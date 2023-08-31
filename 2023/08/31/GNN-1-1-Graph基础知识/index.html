@@ -13,7 +13,7 @@
 
 
 
-<title>4.2 路由器组成 | Simba&#39;s Homepage</title>
+<title>GNN-1-1 | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">4.2 路由器组成</h1>
+            <h1 class="post-title">GNN-1-1</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +205,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">August 31, 2023&nbsp;&nbsp;21:33:57</a>
+                        Date: <a href="#">August 31, 2023&nbsp;&nbsp;22:42:41</a>
                         </span>
                     
                     <!-- 
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/Computer-Network/">Computer Network</a>
+                                <a href="/categories/Graph-Neural-Networks/">Graph Neural Networks</a>
                             
                         </span>
                      -->
@@ -224,7 +224,7 @@
                         
                         
                         
-                        <a href="/categories/Computer-Network/">Computer Network</a>
+                        <a href="/categories/Graph-Neural-Networks/">Graph Neural Networks</a>
                         
                         
                         
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">438</a> 
+                        <a href="">370</a> 
                         
                         </span>
                         
@@ -264,51 +264,29 @@
         </header>
 
         <div class="post-content">
-            <h1 id="Section-4-网络层：数据平面"><a href="#Section-4-网络层：数据平面" class="headerlink" title="Section 4 网络层：数据平面"></a>Section 4 网络层：数据平面</h1><p>中科大郑烇、杨坚老师《计算机网络》笔记</p>
-<h2 id="4-2-路由器组成"><a href="#4-2-路由器组成" class="headerlink" title="4.2 路由器组成"></a>4.2 路由器组成</h2><ul>
-<li>Routing processor  - high-speed switching fabric- input ports - output ports<ul>
-<li>路由器的输入端口和输出端口通常是整合在一起的</li>
+            <h1 id="GNN学习比较"><a href="#GNN学习比较" class="headerlink" title="GNN学习比较"></a>GNN学习比较</h1><p><a target="_blank" rel="noopener" href="http://www.bilibili.com/video/BV1K5411H7EQ">GNN从入门到精通</a>课程笔记</p>
+<h2 id="1-1-Graph基础知识"><a href="#1-1-Graph基础知识" class="headerlink" title="1.1 Graph基础知识"></a>1.1 Graph基础知识</h2><ul>
+<li>Graph: <ul>
+<li>Node + Edge</li>
+<li>无向图&#x2F;有向图</li>
+<li>degree：结点相连的边的数量</li>
+<li>subgraph：子图</li>
 </ul>
 </li>
-<li>路由：运行路由选择算法（RIP，OSPF，BGP）- 生成路由表<ul>
-<li>软件，毫秒级</li>
+<li>图的表示：邻接矩阵adjacency</li>
+<li>连通图：任意节点i能够通过一些边到达任意节点j<ul>
+<li>连通分量：一个极大的连通子图</li>
+<li>强连通图：如果节点u、v相互可达，则至少存在一条路径可以由u开始到v结束</li>
 </ul>
 </li>
-<li>转发：从输入到输出链路交换数据报-根据路由表进行分组的转发(匹配目标端口)<ul>
-<li>硬件，纳秒级</li>
-</ul>
-</li>
-<li>路由器<ul>
-<li>物理层：line termination, bit级接收</li>
-<li>数据链路层：判断字段，纠错，解封装<ul>
-<li>网络层：查表、排队、转发<ul>
-<li>输入端口缓存：交换机瞬时输入端口速度大于输出端口（head-of-the-line blocking，可能会缓冲区溢出）</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>交换结构<ul>
-<li>将分组从输入缓冲区传输到合适的输出端口</li>
-<li>交换速率：运行速度经常是输入&#x2F;输出链路速率的N倍</li>
-<li>交换结构<br><img src="/2023/08/31/4-2-%E8%B7%AF%E7%94%B1%E5%99%A8%E7%BB%84%E6%88%90/4-2-fabric.png" alt="交换结构"></li>
-<li>输出端口排队：<ul>
-<li>当多个输入端口同时向输出端口发送时，缓冲该分组（可能会缓冲区溢出）</li>
-<li>调度规则schedule：选择哪个分组先传送（谁会获得最优性能）<ul>
-<li>FIFO：丢弃策略（tail drop, priority, random）</li>
-<li>优先权调度：标记、分类（high&#x2F;low priority queue）</li>
-<li>Round Robin (RR) 循环扫描不同类型的队列, 发送完一类的一个分组，再发送下一个类的一个分组，循环</li>
-<li>Weighted Fair Queuing (WFQ)：每个队列得到的服务时间是：W_i&#x2F;(\SIGMA(Wi))*t，和权重成正比</li>
-</ul>
-</li>
-<li>缓存容量：<ul>
-<li>RFC 3439 拇指规则（经验性规则）：平均缓存大小&#x3D;典型的RTT倍于链路容量C</li>
-<li>对于N个非常大的流：RTT*C&#x2F; \sqrt(N)</li>
-</ul>
-</li>
-</ul>
-</li>
+<li>图直径：两节点的最短距离的最大值</li>
+<li>静态指标<ul>
+<li>度中心性&#x3D;\frac{N_degree}{n-1} (一个节点的度越大，就意味着这个节点的度中心性就越高，就说明这个节点越重要)</li>
+<li>特征向量中心性 Eigenvector Centrality：一个节点的中心性是相邻节点中心性的函数。(与你连接的人越重要，你也就越重要)</li>
+<li>中介中心性Betweenness Centrality：BC&#x3D;\frac{经过该节点的最短路径}{其余两两节点的最短路径}（可以理解为“瓶颈”）</li>
+<li>连接中心性Closeness：Closeness&#x3D;\frac{n-1}{节点到其他节点的最短路径之和} （反映在网络中某一节点与其他节点之间的接近程度。如果一个节点离其他的节点都很近，那么传递信息的时候就不需要依赖其他的节点，说明这个节点很重要）</li>
+<li>PageRank（网页重要度算法）</li>
+<li>HITS（网页重要度算法）</li>
 </ul>
 </li>
 </ul>
@@ -347,7 +325,7 @@
                     
                         <a href="/tags/Note/"># Note</a>
                     
-                        <a href="/tags/Computer-Network/"># Computer Network</a>
+                        <a href="/tags/GNN/"># GNN</a>
                     
                         
                 </span>
@@ -360,10 +338,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/08/31/GNN-1-1-Graph%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">GNN-1-1</a>
             
-            
-            <a class="next" rel="next" href="/2023/08/24/4-1-%E7%BD%91%E7%BB%9C%E5%B1%82%E6%95%B0%E6%8D%AE%E5%B9%B3%E9%9D%A2_%E5%AF%BC%E8%AE%BA/">4.1 网络层数据平面:导论</a>
+            <a class="next" rel="next" href="/2023/08/31/4-2-%E8%B7%AF%E7%94%B1%E5%99%A8%E7%BB%84%E6%88%90/">4.2 路由器组成</a>
             
         </section>
 
