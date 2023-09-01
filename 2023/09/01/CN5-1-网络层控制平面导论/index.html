@@ -13,7 +13,7 @@
 
 
 
-<title>GNN1.1 Graph基础知识 | Simba&#39;s Homepage</title>
+<title>CN5-1-网络层控制平面导论 | Simba&#39;s Homepage</title>
 
 
 
@@ -40,45 +40,6 @@
 
     
     
-        
-            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-    "HTML-CSS": {
-        preferredFont: "TeX",
-        availableFonts: ["STIX","TeX"],
-        linebreaks: { automatic:true },
-        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
-    },
-    tex2jax: {
-        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
-        processEscapes: true,
-        ignoreClass: "tex2jax_ignore|dno",
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-        equationNumbers: { autoNumber: "AMS" },
-        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
-        Macros: { href: "{}" }
-    },
-    messageStyle: "none"
-    });
-</script>
-<!-- 给MathJax元素添加has-jax class -->
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for(i=0; i < all.length; i += 1) {
-            all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-    });
-</script>
-<!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-
-
         
     
 
@@ -235,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">GNN1.1 Graph基础知识</h1>
+            <h1 class="post-title">CN5-1-网络层控制平面导论</h1>
             
                 <div class="post-meta">
                     
@@ -244,14 +205,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">August 31, 2023&nbsp;&nbsp;22:42:41</a>
+                        Date: <a href="#">September 01, 2023&nbsp;&nbsp;22:37:53</a>
                         </span>
                     
                     <!-- 
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/Graph-Neural-Networks/">Graph Neural Networks</a>
+                                <a href="/categories/Computer-Network/">Computer Network</a>
                             
                         </span>
                      -->
@@ -263,7 +224,7 @@
                         
                         
                         
-                        <a href="/categories/Graph-Neural-Networks/">Graph Neural Networks</a>
+                        <a href="/categories/Computer-Network/">Computer Network</a>
                         
                         
                         
@@ -279,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">370</a> 
+                        <a href="">76</a> 
                         
                         </span>
                         
@@ -303,31 +264,12 @@
         </header>
 
         <div class="post-content">
-            <h1 id="GNN学习比较"><a href="#GNN学习比较" class="headerlink" title="GNN学习比较"></a>GNN学习比较</h1><p><a target="_blank" rel="noopener" href="http://www.bilibili.com/video/BV1K5411H7EQ">GNN从入门到精通</a>课程笔记</p>
-<h2 id="1-1-Graph基础知识"><a href="#1-1-Graph基础知识" class="headerlink" title="1.1 Graph基础知识"></a>1.1 Graph基础知识</h2><ul>
-<li>Graph: <ul>
-<li>Node + Edge</li>
-<li>无向图&#x2F;有向图</li>
-<li>degree：结点相连的边的数量</li>
-<li>subgraph：子图</li>
-</ul>
-</li>
-<li>图的表示：邻接矩阵adjacency</li>
-<li>连通图：任意节点i能够通过一些边到达任意节点j<ul>
-<li>连通分量：一个极大的连通子图</li>
-<li>强连通图：如果节点u、v相互可达，则至少存在一条路径可以由u开始到v结束</li>
-</ul>
-</li>
-<li>图直径：两节点的最短距离的最大值</li>
-<li>静态指标<ul>
-<li>度中心性&#x3D;\frac{N_degree}{n-1} (一个节点的度越大，就意味着这个节点的度中心性就越高，就说明这个节点越重要)</li>
-<li>特征向量中心性 Eigenvector Centrality：一个节点的中心性是相邻节点中心性的函数。(与你连接的人越重要，你也就越重要)</li>
-<li>中介中心性Betweenness Centrality：BC&#x3D;\frac{经过该节点的最短路径}{其余两两节点的最短路径}（可以理解为“瓶颈”）</li>
-<li>连接中心性Closeness：Closeness&#x3D;\frac{n-1}{节点到其他节点的最短路径之和} （反映在网络中某一节点与其他节点之间的接近程度。如果一个节点离其他的节点都很近，那么传递信息的时候就不需要依赖其他的节点，说明这个节点很重要）</li>
-<li>PageRank（网页重要度算法）</li>
-<li>HITS（网页重要度算法）</li>
-</ul>
-</li>
+            <h1 id="Section-5-网络层：控制平面"><a href="#Section-5-网络层：控制平面" class="headerlink" title="Section 5 网络层：控制平面"></a>Section 5 网络层：控制平面</h1><p>中科大郑烇、杨坚老师《计算机网络》笔记</p>
+<h2 id="5-1-导论"><a href="#5-1-导论" class="headerlink" title="5.1 导论"></a>5.1 导论</h2><ul>
+<li>传统路由选择算法：路由表 Per-router 分布式 难以修改</li>
+<li>SDN路由选择：流表 逻辑上集中控制</li>
+<li>ICMP协议</li>
+<li>控制平面协议：OSPF、BGP、OpenFlow等</li>
 </ul>
 
         </div>
@@ -364,7 +306,7 @@
                     
                         <a href="/tags/Note/"># Note</a>
                     
-                        <a href="/tags/GNN/"># GNN</a>
+                        <a href="/tags/Computer-Network/"># Computer Network</a>
                     
                         
                 </span>
@@ -377,10 +319,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/09/01/CN5-1-%E7%BD%91%E7%BB%9C%E5%B1%82%E6%8E%A7%E5%88%B6%E5%B9%B3%E9%9D%A2%E5%AF%BC%E8%AE%BA/">CN5-1-网络层控制平面导论</a>
             
-            
-            <a class="next" rel="next" href="/2023/08/31/4-2-%E8%B7%AF%E7%94%B1%E5%99%A8%E7%BB%84%E6%88%90/">CN4.2 路由器组成</a>
+            <a class="next" rel="next" href="/2023/08/31/GNN-1-1-Graph%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">GNN1.1 Graph基础知识</a>
             
         </section>
 
