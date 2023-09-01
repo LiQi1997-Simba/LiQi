@@ -13,7 +13,7 @@
 
 
 
-<title>GNN1.2 Graph基础知识代码 | Simba&#39;s Homepage</title>
+<title>CN5.2 传统路由选择算法 | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">GNN1.2 Graph基础知识代码</h1>
+            <h1 class="post-title">CN5.2 传统路由选择算法</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +205,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">September 01, 2023&nbsp;&nbsp;22:54:11</a>
+                        Date: <a href="#">September 02, 2023&nbsp;&nbsp;00:16:48</a>
                         </span>
                     
                     <!-- 
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/Graph-Neural-Networks/">Graph Neural Networks</a>
+                                <a href="/categories/Computer-Network/">Computer Network</a>
                             
                         </span>
                      -->
@@ -224,7 +224,7 @@
                         
                         
                         
-                        <a href="/categories/Graph-Neural-Networks/">Graph Neural Networks</a>
+                        <a href="/categories/Computer-Network/">Computer Network</a>
                         
                         
                         
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">469</a> 
+                        <a href="">829</a> 
                         
                         </span>
                         
@@ -264,11 +264,100 @@
         </header>
 
         <div class="post-content">
-            <h1 id="GNN学习笔记"><a href="#GNN学习笔记" class="headerlink" title="GNN学习笔记"></a>GNN学习笔记</h1><p><a target="_blank" rel="noopener" href="http://www.bilibili.com/video/BV1K5411H7EQ">GNN从入门到精通</a>课程笔记</p>
-<h2 id="1-2-Graph基础知识代码"><a href="#1-2-Graph基础知识代码" class="headerlink" title="1.2 Graph基础知识代码"></a>1.2 Graph基础知识代码</h2><p>使用networkx库</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> networkx <span class="keyword">as</span> nx</span><br><span class="line"></span><br><span class="line">edges = pd.DataFrame()</span><br><span class="line">edges[<span class="string">&#x27;sources&#x27;</span>] = [<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">7</span>,<span class="number">9</span>,<span class="number">1</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">8</span>]</span><br><span class="line">edges[<span class="string">&#x27;targets&#x27;</span>] = [<span class="number">1</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">8</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">7</span>,<span class="number">9</span>]</span><br><span class="line">edges.columns = [<span class="string">&#x27;sources&#x27;</span>,<span class="string">&#x27;targets&#x27;</span>]</span><br><span class="line"></span><br><span class="line">G = nx.from_pandas_edgelist(edges, source=<span class="string">&#x27;sources&#x27;</span>,target=<span class="string">&#x27;targets&#x27;</span>)</span><br><span class="line"><span class="comment">#degree</span></span><br><span class="line"><span class="built_in">print</span>(nx.degree(G))</span><br><span class="line"><span class="comment">#连通分量  </span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(nx.connected_components(G)))</span><br><span class="line"><span class="comment">#图直径</span></span><br><span class="line"><span class="built_in">print</span>(nx.diameter(G))</span><br><span class="line"><span class="comment">#度中心性</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;度中心性&#x27;</span>,nx.degree_centrality(G))</span><br><span class="line"><span class="comment">#特征向量中心性</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;特征向量中心性&#x27;</span>,nx.eigenvector_centrality(G))</span><br><span class="line"><span class="comment">#betweenness</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;betweenness&#x27;</span>,nx.betweenness_centrality((G)))</span><br><span class="line"><span class="comment">#closeness</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;closeness&#x27;</span>,nx.closeness_centrality(G))</span><br><span class="line"><span class="comment">#pagerank</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;pagerank&#x27;</span>,nx.pagerank(G))</span><br><span class="line"><span class="comment">#HITS</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;HITS&#x27;</span>,nx.hits(G,tol=<span class="number">0.00001</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>运行结果</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[(0, 1), (1, 2), (4, 5), (2, 1), (3, 1), (6, 2), (7, 3), (5, 1), (8, 2), (9, 2)]</span><br><span class="line">[&#123;0, 1, 2, 3, 4, 5, 6, 7, 8, 9&#125;]</span><br><span class="line">4</span><br><span class="line">度中心性 &#123;0: 0.1111111111111111, 1: 0.2222222222222222, 4: 0.5555555555555556, 2: 0.1111111111111111, 3: 0.1111111111111111, 6: 0.2222222222222222, 7: 0.3333333333333333, 5: 0.1111111111111111, 8: 0.2222222222222222, 9: 0.2222222222222222&#125;</span><br><span class="line">特征向量中心性 &#123;0: 0.10581121486512898, 1: 0.26822822377524, 4: 0.5741403289553503, 2: 0.22648750077754073, 3: 0.22648750077754073, 6: 0.26822822377524, 7: 0.4660017030178054, 5: 0.10581121486512898, 8: 0.3035846941076944, 9: 0.3035846941076944&#125;</span><br><span class="line">betweenness &#123;0: 0.0, 1: 0.2222222222222222, 4: 0.861111111111111, 2: 0.0, 3: 0.0, 6: 0.2222222222222222, 7: 0.38888888888888884, 5: 0.0, 8: 0.0, 9: 0.0&#125;</span><br><span class="line">closeness &#123;0: 0.3333333333333333, 1: 0.47368421052631576, 4: 0.6923076923076923, 2: 0.42857142857142855, 3: 0.42857142857142855, 6: 0.47368421052631576, 7: 0.5294117647058824, 5: 0.3333333333333333, 8: 0.375, 9: 0.375&#125;</span><br><span class="line">pagerank &#123;0: 0.06035578534762892, 1: 0.10672083674530217, 4: 0.23774895855004277, 2: 0.055417825677585866, 3: 0.055417825677585866, 6: 0.10672083674530217, 7: 0.1335118554544986, 5: 0.06035578534762892, 8: 0.09187514522721238, 9: 0.09187514522721238&#125;</span><br><span class="line">HITS (&#123;0: 0.03714744932158016, 1: 0.09416816089252279, 4: 0.20156725889739097, 2: 0.07951423776160028, 3: 0.07951423776160028, 6: 0.09416816089252278, 7: 0.1636048227643626, 5: 0.03714744932158016, 8: 0.10658411119341998, 9: 0.10658411119342&#125;, &#123;0: 0.037147449321580275, 1: 0.09416816089252263, 4: 0.20156725889739135, 2: 0.07951423776160016, 3: 0.07951423776160016, 6: 0.09416816089252263, 7: 0.16360482276436247, 5: 0.03714744932158023, 8: 0.10658411119342008, 9: 0.10658411119342005&#125;)</span><br></pre></td></tr></table></figure>
+            <h1 id="Section-5-网络层：控制平面"><a href="#Section-5-网络层：控制平面" class="headerlink" title="Section 5 网络层：控制平面"></a>Section 5 网络层：控制平面</h1><p>中科大郑烇、杨坚老师《计算机网络》笔记</p>
+<h2 id="5-2-传统路由选择算法"><a href="#5-2-传统路由选择算法" class="headerlink" title="5.2 传统路由选择算法"></a>5.2 传统路由选择算法</h2><ul>
+<li>路由概念<ul>
+<li>在一个网络中找一条较好的路径Path</li>
+<li>以子网为单位进行扩散，是子网（路由器）到子网（路由器）的路由<ul>
+<li>第一跳和最后一跳是毫无疑问的</li>
+</ul>
+</li>
+<li>指标：跳数、延迟、费用、队列长度，或一些指标的加权平均</li>
+</ul>
+</li>
+<li>路由问题的抽象：图<ul>
+<li>G&#x3D;(N,E)</li>
+<li>N：路由器（路由器所在的子网）集合</li>
+<li>E：点到点的链路</li>
+<li>输入：source、dest、weight（跳数、时间、拥塞程度、费用等）</li>
+<li>最优化原则：所有路由器找到（路由）并使用（转发）汇集树 sink tree</li>
+</ul>
+</li>
+<li>路由的原则：正确、简单、健壮、稳定、公平、次优性</li>
+<li>路由算法的分类<ul>
+<li>全局：<ul>
+<li>所有路由器都拥有完整的拓扑和边的代价信息</li>
+<li>Link state 算法</li>
+</ul>
+</li>
+<li>局部（分布式）：<ul>
+<li>路由器只知道邻居路由和到邻居的代价</li>
+<li>Distance vector算法</li>
+</ul>
+</li>
+<li>静态&#x2F;动态<ul>
+<li>动态：周期性更新迭代，反应网络拓扑变化，自适应</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Link State Routing 链路状态算法<ul>
+<li>获得网络拓扑和链路代价信息<ul>
+<li>链路状态分组：路由器及其邻居的信息，和该路由器到邻居的代价</li>
+<li>泛洪flooding：<ul>
+<li>减少广播风暴（年龄age字段和版本号）</li>
+<li>可靠泛洪，需要路由器确认</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>使用最短路由算法得到路由表（Dijkstra算法，复杂度N^2，可能存在震荡）</li>
+<li>使用其路由表</li>
+<li>LS应用：OSPF、IS-IS</li>
+</ul>
+</li>
+<li>Distance Vector Routing 距离矢量算法（Bellman-Fold方程，动态规划）<ul>
+<li>基本思想<ul>
+<li>各个路由器维护一张路由表：To | Next | Cost</li>
+<li>各个路由器与相邻路由器交换路由表</li>
+<li>根据获得的路由信息，更新路由表</li>
+</ul>
+</li>
+<li>定期测量、定期交换、更新路由表</li>
+<li>经过若干次的迭代，最终会收敛到最优值</li>
+<li>特点：好消息传得快、坏消息传得慢（可能形成环路）<ul>
+<li>水平分裂（split horizon）：减缓坏消息传得慢的问题（存在环状拓扑的网络不适用）<ul>
+<li>当B是C到A的下一跳的时候，C传给B的信息是“A不可达”，而传给其他节点的信息是真实信息（C发出的信息水平分裂为了两种情况）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>触发：分布式、异步算法<ul>
+<li>本地链路代价变化了</li>
+<li>从邻居节点来了DV更新消息</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>LS和DV的比较<ul>
+<li>消息复杂度（DV胜出）<ul>
+<li>LS：有 n节点, E条链路，报文O(nE)个（局部的路由信息；全局传播）</li>
+<li>DV:只和邻居交换信息（全局的路由信息，局部传播）</li>
+</ul>
+</li>
+<li>收敛时间（LS胜出）<ul>
+<li>LS：O(n2)算法，有可能震荡</li>
+<li>DV：收敛较慢，可能存在路由环路</li>
+</ul>
+</li>
+<li>健壮性：某一个路由器故障会发生什么（LS胜出）<ul>
+<li>LS：节点会通告不正确的链路代价，每个节点只计算自己的路由表，错误信息影响较小、局部</li>
+<li>DV：DV节点可能通告对全网所有节点的不正确路径代价，每一个节点的路由表可能被其它节点使用（错误可以扩散到全网）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
         </div>
 
@@ -304,7 +393,7 @@
                     
                         <a href="/tags/Note/"># Note</a>
                     
-                        <a href="/tags/GNN/"># GNN</a>
+                        <a href="/tags/Computer-Network/"># Computer Network</a>
                     
                         
                 </span>
@@ -317,10 +406,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/09/02/CN5-2-%E4%BC%A0%E7%BB%9F%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E7%AE%97%E6%B3%95/">CN5.2 传统路由选择算法</a>
             
-            
-            <a class="next" rel="next" href="/2023/09/01/CN5-1-%E7%BD%91%E7%BB%9C%E5%B1%82%E6%8E%A7%E5%88%B6%E5%B9%B3%E9%9D%A2%E5%AF%BC%E8%AE%BA/">CN5.1网络层控制平面导论</a>
+            <a class="next" rel="next" href="/2023/09/01/GNN-1-2-Graph%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E4%BB%A3%E7%A0%81/">GNN1.2 Graph基础知识代码</a>
             
         </section>
 
