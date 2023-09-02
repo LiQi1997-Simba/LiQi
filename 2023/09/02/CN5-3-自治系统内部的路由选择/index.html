@@ -13,7 +13,7 @@
 
 
 
-<title>CN5.2 传统路由选择算法 | Simba&#39;s Homepage</title>
+<title>CN5.3 自治系统内部的路由选择 | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">CN5.2 传统路由选择算法</h1>
+            <h1 class="post-title">CN5.3 自治系统内部的路由选择</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">September 02, 2023&nbsp;&nbsp;00:16:48</a>
+                        Date: <a href="#">September 02, 2023&nbsp;&nbsp;11:07:01</a>
                         </span>
                     
                     <!-- 
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">829</a> 
+                        <a href="">347</a> 
                         
                         </span>
                         
@@ -254,7 +254,7 @@
                         
                         Time:
                         
-                        <a href="">2min</a> 
+                        <a href="">1min</a> 
                         
                         </span>
                         
@@ -265,98 +265,33 @@
 
         <div class="post-content">
             <h1 id="Section-5-网络层：控制平面"><a href="#Section-5-网络层：控制平面" class="headerlink" title="Section 5 网络层：控制平面"></a>Section 5 网络层：控制平面</h1><p>中科大郑烇、杨坚老师《计算机网络》笔记</p>
-<h2 id="5-2-传统路由选择算法"><a href="#5-2-传统路由选择算法" class="headerlink" title="5.2 传统路由选择算法"></a>5.2 传统路由选择算法</h2><ul>
-<li>路由概念<ul>
-<li>在一个网络中找一条较好的路径Path</li>
-<li>以子网为单位进行扩散，是子网（路由器）到子网（路由器）的路由<ul>
-<li>第一跳和最后一跳是毫无疑问的</li>
+<h2 id="5-3-自治系统内部的路由选择"><a href="#5-3-自治系统内部的路由选择" class="headerlink" title="5.3 自治系统内部的路由选择"></a>5.3 自治系统内部的路由选择</h2><ul>
+<li>Routing Information Protocol (RIP)<ul>
+<li>DV 算法</li>
+<li>每条链路cost&#x3D;1，max hops &#x3D; 15</li>
+<li>每隔30秒和邻居交换通告（dest-subnet｜ hops-to-dest），或者收到请求的时候</li>
+<li>每个通告包括最多25个目标子网的可达信息</li>
+<li>180(6个周期)没有收到链路通告，则链路失效</li>
+<li>水平分裂阻止坏消息形成环路</li>
 </ul>
 </li>
-<li>指标：跳数、延迟、费用、队列长度，或一些指标的加权平均</li>
-</ul>
-</li>
-<li>路由问题的抽象：图<ul>
-<li>G&#x3D;(N,E)</li>
-<li>N：路由器（路由器所在的子网）集合</li>
-<li>E：点到点的链路</li>
-<li>输入：source、dest、weight（跳数、时间、拥塞程度、费用等）</li>
-<li>最优化原则：所有路由器找到（路由）并使用（转发）汇集树 sink tree</li>
-</ul>
-</li>
-<li>路由的原则：正确、简单、健壮、稳定、公平、次优性</li>
-<li>路由算法的分类<ul>
-<li>全局：<ul>
-<li>所有路由器都拥有完整的拓扑和边的代价信息</li>
-<li>Link state 算法</li>
-</ul>
-</li>
-<li>局部（分布式）：<ul>
-<li>路由器只知道邻居路由和到邻居的代价</li>
-<li>Distance vector算法</li>
-</ul>
-</li>
-<li>静态&#x2F;动态<ul>
-<li>动态：周期性更新迭代，反应网络拓扑变化，自适应</li>
+<li>Open Shortest Path First (OSPF) <ul>
+<li>LS算法，在一个AS内部泛洪，算汇集树，算路由表</li>
+<li>路由通告，携带信息：版本、ttl、邻居、到邻居的代价</li>
+<li>安全性：所有报文经过认证，防止恶意攻击</li>
+<li>允许多个代价相同的路径存在，可以做负载均衡（RIP只保留一条）</li>
+<li>允许多重代价矩阵，支持按照不同的代价计算最优路径</li>
+<li>Multicast OSPF</li>
+<li>大型网络中支持层次化OSPF<ul>
+<li>2个级别的层次性：本地&#x2F;骨干；链路状态通告仅在本地area内进行</li>
+<li>区域边界路由器：汇总自己区域内网络的距离，向其他区域的边界路由器通告</li>
+<li>骨干路由器：仅在骨干区域内，运行OSPF路由</li>
+<li>边界路由器：连接其他的AS</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Link State Routing 链路状态算法<ul>
-<li>获得网络拓扑和链路代价信息<ul>
-<li>链路状态分组：路由器及其邻居的信息，和该路由器到邻居的代价</li>
-<li>泛洪flooding：<ul>
-<li>减少广播风暴（年龄age字段和版本号）</li>
-<li>可靠泛洪，需要路由器确认</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>使用最短路由算法得到路由表（Dijkstra算法，复杂度N^2，可能存在震荡）</li>
-<li>使用其路由表</li>
-<li>LS应用：OSPF、IS-IS</li>
-</ul>
-</li>
-<li>Distance Vector Routing 距离矢量算法（Bellman-Fold方程，动态规划）<ul>
-<li>基本思想<ul>
-<li>各个路由器维护一张路由表：To | Next | Cost</li>
-<li>各个路由器与相邻路由器交换路由表</li>
-<li>根据获得的路由信息，更新路由表</li>
-</ul>
-</li>
-<li>定期测量、定期交换、更新路由表</li>
-<li>经过若干次的迭代，最终会收敛到最优值</li>
-<li>特点：好消息传得快、坏消息传得慢（可能形成环路）<ul>
-<li>水平分裂（split horizon）：减缓坏消息传得慢的问题（存在环状拓扑的网络不适用）<ul>
-<li>当B是C到A的下一跳的时候，C传给B的信息是“A不可达”，而传给其他节点的信息是真实信息（C发出的信息水平分裂为了两种情况）</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>触发：分布式、异步算法<ul>
-<li>本地链路代价变化了</li>
-<li>从邻居节点来了DV更新消息</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>LS和DV的比较<ul>
-<li>消息复杂度（DV胜出）<ul>
-<li>LS：有 n节点, E条链路，报文O(nE)个（局部的路由信息；全局传播）</li>
-<li>DV:只和邻居交换信息（全局的路由信息，局部传播）</li>
-</ul>
-</li>
-<li>收敛时间（LS胜出）<ul>
-<li>LS：O(n2)算法，有可能震荡</li>
-<li>DV：收敛较慢，可能存在路由环路</li>
-</ul>
-</li>
-<li>健壮性：某一个路由器故障会发生什么（LS胜出）<ul>
-<li>LS：节点会通告不正确的链路代价，每个节点只计算自己的路由表，错误信息影响较小、局部</li>
-<li>DV：DV节点可能通告对全网所有节点的不正确路径代价，每一个节点的路由表可能被其它节点使用（错误可以扩散到全网）</li>
-</ul>
-</li>
-</ul>
-</li>
+<li>IS-IS与OSPF几乎相同</li>
 </ul>
 
         </div>
@@ -406,10 +341,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/09/02/CN5-3-%E8%87%AA%E6%B2%BB%E7%B3%BB%E7%BB%9F%E5%86%85%E9%83%A8%E7%9A%84%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9/">CN5.3 自治系统内部的路由选择</a>
             
-            
-            <a class="next" rel="next" href="/2023/09/01/GNN-1-2-Graph%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E4%BB%A3%E7%A0%81/">GNN1.2 Graph基础知识代码</a>
+            <a class="next" rel="next" href="/2023/09/02/CN5-2-%E4%BC%A0%E7%BB%9F%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E7%AE%97%E6%B3%95/">CN5.2 传统路由选择算法</a>
             
         </section>
 
