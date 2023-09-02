@@ -13,7 +13,7 @@
 
 
 
-<title>CN5.3 自治系统内部的路由选择 | Simba&#39;s Homepage</title>
+<title>CN5.4 ISP之间的路由选择 | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">CN5.3 自治系统内部的路由选择</h1>
+            <h1 class="post-title">CN5.4 ISP之间的路由选择</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">September 02, 2023&nbsp;&nbsp;11:07:01</a>
+                        Date: <a href="#">September 02, 2023&nbsp;&nbsp;15:14:40</a>
                         </span>
                     
                     <!-- 
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">347</a> 
+                        <a href="">807</a> 
                         
                         </span>
                         
@@ -254,7 +254,7 @@
                         
                         Time:
                         
-                        <a href="">1min</a> 
+                        <a href="">2min</a> 
                         
                         </span>
                         
@@ -265,33 +265,86 @@
 
         <div class="post-content">
             <h1 id="Section-5-网络层：控制平面"><a href="#Section-5-网络层：控制平面" class="headerlink" title="Section 5 网络层：控制平面"></a>Section 5 网络层：控制平面</h1><p>中科大郑烇、杨坚老师《计算机网络》笔记</p>
-<h2 id="5-3-自治系统内部的路由选择"><a href="#5-3-自治系统内部的路由选择" class="headerlink" title="5.3 自治系统内部的路由选择"></a>5.3 自治系统内部的路由选择</h2><ul>
-<li>Routing Information Protocol (RIP)<ul>
-<li>DV算法</li>
-<li>每条链路cost&#x3D;1，max hops &#x3D; 15</li>
-<li>每隔30秒和邻居交换通告（dest-subnet｜ hops-to-dest），或者收到请求的时候</li>
-<li>每个通告包括最多25个目标子网的可达信息</li>
-<li>180(6个周期)没有收到链路通告，则链路失效</li>
-<li>水平分裂阻止坏消息形成环路</li>
-</ul>
-</li>
-<li>Open Shortest Path First (OSPF) <ul>
-<li>LS算法，在一个AS内部泛洪，算汇集树，算路由表</li>
-<li>路由通告，携带信息：版本、ttl、邻居、到邻居的代价</li>
-<li>安全性：所有报文经过认证，防止恶意攻击</li>
-<li>允许多个代价相同的路径存在，可以做负载均衡（RIP只保留一条）</li>
-<li>允许多重代价矩阵，支持按照不同的代价计算最优路径</li>
-<li>Multicast OSPF</li>
-<li>大型网络中支持层次化OSPF<ul>
-<li>2个级别的层次性：本地&#x2F;骨干；链路状态通告仅在本地area内进行</li>
-<li>区域边界路由器：汇总自己区域内网络的距离，向其他区域的边界路由器通告</li>
-<li>骨干路由器：仅在骨干区域内，运行OSPF路由</li>
-<li>边界路由器：连接其他的AS</li>
+<h2 id="5-4-ISP之间的路由选择"><a href="#5-4-ISP之间的路由选择" class="headerlink" title="5.4 ISP之间的路由选择"></a>5.4 ISP之间的路由选择</h2><ul>
+<li>平面路由<ul>
+<li>一个网络中的所有路由器的地位一样（在一个平面）</li>
+<li>通过LS、DV等算法，所有路由器都要知道其他所有路由器（子网）的路径</li>
+<li>平面路由的问题<ul>
+<li>规模巨大的网络中，路由信息的存储、传输和计算代价巨大</li>
+<li>管理问题：不同网络不同管理形式；对外网隐藏网络细节</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>IS-IS与OSPF几乎相同</li>
+<li>层次路由<ul>
+<li>将互联网分成自治系统AS</li>
+<li>AS内部路由：Intra-AS Routing Protocol（RIP、OSPF、思科IGRP等）<ul>
+<li>网关路由器连接其他AS</li>
+</ul>
+</li>
+<li>AS之间路由：外部网关协议 Inter-AS Routing Protocol</li>
+<li>解决了规模问题（具有可扩展性，性能下降比较缓慢）和管理问题</li>
+</ul>
+</li>
+<li>AS间的路由：Border Gateway Protocol（BGP）<ul>
+<li>BGP提供给每个AS的方法<ul>
+<li>eBGP：从相邻的ASes那里获得子网可达信息</li>
+<li>iBGP：将获得的子网可达信息传遍到AS内部的所有路由器</li>
+<li>根据子网可达信息和策略来决定到达子网的“好”路径</li>
+<li>采用改进的DV算法（包括到达各个目标网络的详细路径信息）<br><img src="/2023/09/02/CN5-4-ISP%E4%B9%8B%E9%97%B4%E7%9A%84%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9/bgp.png" alt="eBGP和iBGP"></li>
+</ul>
+</li>
+<li>BGP基础<ul>
+<li>BGP会话：两个BGP路由器在一个半永久的TCP连接上交换BGP报文：通告（BGP advertisement）向不同目标子网前缀的“路径”<ul>
+<li>通告一个子网前缀: prefix + attributes</li>
+<li>两个重要属性：AS-PATH和NEXT-HOP</li>
+</ul>
+</li>
+<li>基于策略的路由<ul>
+<li>当一个网关路由器接收到了一个路由通告,使用输入策略来接受或过滤（accept&#x2F;decline），e.g. 不想经过某个AS，转发某些前缀的分组，已经有了一条往某前缀的偏好路径</li>
+</ul>
+</li>
+<li>BGP通告：通告所经过的AS列表，目的是检测环路&#x2F;多路径选择，转发前加上自己的AS号</li>
+</ul>
+</li>
+<li>BGP报文<ul>
+<li>使用TCP协议交换BGP报文</li>
+<li>BGP报文<ul>
+<li>OPEN：打开TCP连接，认证发送方</li>
+<li>UPDATE：通告新路径 (或者撤销原路径)</li>
+<li>KEEPALIVE：在没有更新时保持连接，也用于对OPEN请求确认</li>
+<li>NOTIFICATION:报告以前消息的错误，也用来关闭连接</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>BGP路径选择<ul>
+<li>路由器可能获得一个网络前缀的多个路径，自定义方案打分<ul>
+<li>可能的方案：本地偏好值属性、最短AS-PATH、最近的NEXT-HOP路由器（热土豆路由：有人给你了一个热土豆，你就找代价最低的一个邻居赶紧丢出去）、附加的判据（使用BGP标示）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>为什么内部网关协议和外部网关协议设计不同？<ul>
+<li>策略<ul>
+<li>Inter-AS：管理员需要控制通信路径，谁在使用它的网络进行数据传输</li>
+<li>Intra-AS：子网管理者，所以无需策略，尽可能地利用资源进行快速路由</li>
+</ul>
+</li>
+<li>规模<ul>
+<li>Inter-AS：必须考虑规模问题，以便支持全网的数据转发</li>
+<li>Intra-AS：规模可控（如果AS太大，可将此AS分成小的AS）</li>
+</ul>
+</li>
+<li>性能<ul>
+<li>Inter-AS：策略可能比性能更重要</li>
+<li>Intra-AS：关注性能</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -341,10 +394,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/09/02/CN5-4-ISP%E4%B9%8B%E9%97%B4%E7%9A%84%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9/">CN5.4 ISP之间的路由选择</a>
             
-            
-            <a class="next" rel="next" href="/2023/09/02/CN5-2-%E4%BC%A0%E7%BB%9F%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E7%AE%97%E6%B3%95/">CN5.2 传统路由选择算法</a>
+            <a class="next" rel="next" href="/2023/09/02/CN5-3-%E8%87%AA%E6%B2%BB%E7%B3%BB%E7%BB%9F%E5%86%85%E9%83%A8%E7%9A%84%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9/">CN5.3 自治系统内部的路由选择</a>
             
         </section>
 
