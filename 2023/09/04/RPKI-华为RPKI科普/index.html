@@ -265,12 +265,12 @@
 
         <div class="post-content">
             <h1 id="华为RPKI科普"><a href="#华为RPKI科普" class="headerlink" title="华为RPKI科普"></a>华为RPKI科普</h1><p>以下内容来自 <a target="_blank" rel="noopener" href="https://info.support.huawei.com/info-finder/encyclopedia/zh/RPKI.html">Huawei</a></p>
-<h1 id="0-简介"><a href="#0-简介" class="headerlink" title="0.简介"></a>0.简介</h1><p>RPKI（资源公钥基础设施）是一种基于PKI（公钥基础设施）的技术，专门用于验证BGP发布的路由信息的真实性和合法性，防止路由劫持等网络安全问题。</p>
+<h2 id="0-简介"><a href="#0-简介" class="headerlink" title="0.简介"></a>0.简介</h2><p>RPKI（资源公钥基础设施）是一种基于PKI（公钥基础设施）的技术，专门用于验证BGP发布的路由信息的真实性和合法性，防止路由劫持等网络安全问题。</p>
 <ul>
 <li>PKI：一种用于管理和验证数字证书的技术，它主要用来保障数据交换的安全性和完整性。</li>
 <li>RPKI：是PKI的一种应用，专门用于保障BGP路由的安全性。</li>
 </ul>
-<h1 id="1-为什么需要RPKI"><a href="#1-为什么需要RPKI" class="headerlink" title="1.为什么需要RPKI"></a>1.为什么需要RPKI</h1><ul>
+<h2 id="1-为什么需要RPKI"><a href="#1-为什么需要RPKI" class="headerlink" title="1.为什么需要RPKI"></a>1.为什么需要RPKI</h2><ul>
 <li>难以保证每个AS通告的路由信息都是完整的、真实的、可信的</li>
 <li>BGP前缀劫持<br><img src="/2023/09/04/RPKI-%E5%8D%8E%E4%B8%BARPKI%E7%A7%91%E6%99%AE/bgp.PNG" alt="BGP前缀劫持"><ul>
 <li>前缀劫持：在AS1向外通告10.1.0.0&#x2F;16的基础上，AS4恶意伪造路由通告，即向外谎称自己是10.1.0.0&#x2F;16的起源AS。AS3收到的10.1.0.0&#x2F;16的真实路由的AS_PATH长度为2，虚假路由的AS_PATH长度是1，根据BGP最短AS_Path优先原则，AS3将选取该虚假路由，因此原本流向AS1的全部流量被劫持到AS4</li>
@@ -278,7 +278,7 @@
 </ul>
 </li>
 </ul>
-<h1 id="2-RPKI是如何工作的"><a href="#2-RPKI是如何工作的" class="headerlink" title="2.RPKI是如何工作的"></a>2.RPKI是如何工作的</h1><ul>
+<h2 id="2-RPKI是如何工作的"><a href="#2-RPKI是如何工作的" class="headerlink" title="2.RPKI是如何工作的"></a>2.RPKI是如何工作的</h2><ul>
 <li>重要概念<ul>
 <li>互联网号码资源分配机构IANA，负责分配IP、AS、域名等；组织架构为IANA-&gt;RIR-&gt;NIR&#x2F;LIR-&gt;ISP</li>
 <li>资源公钥基础设施：RPKI是数字证书系统</li>
@@ -289,7 +289,7 @@
 </ul>
 </li>
 <li>整体架构<ul>
-<li>RPKI整体架构：证书签发体系、证书存储系统以及证书同步验证机制。<br><img src="/RPKI.PNG" alt="RPKI整体架构"></li>
+<li>RPKI整体架构：证书签发体系、证书存储系统以及证书同步验证机制。<br><img src="/2023/09/04/RPKI-%E5%8D%8E%E4%B8%BARPKI%E7%A7%91%E6%99%AE/rpki.PNG" alt="RPKI整体架构"></li>
 <li>证书签发体系<ol>
 <li>APNIC签发自签名的根证书[签发者：APNIC，接收者：APNIC，号码资源：10.1.0.0&#x2F;16，10.2.0.0&#x2F;16，AS1-AS99]，证书生成后，APNIC会将根证书存储在自己的资料库中；</li>
 <li>APNIC使用根证书为ISP1签发资源证书[签发者：APNIC，接收者：ISP1，号码资源：10.1.0.0&#x2F;18，10.2.0.0&#x2F;20，AS1-AS9]，证书生成后，ISP1也会将签发的证书存储在自己的资料库中；</li>
@@ -299,7 +299,7 @@
 </ul>
 </li>
 </ul>
-<h1 id="3-RPKI区域验证"><a href="#3-RPKI区域验证" class="headerlink" title="3.RPKI区域验证"></a>3.RPKI区域验证</h1><ul>
+<h2 id="3-RPKI区域验证"><a href="#3-RPKI区域验证" class="headerlink" title="3.RPKI区域验证"></a>3.RPKI区域验证</h2><ul>
 <li>目的：通过验证从外域EBGP对等体收到的路由是否属于本区域路由来控制选路结果，防止域内的路由被域外攻击者劫持，从而确保域内的主机能够安全地访问内部服务。</li>
 <li>区域验证<br><img src="/2023/09/04/RPKI-%E5%8D%8E%E4%B8%BARPKI%E7%A7%91%E6%99%AE/quyu.PNG" alt="区域验证"><ul>
 <li>攻击：在这个网络环境中，AS1、AS2和AS3属于同一运营商，而AS3与另一个运营商网络AS100连接。当一个用户从AS1接入网络，并尝试访问AS2上的一个服务器，其IP地址为10.1.0.0&#x2F;16。通常情况下，用户的流量会通过AS1-AS3-AS2的路径来到达服务器。然而，如果AS100存在一个攻击者伪造的更详细的路由10.1.0.0&#x2F;24，并将其发布出去，用户的访问流量可能会被攻击者窃取。</li>
