@@ -13,7 +13,7 @@
 
 
 
-<title>CN5.4 ISP之间的路由选择 | Simba&#39;s Homepage</title>
+<title>RPKI-华为RPKI科普 | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">CN5.4 ISP之间的路由选择</h1>
+            <h1 class="post-title">RPKI-华为RPKI科普</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +205,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">September 02, 2023&nbsp;&nbsp;15:14:40</a>
+                        Date: <a href="#">September 04, 2023&nbsp;&nbsp;21:01:13</a>
                         </span>
                     
                     <!-- 
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/Computer-Network/">Computer Network</a>
+                                <a href="/categories/Resource-Public-Key-Infrastructure/">Resource Public Key Infrastructure</a>
                             
                         </span>
                      -->
@@ -224,7 +224,7 @@
                         
                         
                         
-                        <a href="/categories/Computer-Network/">Computer Network</a>
+                        <a href="/categories/Resource-Public-Key-Infrastructure/">Resource Public Key Infrastructure</a>
                         
                         
                         
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">807</a> 
+                        <a href="">1.6k</a> 
                         
                         </span>
                         
@@ -254,7 +254,7 @@
                         
                         Time:
                         
-                        <a href="">2min</a> 
+                        <a href="">5min</a> 
                         
                         </span>
                         
@@ -264,85 +264,51 @@
         </header>
 
         <div class="post-content">
-            <h1 id="Section-5-网络层：控制平面"><a href="#Section-5-网络层：控制平面" class="headerlink" title="Section 5 网络层：控制平面"></a>Section 5 网络层：控制平面</h1><p>中科大郑烇、杨坚老师《计算机网络》笔记</p>
-<h2 id="5-4-ISP之间的路由选择"><a href="#5-4-ISP之间的路由选择" class="headerlink" title="5.4 ISP之间的路由选择"></a>5.4 ISP之间的路由选择</h2><ul>
-<li>平面路由<ul>
-<li>一个网络中的所有路由器的地位一样（在一个平面）</li>
-<li>通过LS、DV等算法，所有路由器都要知道其他所有路由器（子网）的路径</li>
-<li>平面路由的问题<ul>
-<li>规模巨大的网络中，路由信息的存储、传输和计算代价巨大</li>
-<li>管理问题：不同网络不同管理形式；对外网隐藏网络细节</li>
+            <h1 id="华为RPKI科普"><a href="#华为RPKI科普" class="headerlink" title="华为RPKI科普"></a>华为RPKI科普</h1><p>以下内容来自 <a target="_blank" rel="noopener" href="https://info.support.huawei.com/info-finder/encyclopedia/zh/RPKI.html">Huawei</a></p>
+<h1 id="0-简介"><a href="#0-简介" class="headerlink" title="0.简介"></a>0.简介</h1><p>RPKI（资源公钥基础设施）是一种基于PKI（公钥基础设施）的技术，专门用于验证BGP发布的路由信息的真实性和合法性，防止路由劫持等网络安全问题。</p>
+<ul>
+<li>PKI：一种用于管理和验证数字证书的技术，它主要用来保障数据交换的安全性和完整性。</li>
+<li>RPKI：是PKI的一种应用，专门用于保障BGP路由的安全性。</li>
+</ul>
+<h1 id="1-为什么需要RPKI"><a href="#1-为什么需要RPKI" class="headerlink" title="1.为什么需要RPKI"></a>1.为什么需要RPKI</h1><ul>
+<li>难以保证每个AS通告的路由信息都是完整的、真实的、可信的</li>
+<li>BGP前缀劫持<br><img src="/2023/09/04/RPKI-%E5%8D%8E%E4%B8%BARPKI%E7%A7%91%E6%99%AE/bgp.PNG" alt="BGP前缀劫持"><ul>
+<li>前缀劫持：在AS1向外通告10.1.0.0&#x2F;16的基础上，AS4恶意伪造路由通告，即向外谎称自己是10.1.0.0&#x2F;16的起源AS。AS3收到的10.1.0.0&#x2F;16的真实路由的AS_PATH长度为2，虚假路由的AS_PATH长度是1，根据BGP最短AS_Path优先原则，AS3将选取该虚假路由，因此原本流向AS1的全部流量被劫持到AS4</li>
+<li>子前缀劫持：在AS1向外通告10.1.0.0&#x2F;16的基础上，AS4恶意构造更为详细的路由通告，即向外发出比10.1.0.0&#x2F;16更加具体的通告，即10.1.0.0&#x2F;24，根据BGP最长前缀匹配原则，AS2和AS3到达10.1.0.0&#x2F;24的流量将会发往AS4。</li>
 </ul>
 </li>
 </ul>
-</li>
-<li>层次路由<ul>
-<li>将互联网分成自治系统AS</li>
-<li>AS内部路由：Intra-AS Routing Protocol（RIP、OSPF、思科IGRP等）<ul>
-<li>网关路由器连接其他AS</li>
+<h1 id="2-RPKI是如何工作的"><a href="#2-RPKI是如何工作的" class="headerlink" title="2.RPKI是如何工作的"></a>2.RPKI是如何工作的</h1><ul>
+<li>重要概念<ul>
+<li>互联网号码资源分配机构IANA，负责分配IP、AS、域名等；组织架构为IANA-&gt;RIR-&gt;NIR&#x2F;LIR-&gt;ISP</li>
+<li>资源公钥基础设施：RPKI是数字证书系统</li>
+<li>证书：RPKI中的证书包括CA（Certificate Authority，证书颁发机构证书）证书和EE证书（End Entity Certificate，终端实体证书）；CA证书用来担保IP地址和AS号的分配，EE证书用来验证路由源授权（Route Origin Authorizations，ROA）。</li>
+<li>ROA：某个IP地址的所有者已经将其持有的IP地址授权给某个AS。</li>
+<li>RPKI资料库：RPKI资料库是用来存储证书和签名的数据库。</li>
+<li>RPKI依赖方（Relying Party，RP）：是连接RPKI体系和互联网域间路由系统之间的桥梁。RP负责从RPKI资料库中周期性地同步下载证书和签名（ROA），并进行验证，从而获得IP地址前缀与AS号的真实绑定关系。RP会将这一结果下发给路由器，路由器获得这些数据后用于判断BGP路由消息的真实性。</li>
 </ul>
 </li>
-<li>AS之间路由：外部网关协议 Inter-AS Routing Protocol</li>
-<li>解决了规模问题（具有可扩展性，性能下降比较缓慢）和管理问题</li>
-</ul>
-</li>
-<li>AS间的路由：Border Gateway Protocol（BGP）<ul>
-<li>BGP提供给每个AS的方法<ul>
-<li>eBGP：从相邻的ASes那里获得子网可达信息</li>
-<li>iBGP：将获得的子网可达信息传遍到AS内部的所有路由器</li>
-<li>根据子网可达信息和策略来决定到达子网的“好”路径</li>
-<li>采用改进的DV算法（包括到达各个目标网络的详细路径信息）<br><img src="/2023/09/02/CN5-4-ISP%E4%B9%8B%E9%97%B4%E7%9A%84%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9/bgp.png" alt="eBGP和iBGP"></li>
-</ul>
-</li>
-<li>BGP基础<ul>
-<li>BGP会话：两个BGP路由器在一个半永久的TCP连接上交换BGP报文：通告（BGP advertisement）向不同目标子网前缀的“路径”<ul>
-<li>通告一个子网前缀: prefix + attributes</li>
-<li>两个重要属性：AS-PATH和NEXT-HOP</li>
-</ul>
-</li>
-<li>基于策略的路由<ul>
-<li>当一个网关路由器接收到了一个路由通告,使用输入策略来接受或过滤（accept&#x2F;decline），e.g. 不想经过某个AS，转发某些前缀的分组，已经有了一条往某前缀的偏好路径</li>
-</ul>
-</li>
-<li>BGP通告：通告所经过的AS列表，目的是检测环路&#x2F;多路径选择，转发前加上自己的AS号</li>
-</ul>
-</li>
-<li>BGP报文<ul>
-<li>使用TCP协议交换BGP报文</li>
-<li>BGP报文<ul>
-<li>OPEN：打开TCP连接，认证发送方</li>
-<li>UPDATE：通告新路径 (或者撤销原路径)</li>
-<li>KEEPALIVE：在没有更新时保持连接，也用于对OPEN请求确认</li>
-<li>NOTIFICATION:报告以前消息的错误，也用来关闭连接</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>BGP路径选择<ul>
-<li>路由器可能获得一个网络前缀的多个路径，自定义方案打分<ul>
-<li>可能的方案：本地偏好值属性、最短AS-PATH、最近的NEXT-HOP路由器（热土豆路由：有人给你了一个热土豆，你就找代价最低的一个邻居赶紧丢出去）、附加的判据（使用BGP标示）</li>
-</ul>
+<li>整体架构<ul>
+<li>RPKI整体架构：证书签发体系、证书存储系统以及证书同步验证机制。<br><img src="/RPKI.PNG" alt="RPKI整体架构"></li>
+<li>证书签发体系<ol>
+<li>APNIC签发自签名的根证书[签发者：APNIC，接收者：APNIC，号码资源：10.1.0.0&#x2F;16，10.2.0.0&#x2F;16，AS1-AS99]，证书生成后，APNIC会将根证书存储在自己的资料库中；</li>
+<li>APNIC使用根证书为ISP1签发资源证书[签发者：APNIC，接收者：ISP1，号码资源：10.1.0.0&#x2F;18，10.2.0.0&#x2F;20，AS1-AS9]，证书生成后，ISP1也会将签发的证书存储在自己的资料库中；</li>
+<li>ISP1使用自己的证书签发ROA[签发者：ISP1，绑定关系：10.1.1.0&#x2F;24 &amp; AS1]，通过签发ROA签名来授权某个自治网络对某个IP地址前缀发起路由起源通告。ROA将该自治网络的AS号与该IP前缀绑定在一起。</li>
+</ol>
 </li>
 </ul>
 </li>
 </ul>
-</li>
-<li>为什么内部网关协议和外部网关协议设计不同？<ul>
-<li>策略<ul>
-<li>Inter-AS：管理员需要控制通信路径，谁在使用它的网络进行数据传输</li>
-<li>Intra-AS：子网管理者，所以无需策略，尽可能地利用资源进行快速路由</li>
+<h1 id="3-RPKI区域验证"><a href="#3-RPKI区域验证" class="headerlink" title="3.RPKI区域验证"></a>3.RPKI区域验证</h1><ul>
+<li>目的：通过验证从外域EBGP对等体收到的路由是否属于本区域路由来控制选路结果，防止域内的路由被域外攻击者劫持，从而确保域内的主机能够安全地访问内部服务。</li>
+<li>区域验证<br><img src="/2023/09/04/RPKI-%E5%8D%8E%E4%B8%BARPKI%E7%A7%91%E6%99%AE/quyu.PNG" alt="区域验证"><ul>
+<li>攻击：在这个网络环境中，AS1、AS2和AS3属于同一运营商，而AS3与另一个运营商网络AS100连接。当一个用户从AS1接入网络，并尝试访问AS2上的一个服务器，其IP地址为10.1.0.0&#x2F;16。通常情况下，用户的流量会通过AS1-AS3-AS2的路径来到达服务器。然而，如果AS100存在一个攻击者伪造的更详细的路由10.1.0.0&#x2F;24，并将其发布出去，用户的访问流量可能会被攻击者窃取。</li>
+<li>防御：为了应对这种攻击，我们在AS3的边界路由器上部署了区域验证功能，并将AS1、AS2和AS3划分为一个区域1。当AS3从AS100接收到一个攻击路由时，如果该路由的源AS是AS2，尽管它属于本区域1，但由于它是从区域1之外的BGP对等体接收到的，区域验证不会通过，因此该路由被视为无效或者被降低优先级处理。这样，我们可以有效地减少攻击者伪造路由的影响。</li>
 </ul>
 </li>
-<li>规模<ul>
-<li>Inter-AS：必须考虑规模问题，以便支持全网的数据转发</li>
-<li>Intra-AS：规模可控（如果AS太大，可将此AS分成小的AS）</li>
-</ul>
-</li>
-<li>性能<ul>
-<li>Inter-AS：策略可能比性能更重要</li>
-<li>Intra-AS：关注性能</li>
-</ul>
-</li>
+<li>区域联盟验证<br><img src="/2023/09/04/RPKI-%E5%8D%8E%E4%B8%BARPKI%E7%A7%91%E6%99%AE/qylm.png" alt="区域联盟验证"><ul>
+<li>攻击：在这个网络环境中，有多个自治系统（AS）属于不同的运营商。AS1、AS2和AS3属于同一运营商，而AS4和AS5属于另一个合作运营商。此外，AS3和AS4都与另一个运营商的AS100连接。当一个用户从AS1接入网络，并尝试访问AS5上的一个服务器，其IP地址为10.1.0.0&#x2F;16。通常情况下，用户的流量会通过AS1-AS3-AS4-AS5的路径来到达服务器。然而，如果存在一个攻击者伪造了一个更详细的路由10.1.1.0&#x2F;24，并将其发布出去，用户的流量可能会被这个攻击者窃取。</li>
+<li>防御：为了应对这种攻击，我们在AS3的边界路由器上部署了区域验证功能。将AS1、AS2和AS3划分为一个区域1，将AS4和AS5划分为另一个区域2，这两个区域共同组成一个区域联盟1。当AS3从AS100接收到一个攻击路由时，如果该路由的源AS是AS5，尽管它属于本区域联盟1，但由于它是从区域联盟之外的BGP对等体接收到的，区域验证不会通过，因此该路由被视为无效或者被降低优先级处理。这样，我们可以有效地减少攻击者伪造路由的影响。</li>
 </ul>
 </li>
 </ul>
@@ -381,7 +347,7 @@
                     
                         <a href="/tags/Note/"># Note</a>
                     
-                        <a href="/tags/Computer-Network/"># Computer Network</a>
+                        <a href="/tags/RPKI/"># RPKI</a>
                     
                         
                 </span>
@@ -394,10 +360,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/09/04/RPKI-%E5%8D%8E%E4%B8%BARPKI%E7%A7%91%E6%99%AE/">RPKI-华为RPKI科普</a>
             
-            
-            <a class="next" rel="next" href="/2023/09/02/CN5-3-%E8%87%AA%E6%B2%BB%E7%B3%BB%E7%BB%9F%E5%86%85%E9%83%A8%E7%9A%84%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9/">CN5.3 自治系统内部的路由选择</a>
+            <a class="next" rel="next" href="/2023/09/02/CN5-4-ISP%E4%B9%8B%E9%97%B4%E7%9A%84%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9/">CN5.4 ISP之间的路由选择</a>
             
         </section>
 
