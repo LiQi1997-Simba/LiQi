@@ -13,7 +13,7 @@
 
 
 
-<title>GNN2.1 DeepWalk | Simba&#39;s Homepage</title>
+<title>GNN2.1 DeepWalk(Code) | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">GNN2.1 DeepWalk</h1>
+            <h1 class="post-title">GNN2.1 DeepWalk(Code)</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">September 06, 2023&nbsp;&nbsp;22:00:11</a>
+                        Date: <a href="#">September 06, 2023&nbsp;&nbsp;22:35:58</a>
                         </span>
                     
                     <!-- 
@@ -246,7 +246,7 @@
                         
                         Words:
                         
-                        <a href="">359</a> 
+                        <a href="">152</a> 
                         
                         </span>
                         
@@ -260,7 +260,7 @@
                         
                         Time:
                         
-                        <a href="">2min</a> 
+                        <a href="">1min</a> 
                         
                         </span>
                         
@@ -271,76 +271,12 @@
 
         <div class="post-content">
             <h1 id="GNN学习笔记"><a href="#GNN学习笔记" class="headerlink" title="GNN学习笔记"></a>GNN学习笔记</h1><p><a target="_blank" rel="noopener" href="http://www.bilibili.com/video/BV1K5411H7EQ">GNN从入门到精通</a>课程笔记</p>
-<h2 id="2-1-DeepWalk-PaperReading"><a href="#2-1-DeepWalk-PaperReading" class="headerlink" title="2.1 DeepWalk (PaperReading)"></a>2.1 DeepWalk (PaperReading)</h2><p>DeepWalk: Online Learning of Social Representations (KDD’ 14)</p>
-<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><ul>
-<li>Unsupervised feature learning</li>
-<li>Input: graph; Output: Latent representation</li>
-<li>GNN basic dataset: Zachary’s Karate network</li>
-<li>one-hot encoding-Sparse; embedding-dense</li>
-<li>Heterogeneous graphs: graphs that have nodes and edges of different types</li>
-<li>Relational classification: aims to include relations among entities into the classification process (在一个图中标注一些节点预测其他节点)</li>
-</ul>
-<h3 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h3><ul>
-<li>DeepWalk used a different approach to capture the network topology information. Build robust representations that are suitable for statistical modeling</li>
-<li>Multi-label classification tasks</li>
-<li>Scalability (parallel implementation)</li>
-</ul>
-<h3 id="Problem-Definition"><a href="#Problem-Definition" class="headerlink" title="Problem Definition"></a>Problem Definition</h3><ul>
-<li>G &#x3D; (V,E) V: vertices, E: edge, E&#x3D;(V*V) 邻接矩阵</li>
-<li>G_L &#x3D; (V, E, X, Y), X \in R^{|V|*S}, S &#x3D; the size of the feature space for each attribute vector, Y \in R^{|V|*y}, y &#x3D; the set of labels</li>
-</ul>
-<h3 id="Learning-Social-Representations"><a href="#Learning-Social-Representations" class="headerlink" title="Learning Social Representations"></a>Learning Social Representations</h3><ul>
-<li>(short) Random walks<ul>
-<li>Easy to parallelize</li>
-<li>No need for global recomputation.</li>
-</ul>
-</li>
-<li>Language modeling<ul>
-<li>We present a generalization of language modeling to explore the graph through a stream of short random walks.<ul>
-<li>Pr(v_i | (v_1,v_2,…,v_{i-1})): language modeling</li>
-</ul>
-</li>
-<li>the prediction problem<ul>
-<li>minimize_\Phi -logPr({v_{i-w},…,v_{i+w}}\v_i | \Phi(v_i)): skipgram(节点没有顺序)</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><ul>
-<li>DeepWalk &#x3D; Random walks + Language modeling</li>
-<li>Language model: corpus + vocalulary<ul>
-<li>Deepwalk: corpus &#x3D; short truncated random walks; vocalulary &#x3D; V</li>
-</ul>
-</li>
-<li>Algorithm<br><img src="/2023/09/06/GNN-2-1-DeepWalk/alg1.png" alt="DeepWalk"></li>
-<li>SkipGram:<br><img src="/2023/09/06/GNN-2-1-DeepWalk/alg2.png" alt="SkipGram"><ul>
-<li>Pr(v_i | (v_1,v_2,…,v_{i-1})) &#x3D; \Pi^{i+w}_{j&#x3D;i-w;j!&#x3D;i} Pr(v_j|\Phi(v_i))</li>
-</ul>
-</li>
-<li>Hierarchical Softmax<br><img src="/2023/09/06/GNN-2-1-DeepWalk/alg3.png" alt="HierarchicalSoftmax"></li>
-<li>The model parameter set is \theta &#x3D; {\Phi,\Kai}</li>
-<li>Parallelizability</li>
-<li>Algorithm Variants<ul>
-<li>Streaming: without knowledge of the entire graph</li>
-<li>Non-random walks</li>
-</ul>
-</li>
-</ul>
-<h3 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h3><ul>
-<li>Datasets: BlogCatalog, Flickr, YouTube</li>
-<li>Metrics: <ul>
-<li>sample a portion of the labeled nodes(TR)</li>
-<li>Macro-F1, Micro-F1</li>
-</ul>
-</li>
-<li>Results: TR越小，DeepWalk表现地越突出</li>
-</ul>
-<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><ul>
-<li><strong>Language modeling is actually sampling from an unobservable language graph.</strong></li>
-<li>Insights obtained from modeling observable graphs may in turn yield improvements to modeling unobservable ones.</li>
-</ul>
+<h2 id="2-1-DeepWalk-Code"><a href="#2-1-DeepWalk-Code" class="headerlink" title="2.1 DeepWalk (Code)"></a>2.1 DeepWalk (Code)</h2><p>DeepWalk: Online Learning of Social Representations (KDD’ 14)</p>
+<p>用DeepWalk在Zachary’s Karate Network上构建Embedding, 用sklearn提供的LR模型分类。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> networkx <span class="keyword">as</span> nx</span><br><span class="line"><span class="keyword">from</span> karateclub <span class="keyword">import</span> DeepWalk</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load Karate Club Graph</span></span><br><span class="line">G = nx.karate_club_graph()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Generate DeepWalk Embeddings</span></span><br><span class="line">model = DeepWalk(walk_length=<span class="number">5</span>, dimensions=<span class="number">128</span>, window_size=<span class="number">5</span>, epochs=<span class="number">20</span>, workers=<span class="number">1</span>)</span><br><span class="line">model.fit(G)</span><br><span class="line">embeddings = model.get_embedding()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Generate X and Y for training</span></span><br><span class="line">X = []</span><br><span class="line">Y = []</span><br><span class="line"><span class="keyword">for</span> node <span class="keyword">in</span> G.nodes():</span><br><span class="line">    X.append(embeddings[node])</span><br><span class="line">    Y.append(G.nodes[node][<span class="string">&quot;club&quot;</span>])</span><br><span class="line">    </span><br><span class="line"><span class="comment"># Split Train dataset and Test dataset</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, Y_train, Y_test = train_test_split(X, Y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Train a Logistic Regression Classifier</span></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line">clf = LogisticRegression(random_state=<span class="number">0</span>).fit(X_train, Y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Evaluate the Classifier</span></span><br><span class="line">accuracy = clf.score(X_test, Y_test)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Accuracy:&quot;</span>, accuracy)</span><br></pre></td></tr></table></figure>
 
+<p>运行结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Accuracy: 1.0</span><br></pre></td></tr></table></figure>
         </div>
 
         
@@ -373,9 +309,9 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/Note/"># Note</a>
-                    
                         <a href="/tags/GNN/"># GNN</a>
+                    
+                        <a href="/tags/Code/"># Code</a>
                     
                         
                 </span>
@@ -388,10 +324,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/09/06/GNN-2-1-DeepWalk-Code/">GNN2.1 DeepWalk(Code)</a>
             
-            
-            <a class="next" rel="next" href="/2023/09/06/RPKI-Technical-Analysis-Part1/">RPKI-Technical Analysis(Part1)</a>
+            <a class="next" rel="next" href="/2023/09/06/GNN-2-1-DeepWalk/">GNN2.1 DeepWalk</a>
             
         </section>
 
