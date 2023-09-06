@@ -13,7 +13,7 @@
 
 
 
-<title>GNN1.2 Graph基础知识代码 | Simba&#39;s Homepage</title>
+<title>GNN2.1 DeepWalk | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">GNN1.2 Graph基础知识代码</h1>
+            <h1 class="post-title">GNN2.1 DeepWalk</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">September 01, 2023&nbsp;&nbsp;22:54:11</a>
+                        Date: <a href="#">September 06, 2023&nbsp;&nbsp;22:00:11</a>
                         </span>
                     
                     <!-- 
@@ -213,6 +213,8 @@
                     Category:
                             
                                 <a href="/categories/Graph-Neural-Networks/">Graph Neural Networks</a>
+                            
+                                <a href="/categories/Graph-Neural-Networks/Paper-Reading/">Paper Reading</a>
                             
                         </span>
                      -->
@@ -228,6 +230,10 @@
                         
                         
                         
+                        <a href="/categories/Graph-Neural-Networks/Paper-Reading/">Paper Reading</a>
+                        
+                        
+                        
                         </span>
                         
                         
@@ -240,7 +246,7 @@
                         
                         Words:
                         
-                        <a href="">469</a> 
+                        <a href="">341</a> 
                         
                         </span>
                         
@@ -264,11 +270,75 @@
         </header>
 
         <div class="post-content">
-            <h1 id="GNN学习笔记"><a href="#GNN学习笔记" class="headerlink" title="GNN学习笔记"></a>GNN学习笔记</h1><p><a target="_blank" rel="noopener" href="http://www.bilibili.com/video/BV1K5411H7EQ">GNN从入门到精通</a>课程笔记</p>
-<h2 id="1-2-Graph基础知识代码"><a href="#1-2-Graph基础知识代码" class="headerlink" title="1.2 Graph基础知识代码"></a>1.2 Graph基础知识代码</h2><p>使用networkx库</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> networkx <span class="keyword">as</span> nx</span><br><span class="line"></span><br><span class="line">edges = pd.DataFrame()</span><br><span class="line">edges[<span class="string">&#x27;sources&#x27;</span>] = [<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">7</span>,<span class="number">9</span>,<span class="number">1</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">8</span>]</span><br><span class="line">edges[<span class="string">&#x27;targets&#x27;</span>] = [<span class="number">1</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">8</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">7</span>,<span class="number">9</span>]</span><br><span class="line">edges.columns = [<span class="string">&#x27;sources&#x27;</span>,<span class="string">&#x27;targets&#x27;</span>]</span><br><span class="line"></span><br><span class="line">G = nx.from_pandas_edgelist(edges, source=<span class="string">&#x27;sources&#x27;</span>,target=<span class="string">&#x27;targets&#x27;</span>)</span><br><span class="line"><span class="comment">#degree</span></span><br><span class="line"><span class="built_in">print</span>(nx.degree(G))</span><br><span class="line"><span class="comment">#连通分量  </span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(nx.connected_components(G)))</span><br><span class="line"><span class="comment">#图直径</span></span><br><span class="line"><span class="built_in">print</span>(nx.diameter(G))</span><br><span class="line"><span class="comment">#度中心性</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;度中心性&#x27;</span>,nx.degree_centrality(G))</span><br><span class="line"><span class="comment">#特征向量中心性</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;特征向量中心性&#x27;</span>,nx.eigenvector_centrality(G))</span><br><span class="line"><span class="comment">#betweenness</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;betweenness&#x27;</span>,nx.betweenness_centrality((G)))</span><br><span class="line"><span class="comment">#closeness</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;closeness&#x27;</span>,nx.closeness_centrality(G))</span><br><span class="line"><span class="comment">#pagerank</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;pagerank&#x27;</span>,nx.pagerank(G))</span><br><span class="line"><span class="comment">#HITS</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;HITS&#x27;</span>,nx.hits(G,tol=<span class="number">0.00001</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>运行结果</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[(0, 1), (1, 2), (4, 5), (2, 1), (3, 1), (6, 2), (7, 3), (5, 1), (8, 2), (9, 2)]</span><br><span class="line">[&#123;0, 1, 2, 3, 4, 5, 6, 7, 8, 9&#125;]</span><br><span class="line">4</span><br><span class="line">度中心性 &#123;0: 0.1111111111111111, 1: 0.2222222222222222, 4: 0.5555555555555556, 2: 0.1111111111111111, 3: 0.1111111111111111, 6: 0.2222222222222222, 7: 0.3333333333333333, 5: 0.1111111111111111, 8: 0.2222222222222222, 9: 0.2222222222222222&#125;</span><br><span class="line">特征向量中心性 &#123;0: 0.10581121486512898, 1: 0.26822822377524, 4: 0.5741403289553503, 2: 0.22648750077754073, 3: 0.22648750077754073, 6: 0.26822822377524, 7: 0.4660017030178054, 5: 0.10581121486512898, 8: 0.3035846941076944, 9: 0.3035846941076944&#125;</span><br><span class="line">betweenness &#123;0: 0.0, 1: 0.2222222222222222, 4: 0.861111111111111, 2: 0.0, 3: 0.0, 6: 0.2222222222222222, 7: 0.38888888888888884, 5: 0.0, 8: 0.0, 9: 0.0&#125;</span><br><span class="line">closeness &#123;0: 0.3333333333333333, 1: 0.47368421052631576, 4: 0.6923076923076923, 2: 0.42857142857142855, 3: 0.42857142857142855, 6: 0.47368421052631576, 7: 0.5294117647058824, 5: 0.3333333333333333, 8: 0.375, 9: 0.375&#125;</span><br><span class="line">pagerank &#123;0: 0.06035578534762892, 1: 0.10672083674530217, 4: 0.23774895855004277, 2: 0.055417825677585866, 3: 0.055417825677585866, 6: 0.10672083674530217, 7: 0.1335118554544986, 5: 0.06035578534762892, 8: 0.09187514522721238, 9: 0.09187514522721238&#125;</span><br><span class="line">HITS (&#123;0: 0.03714744932158016, 1: 0.09416816089252279, 4: 0.20156725889739097, 2: 0.07951423776160028, 3: 0.07951423776160028, 6: 0.09416816089252278, 7: 0.1636048227643626, 5: 0.03714744932158016, 8: 0.10658411119341998, 9: 0.10658411119342&#125;, &#123;0: 0.037147449321580275, 1: 0.09416816089252263, 4: 0.20156725889739135, 2: 0.07951423776160016, 3: 0.07951423776160016, 6: 0.09416816089252263, 7: 0.16360482276436247, 5: 0.03714744932158023, 8: 0.10658411119342008, 9: 0.10658411119342005&#125;)</span><br></pre></td></tr></table></figure>
+            <h1 id="PaperReading-DeepWalk"><a href="#PaperReading-DeepWalk" class="headerlink" title="PaperReading: DeepWalk"></a>PaperReading: DeepWalk</h1><p>DeepWalk: Online Learning of Social Representations (KDD’ 14)</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>Unsupervised feature learning</li>
+<li>Input: graph; Output: Latent representation</li>
+<li>GNN basic dataset: Zachary’s Karate network</li>
+<li>one-hot encoding-Sparse; embedding-dense</li>
+<li>Heterogeneous graphs: graphs that have nodes and edges of different types</li>
+<li>Relational classification: aims to include relations among entities into the classification process (在一个图中标注一些节点预测其他节点)</li>
+</ul>
+<h2 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h2><ul>
+<li>DeepWalk used a different approach to capture the network topology information. Build robust representations that are suitable for statistical modeling</li>
+<li>Multi-label classification tasks</li>
+<li>Scalability (parallel implementation)</li>
+</ul>
+<h2 id="Problem-Definition"><a href="#Problem-Definition" class="headerlink" title="Problem Definition"></a>Problem Definition</h2><ul>
+<li>G &#x3D; (V,E) V: vertices, E: edge, E&#x3D;(V*V) 邻接矩阵</li>
+<li>G_L &#x3D; (V, E, X, Y), X \in R^{|V|*S}, S &#x3D; the size of the feature space for each attribute vector, Y \in R^{|V|*y}, y &#x3D; the set of labels</li>
+</ul>
+<h2 id="Learning-Social-Representations"><a href="#Learning-Social-Representations" class="headerlink" title="Learning Social Representations"></a>Learning Social Representations</h2><ul>
+<li>(short) Random walks<ul>
+<li>Easy to parallelize</li>
+<li>No need for global recomputation.</li>
+</ul>
+</li>
+<li>Language modeling<ul>
+<li>We present a generalization of language modeling to explore the graph through a stream of short random walks.<ul>
+<li>Pr(v_i | (v_1,v_2,…,v_{i-1})): language modeling</li>
+</ul>
+</li>
+<li>the prediction problem<ul>
+<li>minimize_\Phi -logPr({v_{i-w},…,v_{i+w}}\v_i | \Phi(v_i)): skipgram(节点没有顺序)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><ul>
+<li>DeepWalk &#x3D; Random walks + Language modeling</li>
+<li>Language model: corpus + vocalulary<ul>
+<li>Deepwalk: corpus &#x3D; short truncated random walks; vocalulary &#x3D; V</li>
+</ul>
+</li>
+<li>Algorithm<br><img src="/2023/09/06/GNN-2-1-DeepWalk/alg1.png" alt="DeepWalk"></li>
+<li>SkipGram:<br><img src="/2023/09/06/GNN-2-1-DeepWalk/alg2.png" alt="SkipGram"><ul>
+<li>Pr(v_i | (v_1,v_2,…,v_{i-1})) &#x3D; \Pi^{i+w}_{j&#x3D;i-w;j!&#x3D;i} Pr(v_j|\Phi(v_i))</li>
+</ul>
+</li>
+<li>Hierarchical Softmax<br><img src="/2023/09/06/GNN-2-1-DeepWalk/alg3.png" alt="HierarchicalSoftmax"></li>
+<li>The model parameter set is \theta &#x3D; {\Phi,\Kai}</li>
+<li>Parallelizability</li>
+<li>Algorithm Variants<ul>
+<li>Streaming: without knowledge of the entire graph</li>
+<li>Non-random walks</li>
+</ul>
+</li>
+</ul>
+<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><ul>
+<li>Datasets: BlogCatalog, Flickr, YouTube</li>
+<li>Metrics: <ul>
+<li>sample a portion of the labeled nodes(TR)</li>
+<li>Macro-F1, Micro-F1</li>
+</ul>
+</li>
+<li>Results: TR越小，DeepWalk表现地越突出</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><ul>
+<li><strong>Language modeling is actually sampling from an unobservable language graph.</strong></li>
+<li>Insights obtained from modeling observable graphs may in turn yield improvements to modeling unobservable ones.</li>
+</ul>
 
         </div>
 
@@ -302,9 +372,9 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/GNN/"># GNN</a>
+                        <a href="/tags/Note/"># Note</a>
                     
-                        <a href="/tags/Code/"># Code</a>
+                        <a href="/tags/GNN/"># GNN</a>
                     
                         
                 </span>
@@ -317,10 +387,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/09/02/CN5-2-%E4%BC%A0%E7%BB%9F%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E7%AE%97%E6%B3%95/">CN5.2 传统路由选择算法</a>
             
-            
-            <a class="next" rel="next" href="/2023/09/01/CN5-1-%E7%BD%91%E7%BB%9C%E5%B1%82%E6%8E%A7%E5%88%B6%E5%B9%B3%E9%9D%A2%E5%AF%BC%E8%AE%BA/">CN5.1 网络层控制平面导论</a>
+            <a class="next" rel="next" href="/2023/09/06/RPKI-Technical-Analysis-Part1/">RPKI-Technical Analysis(Part1)</a>
             
         </section>
 
