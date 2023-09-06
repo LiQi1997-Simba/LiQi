@@ -13,7 +13,7 @@
 
 
 
-<title>CN4.3 IP协议 | Simba&#39;s Homepage</title>
+<title>RPKI-Technical Analysis(Part1) | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">CN4.3 IP协议</h1>
+            <h1 class="post-title">RPKI-Technical Analysis(Part1)</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +205,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">September 05, 2023&nbsp;&nbsp;10:26:02</a>
+                        Date: <a href="#">September 06, 2023&nbsp;&nbsp;20:15:12</a>
                         </span>
                     
                     <!-- 
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/Computer-Network/">Computer Network</a>
+                                <a href="/categories/Resource-Public-Key-Infrastructure/">Resource Public Key Infrastructure</a>
                             
                         </span>
                      -->
@@ -224,7 +224,7 @@
                         
                         
                         
-                        <a href="/categories/Computer-Network/">Computer Network</a>
+                        <a href="/categories/Resource-Public-Key-Infrastructure/">Resource Public Key Infrastructure</a>
                         
                         
                         
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">1k</a> 
+                        <a href="">931</a> 
                         
                         </span>
                         
@@ -254,7 +254,7 @@
                         
                         Time:
                         
-                        <a href="">4min</a> 
+                        <a href="">5min</a> 
                         
                         </span>
                         
@@ -264,117 +264,78 @@
         </header>
 
         <div class="post-content">
-            <h1 id="Section-4-网络层：数据平面"><a href="#Section-4-网络层：数据平面" class="headerlink" title="Section 4 网络层：数据平面"></a>Section 4 网络层：数据平面</h1><p>中科大郑烇、杨坚老师《计算机网络》笔记</p>
-<h2 id="4-3-Internet-Protocol-IP-协议"><a href="#4-3-Internet-Protocol-IP-协议" class="headerlink" title="4.3 Internet Protocol (IP) 协议"></a>4.3 Internet Protocol (IP) 协议</h2><ul>
-<li>IP数据报格式<ul>
-<li>TTL: Time to Leave</li>
+            <h1 id="RPKI-Technical-Analysis-Part1"><a href="#RPKI-Technical-Analysis-Part1" class="headerlink" title="RPKI Technical Analysis (Part1)"></a>RPKI Technical Analysis (Part1)</h1><p>以下内容来自 ICANN | Resource Public Key Infrastructure (RPKI) Technical Analysis | OCTO-014 | September 2020</p>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1.Introduction"></a>1.Introduction</h2><ul>
+<li>A route leak is “the propagation of routing announcement(s) beyond their intended scope” (RFC 790820). The causes of route leaks include route mis-origination, route hijacks, route policy violation, and others</li>
+<li>Number Resources refers to IP addresses and ASNs</li>
+<li>A trust anchor location (TAL) is a description of the location where a RPKI Trust Anchor can be retrieved.</li>
+</ul>
+<h2 id="2-RPKI-Background"><a href="#2-RPKI-Background" class="headerlink" title="2.RPKI Background"></a>2.RPKI Background</h2><ul>
+<li>RIRs allocate or assign them to network operators such as ISPs. There are five RIRs, one per “continental” service region.</li>
+<li>IRR (Internet Routing Registry)<ul>
+<li>The global IRR is actually made of more than 20 independent (and sometimes inconsistent) databases. </li>
+<li>ISPs publish their routing policies an announcements in one or more of these databases and then use the IRR to build route announcement filters. </li>
+<li>Allow their ISP to filter out any erroneous prefix coming from the customer.</li>
+<li>Major issue: open write access policy: there is little to no validation of what goes into some of these databases, an efforts to create an amalgam of all such IRRs inherit the issue of dubious authenticity of individual entries.</li>
+<li>An additional concern is that objects in the database tend to go stale quickly due to lack of maintenance. These issues render the quality of the IRR data questionable and make its use to automatically build route filters problematic.</li>
 </ul>
 </li>
-<li>IP分片和重组(Fragmentation &amp; Reassembly)<ul>
-<li>网络链路有MTU (最大传输单元)</li>
-<li>大的IP数据报在网络上被分片fragment</li>
-<li>在最终的目标主机重组：定时器，只要定时器到了，任何一片没有到，整个包都丢掉</li>
-<li>IP头部的信息被用于标识，排序相关分片，fragflag是否是最后一片</li>
+<li>RPKI<ul>
+<li>provide assurance as to which party can speak authoritatively for an IP address block.</li>
+<li>not guarantee that the data is up-to-date</li>
+<li>RPKI origin validation has two operational components: route origin attestation and signing, and route origin validation.</li>
 </ul>
 </li>
-<li>IP编址<ul>
-<li>IP地址<ul>
-<li>32位，对主机或者路由器的接口编址</li>
-<li>包括子网部分（高位）和主机部分（地位）</li>
-</ul>
-</li>
-<li>子网<ul>
-<li>IP地址的高位部分相同</li>
-<li>无需路由器介入</li>
-</ul>
-</li>
-<li>IP地址分类<ul>
-<li>A: 0开头，1.0.0.0-127.255.255.255 网络2^7-2 主机2^24-2</li>
-<li>B: 10开头，128.0.0.0-191.255.255.255 网络2^14-2 主机2^16-2</li>
-<li>C：110开头，192.0.0.0-223.255.255.255 网络200多万 主机2^8-2</li>
-<li>D： multicast</li>
-<li>E： reserved for future</li>
-</ul>
-</li>
-<li>IP编址: CIDR<ul>
-<li>CIDR: Classless InterDomain Routing（无类 域间路由）<ul>
-<li>子网部分可以在任意的位置</li>
-<li>地址格式: a.b.c.d&#x2F;x,其中 x是 地址中子网号的长度</li>
-<li>子网掩码：32位 网络号1 主机号0</li>
-<li>查找网络号：子网掩码 and IP地址（与操作）；因为在路由中只有网络号有意义，主机号没有意义</li>
-<li>路由转发表，按照表项中的网络号转发；如果都没有找到,则使用默认表项转发数据报</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>获得一个IP地址<ul>
-<li>系统管理员配置</li>
-<li>DHCP: Dynamic Host Configuration Protocol<ul>
-<li>从DHCP服务器中动态获得一个IP地址</li>
-<li>plug-and-play</li>
-<li>配置IP地址、子网掩码、默认网关、默认出口</li>
-</ul>
-</li>
-<li>获得一个网络的一小块子网<ul>
-<li>从ISP获得地址块中分配一个小地址块（在子网的网络号中，拿出几位作为子网号）</li>
-<li>层次编址：路由聚集（route aggregation）<ul>
-<li>减少路由通告的数量</li>
-<li>E.g. </li>
-<li>Org0: 200.23.16.0&#x2F;23（16&#x3D;0001｜000｜0）</li>
-<li>Org1: 200.23.18.0&#x2F;23（18&#x3D;0001｜001｜0）</li>
-<li>…</li>
-<li>Org7: 200.23.30.0&#x2F;23（30&#x3D;0001｜111｜0）</li>
-<li>路由器发现Org0-Org7可以聚集（more specific routes）：200.23.16.0&#x2F;20</li>
-<li>聚集有时不是精确的，比如路由器拿到了Org0-Org7中的7个，也可以“吹牛”说自己可以转发200.23.16.0&#x2F;20，（允许聚集有空洞）；这样会导致多个路由表项与之匹配，此时采用“最长前缀匹配”，匹配最精确的路由表项进行转发</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>一个ISP如何获得一个地址块<ul>
-<li>ICANN: Internet Corporation for Assigned Names and Numbers</li>
-<li>分配地址、管理DNS、分配域名，解决冲突</li>
+<li>RPKI origin validation signing: Route Origin Authorization<ul>
+<li>These RPKI certificates may be CA certificates when the subject entity is itself a local Internet registry (LIR) that performs number allocations, or they may be End Entity certificates (EE certificates) that are used to certify a key used to generate a digital signature.</li>
+<li>ROA (Route Origin Authorization): A ROA is a cryptographically verifiable statement that says: “Prefix P (and its subprefixes, up to the specified maximum prefix length) can be announced by the Autonomous System Number A, signed: the holder of the IP address block corresponding to prefix P.” <ul>
+<li>There can be multiple ROAs covering the same prefix. <ul>
+<li>Multihoming, where two (or more) ISPs originate a prefix. </li>
+<li>An ISP transitions some address space from one ASN to another.</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li>NAT: Network Address Translation<ul>
-<li>本地网络只有一个有效IP地址，映射内网所有地址</li>
-<li>作用<ul>
-<li>省钱</li>
-<li>内网地址改变不需要通知外网</li>
-<li>外网地址改变不需要修改内网地址</li>
-<li>安全：局域网内部的设备没有明确的地址，对外不可见</li>
+<li>Resource PKI: Delegated Repository vs. Hosted Model<ul>
+<li>The RIRs developed a hosted model</li>
 </ul>
 </li>
-<li>支持NAT的路由器<ul>
-<li>外出数据包：替换源地址和端口号为NAT IP地址和新的端口号，目标IP和端口不变</li>
-<li>记住每个转换替换对</li>
-<li>进入数据包：替换目标IP地址和端口号，采用存储在NAT映射表mapping表项 【源IP，端口】</li>
+<li>RPKI origin validation: Route Origin Validation (ROV)<ul>
+<li>ROV is a process used by routers at ISP BGP peering points to automatically accept or reject BGP route announcements based on a precomputed filter list derived from the Resource PKI and ROAs. </li>
+<li>Routers performing ROV used in peering do not need to perform the CPU intensive cryptographic functions necessary to validate the ROAs’ digital signatures, the precursor to forming and maintaining route announcement filters. </li>
+<li>BGP routers rely on external computers running validator software to perform the cryptographic validation and build prefix filters based on validated ROAs, augmented potentially by other local sources of routing policies. </li>
+<li>To perform this task, the software needs to be constantly synchronized with all ROA repositories across the Internet.</li>
+<li>Building this list starts with downloading five TALs, one from each of the RIRs. Once the TALs are obtained, the validator software can follow the publication pointers in the chain of certificates and recursively download certificates and signed product ROAs from the various Resource PKI repositories.</li>
+<li>Local knowledge can be added to the list of synchronized ROAs. (e.g. private IP addresses)</li>
+<li>Once the list of all valid ROAs is obtained, the next step is the synchronization of the peering routers with validator software.</li>
 </ul>
 </li>
-<li>NAT穿越问题：如果客户端需要连接在NAT后面的服务器<ul>
-<li>静态配置NAT</li>
-<li>Universal Plug and Play (UPnP) ；Internet Gateway Device (IGD)协议：允许服务器查询&#x2F;增加&#x2F;删除NAT中的mapping表项</li>
-<li>中继 (used in Skype)：NAT后面的服务器主动建立和中继的连接，外部的客户端链接到中继</li>
+<li>Data quality<ul>
+<li>Frivolous Origin ASN: A ROA is signed by the owner of an IP prefix, not by the owner of the AS number. As such it is entirely possible to insert frivolous ROAs into the system, signed by the rightful owner of an address block, but asserting some arbitrary AS number as the authorized origin AS.</li>
+<li>Different maximum prefix length: Two ROAs have the same prefix but different maximum prefix lengths. The larger ROA will stay in the system until it expires.</li>
+<li>Stale Data</li>
+</ul>
+</li>
+<li>Other Usage of Resource PKI<ul>
+<li>Some policy proposals in several RIRs have been adopted, or are under discussion, to use the Resource PKI to validate the data in the IRR and remove bogus entries. For example, see RIPE’s object clean-up proposal. <a target="_blank" rel="noopener" href="https://www.ripe.net/publications/docs/ripe-731">https://www.ripe.net/publications/docs/ripe-731</a></li>
+<li>As most legacy addresses are within the ARIN region, many of those legacy blocks cannot be covered by ROAs. While RPKI origin validation adoption is still low, this legacy address issue at ARIN has not been a major problem.</li>
 </ul>
 </li>
 </ul>
-</li>
-<li>IPV6<ul>
-<li>数据报<ul>
-<li>固定的40字节头部</li>
-<li>数据报传输过程中，不允许分片</li>
-<li>Priority：流中数据报的优先级</li>
-<li>Next header：上层协议</li>
+<h2 id="3-From-One-Root-at-IANA-to-Five-or-More-Roots"><a href="#3-From-One-Root-at-IANA-to-Five-or-More-Roots" class="headerlink" title="3.From One Root at IANA to Five (or More) Roots"></a>3.From One Root at IANA to Five (or More) Roots</h2><ul>
+<li>Five RIR TALs for RPKI Origin Validation<ul>
+<li>This would still generate complexities in the certificate infrastructure when number resources are moved from one RIR to another. </li>
+<li>Each RIR, by virtue of this new technical capability claims coverage for the entire address space and AS number space. </li>
+<li>Coordination</li>
+<li>Conflicts</li>
+<li>More than five TALs(Trust anchor location)</li>
 </ul>
 </li>
-<li>IPv4 -&gt; IPv6<ul>
-<li>隧道Tunneling：在IPv4路由器之间传输的IPv4数据报中携带IPv6数据报</li>
-<li>IPv4&#x2F;IPv6双栈服务器，将IPv6数据完整的封装在IPv4分组中</li>
-</ul>
-</li>
+<li>AS0: Covering Unallocated Space<ul>
+<li>IP address space squatting. An ISP, wittingly or unwittingly, is convinced to announce unallocated IP address space. This usually gets detected and fixed fairly quickly, but for a period of time, hours or days, that address block is connected.</li>
+<li>The recommendation was that IANA should issue an AS 0 ROA for all reserved IPv4 and IPv6 resources not intended to be routed.</li>
 </ul>
 </li>
 </ul>
@@ -413,7 +374,7 @@
                     
                         <a href="/tags/Note/"># Note</a>
                     
-                        <a href="/tags/Computer-Network/"># Computer Network</a>
+                        <a href="/tags/RPKI/"># RPKI</a>
                     
                         
                 </span>
@@ -426,10 +387,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/09/06/RPKI-Technical-Analysis-Part1/">RPKI-Technical Analysis(Part1)</a>
             
-            
-            <a class="next" rel="next" href="/2023/09/04/RPKI-%E5%8D%8E%E4%B8%BARPKI%E7%A7%91%E6%99%AE/">RPKI-华为RPKI科普</a>
+            <a class="next" rel="next" href="/2023/09/05/CN4-3-IP%E5%8D%8F%E8%AE%AE/">CN4.3 IP协议</a>
             
         </section>
 
