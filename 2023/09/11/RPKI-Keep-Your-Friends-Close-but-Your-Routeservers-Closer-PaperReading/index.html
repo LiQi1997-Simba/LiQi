@@ -13,7 +13,7 @@
 
 
 
-<title>RPKI-IRR Hygiene in the RPKI Era (PaperReading) | Simba&#39;s Homepage</title>
+<title>RPKI-Keep Your Friends Close, but Your Routeservers Closer (PaperReading) | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">RPKI-IRR Hygiene in the RPKI Era (PaperReading)</h1>
+            <h1 class="post-title">RPKI-Keep Your Friends Close, but Your Routeservers Closer (PaperReading)</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">September 11, 2023&nbsp;&nbsp;11:13:29</a>
+                        Date: <a href="#">September 11, 2023&nbsp;&nbsp;16:15:19</a>
                         </span>
                     
                     <!-- 
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">779</a> 
+                        <a href="">633</a> 
                         
                         </span>
                         
@@ -254,7 +254,7 @@
                         
                         Time:
                         
-                        <a href="">4min</a> 
+                        <a href="">3min</a> 
                         
                         </span>
                         
@@ -264,130 +264,86 @@
         </header>
 
         <div class="post-content">
-            <h1 id="RPKI-IRR-Hygiene-in-the-RPKI-Era"><a href="#RPKI-IRR-Hygiene-in-the-RPKI-Era" class="headerlink" title="RPKI-IRR Hygiene in the RPKI Era"></a>RPKI-IRR Hygiene in the RPKI Era</h1><p>Note of paper “IRR Hygiene in the RPKI Era” (PAM ‘22)</p>
+            <h1 id="Keep-Your-Friends-Close-but-Your-Routeservers-Closer-Insights-into-RPKI-Validation-in-the-Internet-USENIX-Security-‘23"><a href="#Keep-Your-Friends-Close-but-Your-Routeservers-Closer-Insights-into-RPKI-Validation-in-the-Internet-USENIX-Security-‘23" class="headerlink" title="Keep Your Friends Close, but Your Routeservers Closer: Insights into RPKI Validation in the Internet (USENIX Security ‘23)"></a>Keep Your Friends Close, but Your Routeservers Closer: Insights into RPKI Validation in the Internet (USENIX Security ‘23)</h1><p>Dataset: (ROV)[<a target="_blank" rel="noopener" href="https://sit4.me/rpki]">https://sit4.me/rpki]</a></p>
 <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
-<li>IRR &amp; RPKI<ul>
-<li>Improve routing security in the Border Gateway Protocol (BGP) by allowing networks to register information and develop route filters based on information other networks have registered.</li>
-<li>IRR: 基于签名的系统，IRR的签名可以由任何人创建(lack of validation standards, not strictly validated)</li>
-<li>RPKI: 基于证书的系统，RPKI证书由根CA颁发</li>
+<li>BGP prefix hijacks: BGP prefix hijacks allow adversaries to intercept, manipulate, and blackhole communication.</li>
+<li>Filtering invalid routes with RPKI<ul>
+<li>Our goal is to understand how ROV in different network types affects the propagation of invalid paths and how effective ROV deployments are in blocking hijacks.</li>
 </ul>
 </li>
-<li>Goal: Protect against unauthorized origin announcements (origin validation check)</li>
-<li>IRR and RPKI operate in parallel<ul>
-<li>Telia Carrier (recently rebranded to Arelion), a participant of MANRS, helps its customers keep their IRR records current and drops all RPKI invalid routes [5]</li>
-<li>IRR is inaccurate due to improper hygiene (no penalty to the address space owner for not updating the origin information after changes in routing policy or prefix ownership)</li>
-<li>Increase inconsistency between IRR and RPKI</li>
-</ul>
-</li>
-</ul>
-<h2 id="Background-and-Related-Work"><a href="#Background-and-Related-Work" class="headerlink" title="Background and Related Work"></a>Background and Related Work</h2><ul>
-<li>IRR<ul>
-<li>Use Routing Policy Specification Language (RPSL)<ul>
-<li>mntner: contains authentication information required to create, modify, and delete other IRR objects</li>
-<li>aut-num: contains the name and routing policies of an AS</li>
-<li>route &#x2F; route6: contain IPv4 and IPv6 prefixes and their origin AS information<ul>
-<li>e.g., route: 137.110.0.0&#x2F;16 origin: AS7377</li>
+<li>Measurements of ROV: a combination of control and data-plane measurements [PIPE Atlas]</li>
+<li>Research Goals: To gain insights into how far the invalid routes can reach, the scope of the affected networks, the impact of ROV on the reachability of ASes, which parts of the Internet are not protected, and which networks play a central role in providing global protection against hijacks.</li>
+<li>Technical contributions: <ul>
+<li>Improved ROV measurements</li>
+<li>Invalid paths over IXPs</li>
+<li>Propagation of invalid routes</li>
 </ul>
 </li>
 </ul>
-</li>
-<li>IRR mismatching information: 55% outdated (Khan, A Comparative Study on IP Prefixes and Their Origin Ases in BGP and the IRR, SIGCOMM’13)</li>
-</ul>
-</li>
-<li>RPKI<ul>
-<li>ROA<ul>
-<li>Format: IP Prefix, ASN, Max Length<ul>
-<li>E.g., 137.110.0.0&#x2F;16, AS7377, 20</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Misconfigurations caused invalid announcements decreased (Chung, RPKI is Coming of Age: A Longitudinal Study of RPKI Deployment and Invalid Route Origins. IMC’19)</li>
-<li>More transit and content providers had started to enforce RPKI-based filtering, and fewer illicit BGP announcements were propagating across networks. (Testart, To Filter or not to Filter: Measuring the Benefits of Registering in the RPKI Today, PAM’20)</li>
-<li>Caching servers of up to 20% of deployed RPKI RPs did not fetch complete or timely copies of RPKI data (Kristoff, On Measuring RPKI Relying Parties, IMC’20)</li>
-</ul>
-</li>
-</ul>
-<h2 id="Datasets"><a href="#Datasets" class="headerlink" title="Datasets"></a>Datasets</h2><ul>
-<li>Analysis of the causes of inconsistency<ul>
-<li>CAIDA’s Inferred AS to Organization Mappings (as2org)<ul>
-<li>authoritative IRR information</li>
-</ul>
-</li>
-<li>Routeviews Prefix to AS mappings for IPv4 and IPv6 (pfx2as) </li>
-<li>AS Relationships</li>
-<li>AS Rank</li>
-</ul>
-</li>
-<li>IRR datasets<ul>
-<li>Routing Assets Database (RADB)</li>
-<li>RIPE IRR </li>
-<li>APNIC IRR</li>
-<li>APNIC IRR</li>
-</ul>
-</li>
-<li>RPKI datasets<ul>
-<li>RIPE NCC publishes daily validated ROA objects from all five RPKI trust anchors (APNIC, ARIN, RIPE NCC, AFRINIC, LACNIC)</li>
-</ul>
-</li>
-<li>MANRS Participants <ul>
-<li>Mutually Agreed Norms for Routing Security (MANRS) project publishes its list of participants on its website.</li>
+<h2 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h2><ul>
+<li>Approaches for measuring ROV.<br><img src="/2023/09/11/RPKI-Keep-Your-Friends-Close-but-Your-Routeservers-Closer-PaperReading/1.png" alt="Measuring ROV"><ul>
+<li>In 2023, an online service called RoVista4 was set up for reporting ROV enforcement.</li>
+<li>[9] passively monitored ASes that originated valid and invalid BGP announcements, and then collected ASes that were on the paths towards the valid prefix, but not on the paths towards the invalid prefix.\</li>
+<li>[7] passively analyzed the historical data from RouteViews to identify changes in routing behavior</li>
+<li>Cloudflare: community-driven effort to summarize ROV implementation of large providers.</li>
+<li>Asia-Pacific Network Information Centre (APNIC): Dataset</li>
 </ul>
 </li>
 </ul>
 <h2 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h2><ul>
-<li>Classification of IRR records<ul>
-<li>Consistent: Records that show full consistency in prefix and origin AS.</li>
-<li>Inconsistent ASN:  The ASN in an IRR record does not equal that of the ROA.</li>
-<li>Inconsistent length: The ASNs are the same, but the prefix length differs.</li>
-<li>Not in RPKI: No corresponding prefix in the ROA</li>
-</ul>
-</li>
-<li>Classification of ASes registered in IRR<ul>
-<li>Entirely Consistent: All its IRR records are classified</li>
-<li>Entirely Inconsistent: either inconsistent ASN or inconsistent length</li>
-<li>Mixed: associated with both consistent and inconsistent IRR records</li>
+<li>Hlavacek et al : Measuring ROV enforcement on the data plane with RIPE Atlas<ul>
+<li>For the data-plane measurements, RIPE Atlas is used, a collection of small devices distributed in different ASes of the Internet.</li>
+<li>Researchers can obtain access to those devices to run traceroute measurements from many observation points to a predetermined target.<br><img src="/2023/09/11/RPKI-Keep-Your-Friends-Close-but-Your-Routeservers-Closer-PaperReading/2.png"></li>
+<li>If any traceroute to a prefix is routed to a ROA-invalid AS, i.e., falls victim to the hijack, the path to that AS is considered invalid and all ASes on the path are marked as not enforcing ROV.<br><img src="/2023/09/11/RPKI-Keep-Your-Friends-Close-but-Your-Routeservers-Closer-PaperReading/3.png"></li>
+<li>false positives<ul>
+<li>AS 1 and AS 3 are wrongfully classified as ROV-enforcing. While the false positives might be reduced by using multiple origins, a lack of identification which on-path AS enforces ROV still leads to faulty classifications.</li>
 </ul>
 </li>
 </ul>
-<h2 id="Prefix-Origin-Pair-Consistency"><a href="#Prefix-Origin-Pair-Consistency" class="headerlink" title="Prefix Origin Pair Consistency"></a>Prefix Origin Pair Consistency</h2><ul>
-<li>IRR &amp; RPKI<br><img src="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/irr1.png"><ul>
-<li>IRR records &gt;&gt; RPKI records (nearly 10x)</li>
+</li>
+<li>Rodday et al.<ul>
+<li>use a single ASN to announce updates to the Internet and, similarly to [7], probe the paths that updates take over a large number of distributed RIPE Atlas probes.</li>
+<li>Strict Rules: They distinguish between ASes one hop away from their target and ASes 2+ hops away. ASes in a distance of one hop do not, by definition, have any AS between them and are thus not susceptible to false positives induced by other on-path ASes enforcing ROV. In the 2+ hop case, intermediate ASes may enforce ROV. </li>
+<li>increase in false negatives</li>
 </ul>
 </li>
-<li>IPv4 vs IPv6<ul>
-<li>RADB IRR: 28.3% matching ROA<br><img src="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/irr2.png"><ul>
-<li>Oct. 2021: RADB IRR dataset (v4, 21% has corresponding ROA): 38% consistent, 46% inconsistent ASN, 16% inconsistent length</li>
-</ul>
-</li>
-<li>RIPE IRR: 45.2% matching ROA<br><img src="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/irr3.png"><ul>
-<li>RIPE IRR has better-maintained records</li>
-</ul>
-</li>
-<li>APNIC IRR: highest consistency with RPKI</li>
-<li>The IRR databases operated by RIRs showed higher consistency with RPKI compared to RADB</li>
-</ul>
-</li>
-<li>Causes of Prefix Length Inconsistency<ul>
-<li>RPKI misconfiguration</li>
-<li>To find out whether the networks registered inaccurate IRR records or incorrectly used the RPKI Max Length, we compared the inconsistent length records to their BGP announcement and corresponding RPKI ROAs.<br><img src="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/irr4.png"></li>
-</ul>
-</li>
-<li>Analysis of ASN Inconsistency<ul>
-<li>Conflicts: any two IRR records with the same IP prefix but different origin ASes.<br><img src="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/irr5.png"></li>
-<li>This result contradicts the intuition that an inconsistent ASN record should be older than its correct counterpart because inaccurate IRR records are likely stale.</li>
-<li>Providers could proactively require their customers to remove their IRR entries upon reclamation of address space to promote good IRR maintenance</li>
+<li>Ours<ul>
+<li>announcing two prefixes from two ASes</li>
+<li>Divergence points</li>
 </ul>
 </li>
 </ul>
-<h2 id="ASes-behind-IRR-inconsistency"><a href="#ASes-behind-IRR-inconsistency" class="headerlink" title="ASes behind IRR inconsistency"></a>ASes behind IRR inconsistency</h2><p><img src="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/irr6.png"></p>
-<ul>
-<li>Table 3 shows that the authoritative RIPE IRR had few users outside of the RIPE service region, and the ASes had good IRR hygiene as a result of the validation requirement of the RIPE Database.</li>
+<h2 id="Measurements-of-ROV-Enforcement"><a href="#Measurements-of-ROV-Enforcement" class="headerlink" title="Measurements of ROV Enforcement"></a>Measurements of ROV Enforcement</h2><ul>
+<li>Control-Plane: Monitor the propagation of our BGP announcements on the control-plane<ul>
+<li>route collectors by Routeviews and the RIPE Routing Information Service (RIS).</li>
 </ul>
-<h2 id="Summary-and-Future-Work"><a href="#Summary-and-Future-Work" class="headerlink" title="Summary and Future Work"></a>Summary and Future Work</h2><ul>
-<li>The future of IRR can be promising, as new tools such as IRRd Version 4 have been developed to help operators automatically validate IRR information against RPKI. This could further improve the accuracy of the IRR and contribute to better routing security.</li>
+</li>
+<li>Data-Plane: <ul>
+<li>Traceroute packets</li>
+<li>IP addresses on Traceroute paths are mapped according to the CAIDA AS and IXP mapping</li>
 </ul>
-
+</li>
+</ul>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><ul>
+<li>How many ASes enforce ROV<ul>
+<li>Control-plane results<br><img src="/2023/09/11/RPKI-Keep-Your-Friends-Close-but-Your-Routeservers-Closer-PaperReading/4.png"></li>
+<li>Data-plane results<br><img src="/2023/09/11/RPKI-Keep-Your-Friends-Close-but-Your-Routeservers-Closer-PaperReading/5.png"></li>
+</ul>
+</li>
+<li>Characterization of ASes with ROV<ul>
+<li>Europe (30.3%) and North America (23.5%) have significantly higher rates of enforcing ASes than the rest of the world.</li>
+<li>IXPs (Internet Exchange Points) and stub-ASes have a significantly higher rate of indirect protection or the lack of positive evidence than ISPs (Internet Service Providers).</li>
+<li>ASes that enforce ROV strictly tend to be larger than non-enforcing ASes.</li>
+</ul>
+</li>
+<li>Validation of our results<ul>
+<li>validation of ROV measurements is still an open question. (no ground-truth)</li>
+<li>Cloudflare: community-driven effort to summarize ROV implementation of large providers.</li>
+<li>Asia-Pacific Network Information Centre (APNIC): Dataset</li>
+</ul>
+</li>
+</ul>
+<h2 id="Invalid-Paths-over-Internet-Exchanges"><a href="#Invalid-Paths-over-Internet-Exchanges" class="headerlink" title="Invalid Paths over Internet Exchanges"></a>Invalid Paths over Internet Exchanges</h2><h2 id="Propagation-of-Invalid-Paths"><a href="#Propagation-of-Invalid-Paths" class="headerlink" title="Propagation of Invalid Paths"></a>Propagation of Invalid Paths</h2>
         </div>
 
         
@@ -419,14 +375,6 @@
                 <span>Tag(s):</span>
                 <span class="tag">
                     
-                    
-                        <a href="/tags/Note/"># Note</a>
-                    
-                        <a href="/tags/RPKI/"># RPKI</a>
-                    
-                        <a href="/tags/Paper-Reading/"># Paper Reading</a>
-                    
-                        
                 </span>
             </div>
             <div>
@@ -437,10 +385,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/09/11/RPKI-Keep-Your-Friends-Close-but-Your-Routeservers-Closer-PaperReading/">RPKI-Keep Your Friends Close, but Your Routeservers Closer (PaperReading)</a>
             
-            
-            <a class="next" rel="next" href="/2023/09/06/GNN-2-1-DeepWalk-Code/">GNN2.1 DeepWalk(Code)</a>
+            <a class="next" rel="next" href="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/">RPKI-IRR Hygiene in the RPKI Era (PaperReading)</a>
             
         </section>
 
