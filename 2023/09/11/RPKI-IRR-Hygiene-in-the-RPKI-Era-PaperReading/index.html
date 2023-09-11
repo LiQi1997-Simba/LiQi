@@ -13,7 +13,7 @@
 
 
 
-<title>GNN1.2 Graph基础知识(Code) | Simba&#39;s Homepage</title>
+<title>RPKI-IRR Hygiene in the RPKI Era (PaperReading) | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">GNN1.2 Graph基础知识(Code)</h1>
+            <h1 class="post-title">RPKI-IRR Hygiene in the RPKI Era (PaperReading)</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +205,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">September 01, 2023&nbsp;&nbsp;22:54:11</a>
+                        Date: <a href="#">September 11, 2023&nbsp;&nbsp;11:13:29</a>
                         </span>
                     
                     <!-- 
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/Graph-Neural-Networks/">Graph Neural Networks</a>
+                                <a href="/categories/Resource-Public-Key-Infrastructure/">Resource Public Key Infrastructure</a>
                             
                         </span>
                      -->
@@ -224,7 +224,7 @@
                         
                         
                         
-                        <a href="/categories/Graph-Neural-Networks/">Graph Neural Networks</a>
+                        <a href="/categories/Resource-Public-Key-Infrastructure/">Resource Public Key Infrastructure</a>
                         
                         
                         
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">469</a> 
+                        <a href="">768</a> 
                         
                         </span>
                         
@@ -254,7 +254,7 @@
                         
                         Time:
                         
-                        <a href="">2min</a> 
+                        <a href="">4min</a> 
                         
                         </span>
                         
@@ -264,11 +264,128 @@
         </header>
 
         <div class="post-content">
-            <h1 id="GNN学习笔记"><a href="#GNN学习笔记" class="headerlink" title="GNN学习笔记"></a>GNN学习笔记</h1><p><a target="_blank" rel="noopener" href="http://www.bilibili.com/video/BV1K5411H7EQ">GNN从入门到精通</a>课程笔记</p>
-<h2 id="1-2-Graph基础知识代码"><a href="#1-2-Graph基础知识代码" class="headerlink" title="1.2 Graph基础知识代码"></a>1.2 Graph基础知识代码</h2><p>使用networkx库</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> networkx <span class="keyword">as</span> nx</span><br><span class="line"></span><br><span class="line">edges = pd.DataFrame()</span><br><span class="line">edges[<span class="string">&#x27;sources&#x27;</span>] = [<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">7</span>,<span class="number">9</span>,<span class="number">1</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">8</span>]</span><br><span class="line">edges[<span class="string">&#x27;targets&#x27;</span>] = [<span class="number">1</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">8</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">7</span>,<span class="number">9</span>]</span><br><span class="line">edges.columns = [<span class="string">&#x27;sources&#x27;</span>,<span class="string">&#x27;targets&#x27;</span>]</span><br><span class="line"></span><br><span class="line">G = nx.from_pandas_edgelist(edges, source=<span class="string">&#x27;sources&#x27;</span>,target=<span class="string">&#x27;targets&#x27;</span>)</span><br><span class="line"><span class="comment">#degree</span></span><br><span class="line"><span class="built_in">print</span>(nx.degree(G))</span><br><span class="line"><span class="comment">#连通分量  </span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(nx.connected_components(G)))</span><br><span class="line"><span class="comment">#图直径</span></span><br><span class="line"><span class="built_in">print</span>(nx.diameter(G))</span><br><span class="line"><span class="comment">#度中心性</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;度中心性&#x27;</span>,nx.degree_centrality(G))</span><br><span class="line"><span class="comment">#特征向量中心性</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;特征向量中心性&#x27;</span>,nx.eigenvector_centrality(G))</span><br><span class="line"><span class="comment">#betweenness</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;betweenness&#x27;</span>,nx.betweenness_centrality((G)))</span><br><span class="line"><span class="comment">#closeness</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;closeness&#x27;</span>,nx.closeness_centrality(G))</span><br><span class="line"><span class="comment">#pagerank</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;pagerank&#x27;</span>,nx.pagerank(G))</span><br><span class="line"><span class="comment">#HITS</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;HITS&#x27;</span>,nx.hits(G,tol=<span class="number">0.00001</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>运行结果</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[(0, 1), (1, 2), (4, 5), (2, 1), (3, 1), (6, 2), (7, 3), (5, 1), (8, 2), (9, 2)]</span><br><span class="line">[&#123;0, 1, 2, 3, 4, 5, 6, 7, 8, 9&#125;]</span><br><span class="line">4</span><br><span class="line">度中心性 &#123;0: 0.1111111111111111, 1: 0.2222222222222222, 4: 0.5555555555555556, 2: 0.1111111111111111, 3: 0.1111111111111111, 6: 0.2222222222222222, 7: 0.3333333333333333, 5: 0.1111111111111111, 8: 0.2222222222222222, 9: 0.2222222222222222&#125;</span><br><span class="line">特征向量中心性 &#123;0: 0.10581121486512898, 1: 0.26822822377524, 4: 0.5741403289553503, 2: 0.22648750077754073, 3: 0.22648750077754073, 6: 0.26822822377524, 7: 0.4660017030178054, 5: 0.10581121486512898, 8: 0.3035846941076944, 9: 0.3035846941076944&#125;</span><br><span class="line">betweenness &#123;0: 0.0, 1: 0.2222222222222222, 4: 0.861111111111111, 2: 0.0, 3: 0.0, 6: 0.2222222222222222, 7: 0.38888888888888884, 5: 0.0, 8: 0.0, 9: 0.0&#125;</span><br><span class="line">closeness &#123;0: 0.3333333333333333, 1: 0.47368421052631576, 4: 0.6923076923076923, 2: 0.42857142857142855, 3: 0.42857142857142855, 6: 0.47368421052631576, 7: 0.5294117647058824, 5: 0.3333333333333333, 8: 0.375, 9: 0.375&#125;</span><br><span class="line">pagerank &#123;0: 0.06035578534762892, 1: 0.10672083674530217, 4: 0.23774895855004277, 2: 0.055417825677585866, 3: 0.055417825677585866, 6: 0.10672083674530217, 7: 0.1335118554544986, 5: 0.06035578534762892, 8: 0.09187514522721238, 9: 0.09187514522721238&#125;</span><br><span class="line">HITS (&#123;0: 0.03714744932158016, 1: 0.09416816089252279, 4: 0.20156725889739097, 2: 0.07951423776160028, 3: 0.07951423776160028, 6: 0.09416816089252278, 7: 0.1636048227643626, 5: 0.03714744932158016, 8: 0.10658411119341998, 9: 0.10658411119342&#125;, &#123;0: 0.037147449321580275, 1: 0.09416816089252263, 4: 0.20156725889739135, 2: 0.07951423776160016, 3: 0.07951423776160016, 6: 0.09416816089252263, 7: 0.16360482276436247, 5: 0.03714744932158023, 8: 0.10658411119342008, 9: 0.10658411119342005&#125;)</span><br></pre></td></tr></table></figure>
+            <h1 id="RPKI-IRR-Hygiene-in-the-RPKI-Era"><a href="#RPKI-IRR-Hygiene-in-the-RPKI-Era" class="headerlink" title="RPKI-IRR Hygiene in the RPKI Era"></a>RPKI-IRR Hygiene in the RPKI Era</h1><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>IRR &amp; RPKI<ul>
+<li>Improve routing security in the Border Gateway Protocol (BGP) by allowing networks to register information and develop route filters based on information other networks have registered.</li>
+<li>IRR: 基于签名的系统，IRR的签名可以由任何人创建(lack of validation standards, not strictly validated)</li>
+<li>RPKI: 基于证书的系统，RPKI证书由根CA颁发</li>
+</ul>
+</li>
+<li>Goal: Protect against unauthorized origin announcements (origin validation check)</li>
+<li>IRR and RPKI operate in parallel<ul>
+<li>Telia Carrier (recently rebranded to Arelion), a participant of MANRS, helps its customers keep their IRR records current and drops all RPKI invalid routes [5]</li>
+<li>IRR is inaccurate due to improper hygiene (no penalty to the address space owner for not updating the origin information after changes in routing policy or prefix ownership)</li>
+<li>Increase inconsistency between IRR and RPKI</li>
+</ul>
+</li>
+</ul>
+<h2 id="Background-and-Related-Work"><a href="#Background-and-Related-Work" class="headerlink" title="Background and Related Work"></a>Background and Related Work</h2><ul>
+<li>IRR<ul>
+<li>Use Routing Policy Specification Language (RPSL)<ul>
+<li>mntner: contains authentication information required to create, modify, and delete other IRR objects</li>
+<li>aut-num: contains the name and routing policies of an AS</li>
+<li>route &#x2F; route6: contain IPv4 and IPv6 prefixes and their origin AS information<ul>
+<li>e.g., route: 137.110.0.0&#x2F;16 origin: AS7377</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>IRR mismatching information: 55% outdated (Khan, A Comparative Study on IP Prefixes and Their Origin Ases in BGP and the IRR, SIGCOMM’13)</li>
+</ul>
+</li>
+<li>RPKI<ul>
+<li>ROA<ul>
+<li>Format: IP Prefix, ASN, Max Length<ul>
+<li>E.g., 137.110.0.0&#x2F;16, AS7377, 20</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Misconfigurations caused invalid announcements decreased (Chung, RPKI is Coming of Age: A Longitudinal Study of RPKI Deployment and Invalid Route Origins. IMC’19)</li>
+<li>More transit and content providers had started to enforce RPKI-based filtering, and fewer illicit BGP announcements were propagating across networks. (Testart, To Filter or not to Filter: Measuring the Benefits of Registering in the RPKI Today, PAM’20)</li>
+<li>Caching servers of up to 20% of deployed RPKI RPs did not fetch complete or timely copies of RPKI data (Kristoff, On Measuring RPKI Relying Parties, IMC’20)</li>
+</ul>
+</li>
+</ul>
+<h2 id="Datasets"><a href="#Datasets" class="headerlink" title="Datasets"></a>Datasets</h2><ul>
+<li>Analysis of the causes of inconsistency<ul>
+<li>CAIDA’s Inferred AS to Organization Mappings (as2org)<ul>
+<li>authoritative IRR information</li>
+</ul>
+</li>
+<li>Routeviews Prefix to AS mappings for IPv4 and IPv6 (pfx2as) </li>
+<li>AS Relationships</li>
+<li>AS Rank</li>
+</ul>
+</li>
+<li>IRR datasets<ul>
+<li>Routing Assets Database (RADB)</li>
+<li>RIPE IRR </li>
+<li>APNIC IRR</li>
+<li>APNIC IRR</li>
+</ul>
+</li>
+<li>RPKI datasets<ul>
+<li>RIPE NCC publishes daily validated ROA objects from all five RPKI trust anchors (APNIC, ARIN, RIPE NCC, AFRINIC, LACNIC)</li>
+</ul>
+</li>
+<li>MANRS Participants <ul>
+<li>Mutually Agreed Norms for Routing Security (MANRS) project publishes its list of participants on its website.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h2><ul>
+<li>Classification of IRR records<ul>
+<li>Consistent: Records that show full consistency in prefix and origin AS.</li>
+<li>Inconsistent ASN:  The ASN in an IRR record does not equal that of the ROA.</li>
+<li>Inconsistent length: The ASNs are the same, but the prefix length differs.</li>
+<li>Not in RPKI: No corresponding prefix in the ROA</li>
+</ul>
+</li>
+<li>Classification of ASes registered in IRR<ul>
+<li>Entirely Consistent: All its IRR records are classified</li>
+<li>Entirely Inconsistent: either inconsistent ASN or inconsistent length</li>
+<li>Mixed: associated with both consistent and inconsistent IRR records</li>
+</ul>
+</li>
+</ul>
+<h2 id="Prefix-Origin-Pair-Consistency"><a href="#Prefix-Origin-Pair-Consistency" class="headerlink" title="Prefix Origin Pair Consistency"></a>Prefix Origin Pair Consistency</h2><ul>
+<li>IRR &amp; RPKI<br><img src="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/irr1.png"><ul>
+<li>IRR records &gt;&gt; RPKI records (nearly 10x)</li>
+</ul>
+</li>
+<li>IPv4 vs IPv6<ul>
+<li>RADB IRR: 28.3% matching ROA<br><img src="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/irr2.png"><ul>
+<li>Oct. 2021: RADB IRR dataset (v4, 21% has corresponding ROA): 38% consistent, 46% inconsistent ASN, 16% inconsistent length</li>
+</ul>
+</li>
+<li>RIPE IRR: 45.2% matching ROA<br><img src="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/irr3.png"><ul>
+<li>RIPE IRR has better-maintained records</li>
+</ul>
+</li>
+<li>APNIC IRR: highest consistency with RPKI</li>
+<li>The IRR databases operated by RIRs showed higher consistency with RPKI compared to RADB</li>
+</ul>
+</li>
+<li>Causes of Prefix Length Inconsistency<ul>
+<li>RPKI misconfiguration</li>
+<li>To find out whether the networks registered inaccurate IRR records or incorrectly used the RPKI Max Length, we compared the inconsistent length records to their BGP announcement and corresponding RPKI ROAs.<br><img src="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/irr4.png"></li>
+</ul>
+</li>
+<li>Analysis of ASN Inconsistency<ul>
+<li>Conflicts: any two IRR records with the same IP prefix but different origin ASes.<br><img src="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/irr5.png"></li>
+<li>This result contradicts the intuition that an inconsistent ASN record should be older than its correct counterpart because inaccurate IRR records are likely stale.</li>
+<li>Providers could proactively require their customers to remove their IRR entries upon reclamation of address space to promote good IRR maintenance</li>
+</ul>
+</li>
+</ul>
+<h2 id="ASes-behind-IRR-inconsistency"><a href="#ASes-behind-IRR-inconsistency" class="headerlink" title="ASes behind IRR inconsistency"></a>ASes behind IRR inconsistency</h2><p><img src="/2023/09/11/RPKI-IRR-Hygiene-in-the-RPKI-Era-PaperReading/irr6.png"></p>
+<ul>
+<li>Table 3 shows that the authoritative RIPE IRR had few users outside of the RIPE service region, and the ASes had good IRR hygiene as a result of the validation requirement of the RIPE Database.</li>
+</ul>
+<h2 id="Summary-and-Future-Work"><a href="#Summary-and-Future-Work" class="headerlink" title="Summary and Future Work"></a>Summary and Future Work</h2><ul>
+<li>The future of IRR can be promising, as new tools such as IRRd Version 4 have been developed to help operators automatically validate IRR information against RPKI. This could further improve the accuracy of the IRR and contribute to better routing security.</li>
+</ul>
 
         </div>
 
@@ -302,9 +419,9 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/GNN/"># GNN</a>
+                        <a href="/tags/Note/"># Note</a>
                     
-                        <a href="/tags/Code/"># Code</a>
+                        <a href="/tags/RPKI/"># RPKI</a>
                     
                         
                 </span>
@@ -317,10 +434,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/09/02/CN5-2-%E4%BC%A0%E7%BB%9F%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E7%AE%97%E6%B3%95/">CN5.2 传统路由选择算法</a>
             
-            
-            <a class="next" rel="next" href="/2023/09/01/CN5-1-%E7%BD%91%E7%BB%9C%E5%B1%82%E6%8E%A7%E5%88%B6%E5%B9%B3%E9%9D%A2%E5%AF%BC%E8%AE%BA/">CN5.1 网络层控制平面导论</a>
+            <a class="next" rel="next" href="/2023/09/06/GNN-2-1-DeepWalk-Code/">GNN2.1 DeepWalk(Code)</a>
             
         </section>
 
