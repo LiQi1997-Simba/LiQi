@@ -13,7 +13,7 @@
 
 
 
-<title>GNN2.1 DeepWalk(Code-Implementation) | Simba&#39;s Homepage</title>
+<title>GNN2.2 LINE | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">GNN2.1 DeepWalk(Code-Implementation)</h1>
+            <h1 class="post-title">GNN2.2 LINE</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">September 11, 2023&nbsp;&nbsp;20:47:34</a>
+                        Date: <a href="#">September 12, 2023&nbsp;&nbsp;08:59:25</a>
                         </span>
                     
                     <!-- 
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">301</a> 
+                        <a href="">458</a> 
                         
                         </span>
                         
@@ -254,7 +254,7 @@
                         
                         Time:
                         
-                        <a href="">1min</a> 
+                        <a href="">2min</a> 
                         
                         </span>
                         
@@ -265,12 +265,61 @@
 
         <div class="post-content">
             <h1 id="GNN学习笔记"><a href="#GNN学习笔记" class="headerlink" title="GNN学习笔记"></a>GNN学习笔记</h1><p><a target="_blank" rel="noopener" href="http://www.bilibili.com/video/BV1K5411H7EQ">GNN从入门到精通</a>课程笔记</p>
-<h2 id="2-1-DeepWalk-Code-Implementation"><a href="#2-1-DeepWalk-Code-Implementation" class="headerlink" title="2.1 DeepWalk (Code-Implementation)"></a>2.1 DeepWalk (Code-Implementation)</h2><p>DeepWalk: Online Learning of Social Representations (KDD’ 14)</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> networkx <span class="keyword">as</span> nx</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="keyword">from</span> gensim.models <span class="keyword">import</span> Word2Vec</span><br><span class="line"></span><br><span class="line">df = pd.read_csv(<span class="string">&quot;dataset/seealsology-data.tsv&quot;</span>, sep = <span class="string">&quot;\t&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(df.head())</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create a graph</span></span><br><span class="line">G = nx.from_pandas_edgelist(df, source = <span class="string">&quot;source&quot;</span>, target = <span class="string">&quot;target&quot;</span>, edge_attr = <span class="literal">True</span>, create_using = nx.Graph())</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Number of nodes:&quot;</span>, G.number_of_nodes())</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Number of edges:&quot;</span>, G.number_of_edges())</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">random_walk</span>(<span class="params">G, node, walk_length</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Simulate a random walk starting from start node.</span></span><br><span class="line"><span class="string">    G: NetworkX graph</span></span><br><span class="line"><span class="string">    node: Start node for the random walk</span></span><br><span class="line"><span class="string">    walk_length: Length of the random walk</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    walk = [node]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(walk_length - <span class="number">1</span>):</span><br><span class="line">        neighbors = <span class="built_in">list</span>(G.neighbors(node))</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(neighbors) == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        node = random.choice(neighbors)</span><br><span class="line">        walk.append(node)</span><br><span class="line">    <span class="keyword">return</span> walk</span><br><span class="line"></span><br><span class="line"><span class="comment"># Generate walks</span></span><br><span class="line">all_nodes = <span class="built_in">list</span>(G.nodes())</span><br><span class="line">random_walks = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> tqdm(all_nodes):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        random_walks.append(random_walk(G, n, <span class="number">10</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Number of random walks:&quot;</span>, <span class="built_in">len</span>(random_walks))</span><br><span class="line"></span><br><span class="line"><span class="comment"># Train Word2Vec model</span></span><br><span class="line">model = Word2Vec(window = <span class="number">4</span>, sg = <span class="number">1</span>, hs = <span class="number">0</span>,</span><br><span class="line">                 negative=<span class="number">10</span>, <span class="comment"># for negative sampling</span></span><br><span class="line">                 alpha=<span class="number">0.03</span>, min_alpha=<span class="number">0.0007</span>,</span><br><span class="line">                 seed=<span class="number">14</span>)</span><br><span class="line"></span><br><span class="line">model.build_vocab(random_walks, progress_per=<span class="number">2</span>)</span><br><span class="line">model.train(random_walks, total_examples = model.corpus_count, epochs=<span class="number">20</span>, report_delay=<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(model)</span><br></pre></td></tr></table></figure>
-
-<p>运行结果</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">           <span class="built_in">source</span>                         target  depth</span><br><span class="line">0  space research     advances <span class="keyword">in</span> space research      1</span><br><span class="line">1  space research  benefits of space exploration      1</span><br><span class="line">2  space research    committee on space research      1</span><br><span class="line">3  space research         deep space exploration      1</span><br><span class="line">4  space research        lists of space programs      1</span><br><span class="line">Number of nodes: 510</span><br><span class="line">Number of edges: 680</span><br><span class="line">100%|████████████████████████████████████████| 510/510 [00:00&lt;00:00, 15529.95it/s]</span><br><span class="line">Number of random walks: 2550</span><br><span class="line">Word2Vec&lt;vocab=510, vector_size=100, alpha=0.03&gt;</span><br></pre></td></tr></table></figure>
-
+<h2 id="2-1-LINE-PaperReading"><a href="#2-1-LINE-PaperReading" class="headerlink" title="2.1 LINE (PaperReading)"></a>2.1 LINE (PaperReading)</h2><ul>
+<li>LINE: Large-scale Information Network Embedding (WWW ‘15)</li>
+<li>Abstract<ul>
+<li>The method optimizes a carefully designed objective function that preserves both the local and global network structures.</li>
+<li>An edge-sampling algorithm is proposed that addresses the limitation of the classical stochastic gradient descent and improves both the effectiveness and the efficiency of the inference. </li>
+<li>(Practically, DeepWalk only applies to unweighted networks)</li>
+</ul>
+</li>
+<li>Introduction<ul>
+<li>The local structures are represented by the observed links in the networks, which capture the first-order proximity between the vertices. </li>
+<li>As a complement, we explore the second-order proximity between the vertices, which is not determined through the observed tie strength but through the shared neighborhood structures of the vertices.<ul>
+<li>Nodes with shared neighbors are likely to be similar.</li>
+</ul>
+</li>
+<li>The edge-sampling method, which improves both the effectiveness and efficiency of the inference.</li>
+</ul>
+</li>
+<li>Problem definition<br><img src="/2023/09/12/GNN-2-2-LINE/1.png"><ul>
+<li>First-order Proximity: For each pair of vertices linked by an edge (u, v), the weight on that edge, w_{uv}, indicates the first-order proximity between u and v. If no edge is observed between u and v, their first-order proximity is 0.</li>
+<li>The second-order proximity between a pair of vertices (u, v) in a network is the similarity between their neighborhood network structures. let p_u &#x3D; (w_{u,1}, . . . , w_{u,|V |}) denote the first-order proximity of u with all the other vertices, then the second-order proximity between u and v is determined by the similarity between p_u and p_v. If no vertex is linked from&#x2F;to both u and v, the second-order proximity between u and v is 0.</li>
+</ul>
+</li>
+<li>Method<ul>
+<li>Model Description<ul>
+<li>通过优化两个节点的之间某个特征（embedding之间的某个计算公式）和其经验概率（node之间的某个计算公式）的KL散度，使其和经验概率的距离不断接近，来优化node embedding.</li>
+<li>First-order proximity<br><img src="/2023/09/12/GNN-2-2-LINE/2.png" alt="first-order"><ul>
+<li>embedding特征：joint probability</li>
+<li>节点的特征：边的权重占图中所有边总权重的比例</li>
+</ul>
+</li>
+<li>Second-order Proximity<br><img src="/2023/09/12/GNN-2-2-LINE/3.png" alt="second-order"><ul>
+<li>embedding的特征：context， conditional distribution</li>
+<li>节点的特征：边的权重&#x2F;该节点的出度</li>
+</ul>
+</li>
+<li>Concatenate the embeddings of first-order proximity and second-order proximity.</li>
+</ul>
+</li>
+<li>Model Optimization<ul>
+<li>Negative sampling </li>
+<li>Asynchronous stochastic gradient algorithm (ASGD)</li>
+<li>Edge Sampling: The alias table method</li>
+</ul>
+</li>
+<li>Discussion<ul>
+<li>Low-degree vertices: Add higher-order neighbors</li>
+<li>New vertices<ul>
+<li>问题：之前节点的embedding还是需要重新计算？</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
         </div>
 
@@ -304,9 +353,9 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/GNN/"># GNN</a>
+                        <a href="/tags/Note/"># Note</a>
                     
-                        <a href="/tags/Code/"># Code</a>
+                        <a href="/tags/GNN/"># GNN</a>
                     
                         <a href="/tags/Paper-Reading/"># Paper Reading</a>
                     
@@ -321,10 +370,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/09/12/GNN-2-2-LINE/">GNN2.2 LINE</a>
             
-            
-            <a class="next" rel="next" href="/2023/09/11/RPKI-Keep-Your-Friends-Close-but-Your-Routeservers-Closer-PaperReading/">RPKI-Keep Your Friends Close, but Your Routeservers Closer (PaperReading)</a>
+            <a class="next" rel="next" href="/2023/09/11/GNN-2-1-DeepWalk-Code2/">GNN2.1 DeepWalk(Code-Implementation)</a>
             
         </section>
 
