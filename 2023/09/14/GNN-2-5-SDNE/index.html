@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">374</a> 
+                        <a href="">376</a> 
                         
                         </span>
                         
@@ -321,7 +321,7 @@
 </ul>
 </li>
 <li>Loss<ul>
-<li>L1_Loss:  torch.sum(adj * (embed<em>embed - 2</em>torch.mm(embed,embed.t)) + embed*embed.t)<ul>
+<li>L1_Loss:  torch.sum(adj * (embed*embed - 2*torch.mm(embed,embed.t)) + embed*embed.t)<ul>
 <li>矩阵乘法和转置运算来计算一个矩阵的平方和(L2 Norm)</li>
 </ul>
 </li>
