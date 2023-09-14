@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">375</a> 
+                        <a href="">374</a> 
                         
                         </span>
                         
@@ -309,7 +309,7 @@
 <li>Implement<ul>
 <li>深入理解AutoEncoder及其实现方法:<ul>
 <li># Node &#x3D; n, Adjacency Matrix S[n*n]</li>
-<li>Input (each batch): [bz,n] </li>
+<li>Input batch: [bz,n] </li>
 <li>Encoder: <ul>
 <li>encoder1 &#x3D; [n, e1]  outpupt1 &#x3D; [bz,n][n,e1] &#x3D; [bz,e1] </li>
 <li>encoder2 &#x3D; [e1, embed]  output2 &#x3D; [bz, e1][e1, embed] &#x3D; [bz,embed]</li>
@@ -321,11 +321,11 @@
 </ul>
 </li>
 <li>Loss<ul>
-<li>L1_Loss:  torch.sum(adj_t * (embed<em>embed - 2</em>torch.mm(embed,embed.t)) + embed*embed.t)<ul>
+<li>L1_Loss:  torch.sum(adj * (embed<em>embed - 2</em>torch.mm(embed,embed.t)) + embed*embed.t)<ul>
 <li>矩阵乘法和转置运算来计算一个矩阵的平方和(L2 Norm)</li>
 </ul>
 </li>
-<li>L2_Loss:  torch.sum(((adj - output) * b) * ((adj - output) * b))</li>
+<li>L2_Loss:  torch.sum(((adj_batch - output) * b) * ((adj_batch - output) * b))</li>
 <li>L2-norm regularizer:  \Sigma(torch.sum(torch.abs(param)) + args.nu2 * torch.sum(param * param))</li>
 </ul>
 </li>
