@@ -13,7 +13,7 @@
 
 
 
-<title>GNN2.5 SDNE(PaperReading) | Simba&#39;s Homepage</title>
+<title>GNN PageRank (PaperReading) | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">GNN2.5 SDNE(PaperReading)</h1>
+            <h1 class="post-title">GNN PageRank (PaperReading)</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">September 14, 2023&nbsp;&nbsp;22:35:00</a>
+                        Date: <a href="#">September 16, 2023&nbsp;&nbsp;13:51:50</a>
                         </span>
                     
                     <!-- 
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">377</a> 
+                        <a href="">204</a> 
                         
                         </span>
                         
@@ -254,7 +254,7 @@
                         
                         Time:
                         
-                        <a href="">2min</a> 
+                        <a href="">1min</a> 
                         
                         </span>
                         
@@ -264,73 +264,52 @@
         </header>
 
         <div class="post-content">
-            <h1 id="GNN学习笔记"><a href="#GNN学习笔记" class="headerlink" title="GNN学习笔记"></a>GNN学习笔记</h1><p><a target="_blank" rel="noopener" href="http://www.bilibili.com/video/BV1K5411H7EQ">GNN从入门到精通</a>课程笔记</p>
-<h2 id="2-5-SDNE-KDD-‘16"><a href="#2-5-SDNE-KDD-‘16" class="headerlink" title="2.5 SDNE (KDD ‘16)"></a>2.5 SDNE (KDD ‘16)</h2><ul>
-<li>Structural Deep Network Embedding (KDD ‘16)</li>
+            <h1 id="GNN学习笔记"><a href="#GNN学习笔记" class="headerlink" title="GNN学习笔记"></a>GNN学习笔记</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Hs4y157Ls">同济子豪兄：改变世界的谷歌PageRank算法</a>课程笔记</p>
+<p><strong>Google PageRank</strong></p>
+<ul>
+<li>The Anatomy of a Large-Scale Hypertextual Web Search Engine</li>
 </ul>
-<h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><ul>
-<li>semi-supervised deep model</li>
-<li>exploit the first-order and second-order proximity jointly to preserve the network structure.</li>
-<li>preserve both the local and global network structure and is robust to sparse networks.</li>
-</ul>
-<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><ul>
-<li>Challenges of learning network representations<ul>
-<li>High non-linearity</li>
-<li>Structure-preserving</li>
-<li>Sparsity</li>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>The web as a directive graph</li>
+<li>Ranking nodes on the graph</li>
+<li>Core idea: <ul>
+<li>Links as vote (In-comming links)</li>
+<li>Links from important pages count more</li>
+<li>Recurisive question</li>
 </ul>
 </li>
-<li>Semi-supervised architecture<ul>
-<li>The unsupervised component reconstructs the second-order proximity to preserve the global network structure.</li>
-<li>The supervised component exploits the first-order proximity as the supervised information to preserve the local network structure.</li>
+<li>Solusion<ul>
+<li>Measure the importance of nodes in the graph using the link structure.<br><img src="/2023/09/16/GNN-PageRank/1.png"></li>
+<li>r_j &#x3D; \Sigma_{i \leftarrow j}{\frac{r_i}{d_i}}<ul>
+<li>d_i is the outdegree of node i</li>
 </ul>
 </li>
-</ul>
-<h3 id="Structure-Deep-Network-Embedding"><a href="#Structure-Deep-Network-Embedding" class="headerlink" title="Structure Deep Network Embedding"></a>Structure Deep Network Embedding</h3><ul>
-<li>Definition<ul>
-<li>First-Order Proximity: The first-order proximity describes the pairwise proximity between vertexes. </li>
-<li>Second-Order Proximity: The second-order proximity between a pair of vertexes describes the proximity of the pair’s neighborhood structure.</li>
-</ul>
-</li>
-<li>Model<ul>
-<li>Adjacency matrix S: s_i &#x3D; {s_{i,j}}_{j&#x3D;1}^n, s_{i,j} &gt; 0 IFF there exists a link between v_i and v_j.</li>
-<li>Autoencoder: unsupervised -&gt; second-order proximity<br><img src="/2023/09/14/GNN-2-5-SDNE/1.png"><br><img src="/2023/09/14/GNN-2-5-SDNE/2.png"><ul>
-<li>Problem: the links between vertexes do indicate their similarity but no links do not necessarily indicate their dissimilarity.<br><img src="/2023/09/14/GNN-2-5-SDNE/3.png"></li>
-<li>first-order proximity<br><img src="/2023/09/14/GNN-2-5-SDNE/4.png"></li>
-<li>objective function<br><img src="/2023/09/14/GNN-2-5-SDNE/5.png"></li>
-<li>New vertexes<ul>
-<li>If its connection to the existing vertexes is known, we can obtain its adjacency vector x and simply feed the x into our model and use the trained parameters to get the representations.</li>
+<li>Stochastic adjacency matrix M, Rank vector r<ul>
+<li>M_{j,i} &#x3D; 1 &#x2F; d_i</li>
+<li>\Sigma_i{r_i} &#x3D; 1</li>
+<li>r \get M \cdot r </li>
+<li>EigorVector(特征向量)<br><img src="/2023/09/16/GNN-PageRank/2.png"></li>
+<li>收敛：r &#x3D; M(M(…M(r)))<ul>
+<li>r_i^{t+1} - r_1^t &lt; \epsilon</li>
 </ul>
 </li>
 </ul>
 </li>
+<li>Random Walk<ul>
+<li>模拟的思路</li>
+<li>可以理解为在directive graph中random walk，pagerank就是它可能走到这个node的概率。</li>
+<li>Spider Traps<ul>
+<li>With prob. \beta, follow a link at random</li>
+<li>With prob. (1-\beta), jump to a random page</li>
 </ul>
 </li>
-<li>Implement<ul>
-<li>深入理解AutoEncoder及其实现方法:<ul>
-<li># Node &#x3D; n, Adjacency Matrix S[n*n]</li>
-<li>Input batch: [bz,n] </li>
-<li>Encoder: <ul>
-<li>encoder1 &#x3D; [n, e1]  outpupt1 &#x3D; [bz,n][n,e1] &#x3D; [bz,e1] </li>
-<li>encoder2 &#x3D; [e1, embed]  output2 &#x3D; [bz, e1][e1, embed] &#x3D; [bz,embed]</li>
-</ul>
-</li>
-<li>Decode:<ul>
-<li>decoder1 &#x3D; [embed, d1] output3 &#x3D; [bz, embed] [embed, d1] &#x3D; [bz, d1]</li>
-<li>decoder2 &#x3D; [d1, n] output &#x3D; [bz, d1][d1, n] &#x3D; [bz, n]</li>
-</ul>
-</li>
-<li>Loss<ul>
-<li>L1_Loss:  torch.sum(adj * (embed*embed - 2*torch.mm(embed,embed.t)) + embed*embed.t)<ul>
-<li>矩阵乘法和转置运算来计算一个矩阵的平方和(L2 Norm)</li>
-</ul>
-</li>
-<li>L2_Loss:  torch.sum(((adj_batch - output) * b) * ((adj_batch - output) * b))</li>
-<li>L2-norm regularizer:  \Sigma(torch.sum(torch.abs(param)) + args.nu2 * torch.sum(param * param))</li>
+<li>Dead-ends<ul>
+<li>Solution: Make matrix column stochastic by always teleporting when there is nowhere else to go</li>
 </ul>
 </li>
 </ul>
 </li>
+<li>Integrate Procedure<br><img src="/3.png"></li>
 </ul>
 </li>
 </ul>
@@ -384,10 +363,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/09/16/GNN-PageRank/">GNN PageRank (PaperReading)</a>
             
-            
-            <a class="next" rel="next" href="/2023/09/14/GNN-2-4-Struc2Vec/">GNN2.4 Struc2Vec (PaperReading)</a>
+            <a class="next" rel="next" href="/2023/09/14/GNN-2-5-SDNE/">GNN2.5 SDNE(PaperReading)</a>
             
         </section>
 
