@@ -276,7 +276,7 @@
 <li>Introduction<ul>
 <li>Graph-based semi-supervised learning: classifying nodes in a graph network, where labels are only available for a small subset of nodes.</li>
 <li>f(X,A)<ul>
-<li>X:  a matrix of node feature vectors X_i</li>
+<li>X:  a matrix of node feature vectors $X_i$</li>
 <li>A:  an adjacency matrix</li>
 </ul>
 </li>
@@ -290,17 +290,17 @@
 <li>Fast Approximate convolutions on graphs<ul>
 <li>Basic Appoach<ul>
 <li>Average neighbor messages and apply a neural network<br><img src="/2023/09/17/GNN-3-1-GCN/1.png"></li>
-<li>Matrix Formulation: H^{k+1} &#x3D; \sigma(\Tilde{A}H^kW_k^T+H^kB_k^T)<ul>
-<li>\Tilde{A} &#x3D; D^{-1}A: row normalized matrix</li>
-<li>\Tilde{A}H^kW_k^T : neighborhood aggregation</li>
-<li>H^kB_k^T: self transformation</li>
+<li>Matrix Formulation: $H^{k+1} &#x3D; \sigma(\tilde{A}H^kW_k^T+H^kB_k^T)$<ul>
+<li>$\tilde{A} &#x3D; D^{-1}A$: row normalized matrix</li>
+<li>$\tilde{A}H^kW_k^T$ : neighborhood aggregation</li>
+<li>$H^kB_k^T$: self transformation</li>
 </ul>
 </li>
 </ul>
 </li>
 <li>Improvement<ul>
-<li>The normalized adjacency matrix:  \Tilde{A} &#x3D; D^{-1&#x2F;2}(A)D^{-1&#x2F;2}</li>
-<li>\Tilde{A} &#x3D; A + A_N, \Tilde{D}<em>{ii} &#x3D; \Sigma{\Tilde{A}</em>{ij}}<br><img src="/2023/09/17/GNN-3-1-GCN/2.png"><ul>
+<li>The normalized adjacency matrix:  $\tilde{A} &#x3D; D^{-1&#x2F;2}(A)D^{-1&#x2F;2}$</li>
+<li>$\tilde{A} &#x3D; A + A_N$, $\tilde{D}<em>{ii}&#x3D; \Sigma{\tilde{A}</em>{ij}}$<br><img src="/2023/09/17/GNN-3-1-GCN/2.png"><ul>
 <li>H: features</li>
 </ul>
 </li>
@@ -309,7 +309,7 @@
 </ul>
 </li>
 <li>Semi-supervised Node Classification<ul>
-<li>adjacency matrix: \hat{A} &#x3D; \Tilde{D}^{-1&#x2F;2}\Tilde{A}\Tilde{D}^{1&#x2F;2} </li>
+<li>adjacency matrix: $\hat{A} &#x3D; \tilde{D}^{-\frac{1}{2}}\tilde{A}\tilde{D}^{\frac{1}{2}}$ </li>
 <li>Two-layer GCN for semi-supervised node classification<br><img src="/2023/09/17/GNN-3-1-GCN/3.png"></li>
 </ul>
 </li>
