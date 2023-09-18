@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Simba">
+
+
+
+
+
+<title>GNN3.2 GraphSAGE(PaperReading&amp;Implement) | Simba&#39;s Homepage</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Simba&#39;s Homepage</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Simba&#39;s Homepage</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">GNN3.2 GraphSAGE(PaperReading&amp;Implement)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Simba</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 18, 2023&nbsp;&nbsp;08:51:17</a>
+                        </span>
+                    
+                    <!-- 
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Graph-Neural-Networks/">Graph Neural Networks</a>
+                            
+                        </span>
+                     -->
+                    
+
+                        <span class="post-category">
+                        
+                        Category:
+                        
+                        
+                        
+                        <a href="/categories/Graph-Neural-Networks/">Graph Neural Networks</a>
+                        
+                        
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Words:
+                        
+                        <a href="">1.4k</a> 
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Time:
+                        
+                        <a href="">8min</a> 
+                        
+                        </span>
+                        
+                        
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="GNN学习笔记"><a href="#GNN学习笔记" class="headerlink" title="GNN学习笔记"></a>GNN学习笔记</h1><p><a target="_blank" rel="noopener" href="http://www.bilibili.com/video/BV1K5411H7EQ">GNN从入门到精通</a>课程笔记</p>
+<h2 id="3-2-GraphSAGE-NIPS-‘17"><a href="#3-2-GraphSAGE-NIPS-‘17" class="headerlink" title="3.2 GraphSAGE (NIPS ‘17)"></a>3.2 GraphSAGE (NIPS ‘17)</h2><ul>
+<li>Inductive Representation Learning on Large Graphs (NIPS ‘17)</li>
+</ul>
+<h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><ul>
+<li>Problem: existing approaches require that all nodes in the graph are present during training of the embeddings</li>
+<li>Solution:  learn a function that generates embeddings by sampling and aggregating features from a node’s local neighborhood. (inductive framework )</li>
+</ul>
+<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><ul>
+<li>In this work we both extend GCNs to the task of inductive unsupervised learning and propose a framework that generalizes the GCN approach to use trainable aggregation functions (beyond simple convolutions).</li>
+<li>GraphSAGE: sample and aggregate</li>
+<li>By incorporating node features in the learning algorithm, we simultaneously learn the topological structure of each node’s neighborhood as well as the distribution of node features in the neighborhood.</li>
+<li>Our algorithm can also be applied to graphs without node features.</li>
+</ul>
+<h3 id="Proposed-method-GraphSAGE"><a href="#Proposed-method-GraphSAGE" class="headerlink" title="Proposed method: GraphSAGE"></a>Proposed method: GraphSAGE</h3><ul>
+<li><p>Problem: how to aggregate feature information from a node’s local neighborhood</p>
+</li>
+<li><p>Embedding generation (forward propagation)<br><img src="/2023/09/18/GNN-3-2-GraphSAGE/1.png"></p>
+<ul>
+<li>Feature: $x_v$</li>
+<li>$h_{\mathcal{N}(v)}^k$: 第k个aggregator输出的v节点的v的邻居的representation的聚合结果</li>
+<li>$h_v^t$: 第k个aggregator输出的v节点的v的representation，是将第k-1个aggregator输出的自己的representation和邻居的representation连接起来，然后经过线性和非线性变化得到的。</li>
+<li>Neighborhood definition<ul>
+<li>uniformly sample a fixed-size set of neighbors</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Learning the parameters of GraphSAGE<br><img src="/2023/09/18/GNN-3-2-GraphSAGE/2.png"></p>
+<ul>
+<li>Unsupervised learning：Random walk<ul>
+<li>Co-occurs nodes on the random walk (相近的节点): $z_v$, 越相似越好（$z_u^{T}z_v$越大）</li>
+<li>Negative nodes: $z_{v_n}$，越不像越好（$-z_u^{T}z_{v_{n}}$越大）</li>
+</ul>
+</li>
+<li>Supervised learning: task-specific objective</li>
+</ul>
+</li>
+<li><p>Aggregator Architectures: symmetric (invariant to permutations of its inputs)</p>
+<ul>
+<li><p>Mean aggregator<br><img src="/2023/09/18/GNN-3-2-GraphSAGE/3.png"></p>
+</li>
+<li><p>LSTM aggregator: applying the LSTMs to a random permutation of the node’s neighbors</p>
+</li>
+<li><p>Pooling aggregator</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/09/18/GNN-3-2-GraphSAGE/4.png"></p>
+<h3 id="Appendix-minibatch-version-of-the-forward-prepagation"><a href="#Appendix-minibatch-version-of-the-forward-prepagation" class="headerlink" title="Appendix: minibatch version of the forward prepagation"></a>Appendix: minibatch version of the forward prepagation</h3><p><img src="/2023/09/18/GNN-3-2-GraphSAGE/5.png"></p>
+<ul>
+<li>等价于在一个子图里运行algorithm1，这个子图是由minibatch节点的k-hop neighborhood组成的</li>
+<li>Implement<br>[1] <a target="_blank" rel="noopener" href="https://github.com/twjiang/graphSAGE-pytorch.git">https://github.com/twjiang/graphSAGE-pytorch.git</a></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SageLayer</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Encodes a node&#x27;s using &#x27;convolutional&#x27; GraphSage approach</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, input_size, out_size, gcn=<span class="literal">False</span></span>): </span><br><span class="line">        <span class="built_in">super</span>(SageLayer, self).__init__()</span><br><span class="line">        self.input_size = input_size</span><br><span class="line">        self.out_size = out_size</span><br><span class="line"></span><br><span class="line">        self.gcn = gcn</span><br><span class="line">        self.weight = nn.Parameter(torch.FloatTensor(out_size, </span><br><span class="line">            self.input_size <span class="keyword">if</span> self.gcn <span class="keyword">else</span> <span class="number">2</span> * self.input_size))</span><br><span class="line">            <span class="comment"># without gcn: concat(h_v^&#123;k-1&#125;,h_&#123;\mathcal&#123;N&#125;_v&#125;^k) -&gt; inputsize * 2</span></span><br><span class="line"></span><br><span class="line">        self.init_params()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">init_params</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">for</span> param <span class="keyword">in</span> self.parameters():</span><br><span class="line">            nn.init.xavier_uniform_(param)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, self_feats, aggregate_feats, neighs=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.gcn:</span><br><span class="line">            combined = torch.cat([self_feats, aggregate_feats], dim=<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            combined = aggregate_feats</span><br><span class="line">        combined = F.relu(self.weight.mm(combined.t())).t()</span><br><span class="line">        <span class="keyword">return</span> combined</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GraphSage</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;docstring for GraphSage&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_layers, input_size, out_size, raw_features, adj_lists, device, gcn=<span class="literal">False</span>, agg_func=<span class="string">&#x27;MEAN&#x27;</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(GraphSage, self).__init__()</span><br><span class="line"></span><br><span class="line">        self.input_size = input_size</span><br><span class="line">        self.out_size = out_size</span><br><span class="line">        self.num_layers = num_layers</span><br><span class="line">        self.gcn = gcn</span><br><span class="line">        self.device = device</span><br><span class="line">        self.agg_func = agg_func</span><br><span class="line"></span><br><span class="line">        self.raw_features = raw_features</span><br><span class="line">        self.adj_lists = adj_lists</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, num_layers+<span class="number">1</span>):</span><br><span class="line">            layer_size = out_size <span class="keyword">if</span> index != <span class="number">1</span> <span class="keyword">else</span> input_size</span><br><span class="line">            <span class="built_in">setattr</span>(self, <span class="string">&#x27;sage_layer&#x27;</span>+<span class="built_in">str</span>(index), SageLayer(layer_size, out_size, gcn=self.gcn))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, nodes_batch</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Generates embeddings for a batch of nodes.</span></span><br><span class="line"><span class="string">        nodes_batch -- batch of nodes to learn the embeddings</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        lower_layer_nodes = <span class="built_in">list</span>(nodes_batch)</span><br><span class="line">        nodes_batch_layers = [(lower_layer_nodes,)]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.num_layers):</span><br><span class="line">            lower_samp_neighs, lower_layer_nodes_dict, lower_layer_nodes= self._get_unique_neighs_list(lower_layer_nodes)</span><br><span class="line">            nodes_batch_layers.insert(<span class="number">0</span>, (lower_layer_nodes, lower_samp_neighs, lower_layer_nodes_dict))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">len</span>(nodes_batch_layers) == self.num_layers + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        pre_hidden_embs = self.raw_features</span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, self.num_layers+<span class="number">1</span>):</span><br><span class="line">            nb = nodes_batch_layers[index][<span class="number">0</span>]</span><br><span class="line">            pre_neighs = nodes_batch_layers[index-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">            aggregate_feats = self.aggregate(nb, pre_hidden_embs, pre_neighs)</span><br><span class="line">            sage_layer = <span class="built_in">getattr</span>(self, <span class="string">&#x27;sage_layer&#x27;</span>+<span class="built_in">str</span>(index))</span><br><span class="line">            <span class="keyword">if</span> index &gt; <span class="number">1</span>:</span><br><span class="line">                nb = self._nodes_map(nb, pre_hidden_embs, pre_neighs)</span><br><span class="line"></span><br><span class="line">            cur_hidden_embs = sage_layer(self_feats=pre_hidden_embs[nb],</span><br><span class="line">                                        aggregate_feats=aggregate_feats)</span><br><span class="line">            pre_hidden_embs = cur_hidden_embs</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> pre_hidden_embs</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_nodes_map</span>(<span class="params">self, nodes, hidden_embs, neighs</span>):</span><br><span class="line">        layer_nodes, samp_neighs, layer_nodes_dict = neighs</span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">len</span>(samp_neighs) == <span class="built_in">len</span>(nodes)</span><br><span class="line">        index = [layer_nodes_dict[x] <span class="keyword">for</span> x <span class="keyword">in</span> nodes]</span><br><span class="line">        <span class="keyword">return</span> index</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_get_unique_neighs_list</span>(<span class="params">self, nodes, num_sample=<span class="number">10</span></span>):</span><br><span class="line">        _<span class="built_in">set</span> = <span class="built_in">set</span></span><br><span class="line">        to_neighs = [self.adj_lists[<span class="built_in">int</span>(node)] <span class="keyword">for</span> node <span class="keyword">in</span> nodes]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> num_sample <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            _sample = random.sample</span><br><span class="line">            samp_neighs = [_<span class="built_in">set</span>(_sample(to_neigh, num_sample)) <span class="keyword">if</span> <span class="built_in">len</span>(to_neigh) &gt;= num_sample <span class="keyword">else</span> to_neigh <span class="keyword">for</span> to_neigh <span class="keyword">in</span> to_neighs]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            samp_neighs = to_neighs</span><br><span class="line">        samp_neighs = [samp_neigh | <span class="built_in">set</span>([nodes[i]]) <span class="keyword">for</span> i, samp_neigh <span class="keyword">in</span> <span class="built_in">enumerate</span>(samp_neighs)]</span><br><span class="line">        _unique_nodes_list = <span class="built_in">list</span>(<span class="built_in">set</span>.union(*samp_neighs))</span><br><span class="line">        i = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="built_in">len</span>(_unique_nodes_list)))</span><br><span class="line">        unique_nodes = <span class="built_in">dict</span>(<span class="built_in">list</span>(<span class="built_in">zip</span>(_unique_nodes_list, i)))</span><br><span class="line">        <span class="keyword">return</span> samp_neighs, unique_nodes, _unique_nodes_list</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">aggregate</span>(<span class="params">self, nodes, pre_hidden_embs, pre_neighs, num_sample=<span class="number">10</span></span>):</span><br><span class="line">        unique_nodes_list, samp_neighs, unique_nodes = pre_neighs</span><br><span class="line"></span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">len</span>(nodes) == <span class="built_in">len</span>(samp_neighs)</span><br><span class="line">        indicator = [(nodes[i] <span class="keyword">in</span> samp_neighs[i]) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(samp_neighs))]</span><br><span class="line">        <span class="keyword">assert</span> (<span class="literal">False</span> <span class="keyword">not</span> <span class="keyword">in</span> indicator)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.gcn:</span><br><span class="line">            samp_neighs = [(samp_neighs[i]-<span class="built_in">set</span>([nodes[i]])) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(samp_neighs))]</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(pre_hidden_embs) == <span class="built_in">len</span>(unique_nodes):</span><br><span class="line">            embed_matrix = pre_hidden_embs</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            embed_matrix = pre_hidden_embs[torch.LongTensor(unique_nodes_list)]</span><br><span class="line"></span><br><span class="line">        mask = torch.zeros(<span class="built_in">len</span>(samp_neighs), <span class="built_in">len</span>(unique_nodes))</span><br><span class="line">        column_indices = [unique_nodes[n] <span class="keyword">for</span> samp_neigh <span class="keyword">in</span> samp_neighs <span class="keyword">for</span> n <span class="keyword">in</span> samp_neigh]</span><br><span class="line">        row_indices = [i <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(samp_neighs)) <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(samp_neighs[i]))]</span><br><span class="line">        mask[row_indices, column_indices] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># mean aggregation</span></span><br><span class="line">        num_neigh = mask.<span class="built_in">sum</span>(<span class="number">1</span>, keepdim=<span class="literal">True</span>)</span><br><span class="line">        mask = mask.div(num_neigh).to(embed_matrix.device)</span><br><span class="line">        aggregate_feats = mask.mm(embed_matrix)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> aggregate_feats</span><br><span class="line">        </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UnsupervisedLoss</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;docstring for UnsupervisedLoss&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, adj_lists, train_nodes, device</span>):</span><br><span class="line">        <span class="built_in">super</span>(UnsupervisedLoss, self).__init__()</span><br><span class="line">        self.Q = <span class="number">10</span></span><br><span class="line">        self.N_WALKS = <span class="number">6</span></span><br><span class="line">        self.WALK_LEN = <span class="number">1</span></span><br><span class="line">        self.N_WALK_LEN = <span class="number">5</span></span><br><span class="line">        self.MARGIN = <span class="number">3</span></span><br><span class="line">        self.adj_lists = adj_lists</span><br><span class="line">        self.train_nodes = train_nodes</span><br><span class="line">        self.device = device</span><br><span class="line"></span><br><span class="line">        self.target_nodes = <span class="literal">None</span></span><br><span class="line">        self.positive_pairs = []</span><br><span class="line">        self.negtive_pairs = []</span><br><span class="line">        self.node_positive_pairs = &#123;&#125;</span><br><span class="line">        self.node_negtive_pairs = &#123;&#125;</span><br><span class="line">        self.unique_nodes_batch = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_loss_sage</span>(<span class="params">self, embeddings, nodes</span>):</span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">len</span>(embeddings) == <span class="built_in">len</span>(self.unique_nodes_batch)</span><br><span class="line">        <span class="keyword">assert</span> <span class="literal">False</span> <span class="keyword">not</span> <span class="keyword">in</span> [nodes[i]==self.unique_nodes_batch[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(nodes))]</span><br><span class="line">        node2index = &#123;n:i <span class="keyword">for</span> i,n <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.unique_nodes_batch)&#125;</span><br><span class="line"></span><br><span class="line">        nodes_score = []</span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">len</span>(self.node_positive_pairs) == <span class="built_in">len</span>(self.node_negtive_pairs)</span><br><span class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> self.node_positive_pairs:</span><br><span class="line">            pps = self.node_positive_pairs[node]</span><br><span class="line">            nps = self.node_negtive_pairs[node]</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(pps) == <span class="number">0</span> <span class="keyword">or</span> <span class="built_in">len</span>(nps) == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># Q * Exception(negative score)</span></span><br><span class="line">            indexs = [<span class="built_in">list</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">zip</span>(*nps)]</span><br><span class="line">            node_indexs = [node2index[x] <span class="keyword">for</span> x <span class="keyword">in</span> indexs[<span class="number">0</span>]]</span><br><span class="line">            neighb_indexs = [node2index[x] <span class="keyword">for</span> x <span class="keyword">in</span> indexs[<span class="number">1</span>]]</span><br><span class="line">            neg_score = F.cosine_similarity(embeddings[node_indexs], embeddings[neighb_indexs])</span><br><span class="line">            neg_score = self.Q*torch.mean(torch.log(torch.sigmoid(-neg_score)), <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># multiple positive score</span></span><br><span class="line">            indexs = [<span class="built_in">list</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">zip</span>(*pps)]</span><br><span class="line">            node_indexs = [node2index[x] <span class="keyword">for</span> x <span class="keyword">in</span> indexs[<span class="number">0</span>]]</span><br><span class="line">            neighb_indexs = [node2index[x] <span class="keyword">for</span> x <span class="keyword">in</span> indexs[<span class="number">1</span>]]</span><br><span class="line">            pos_score = F.cosine_similarity(embeddings[node_indexs], embeddings[neighb_indexs])</span><br><span class="line">            pos_score = torch.log(torch.sigmoid(pos_score))</span><br><span class="line"></span><br><span class="line">            nodes_score.append(torch.mean(- pos_score - neg_score).view(<span class="number">1</span>,-<span class="number">1</span>))</span><br><span class="line">                </span><br><span class="line">        loss = torch.mean(torch.cat(nodes_score, <span class="number">0</span>))</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">extend_nodes</span>(<span class="params">self, nodes, num_neg=<span class="number">6</span></span>):</span><br><span class="line">        self.positive_pairs = []</span><br><span class="line">        self.node_positive_pairs = &#123;&#125;</span><br><span class="line">        self.negtive_pairs = []</span><br><span class="line">        self.node_negtive_pairs = &#123;&#125;</span><br><span class="line"></span><br><span class="line">        self.target_nodes = nodes</span><br><span class="line">        self.get_positive_nodes(nodes)</span><br><span class="line">        self.get_negtive_nodes(nodes, num_neg)</span><br><span class="line">        self.unique_nodes_batch = <span class="built_in">list</span>(<span class="built_in">set</span>([i <span class="keyword">for</span> x <span class="keyword">in</span> self.positive_pairs <span class="keyword">for</span> i <span class="keyword">in</span> x]) | <span class="built_in">set</span>([i <span class="keyword">for</span> x <span class="keyword">in</span> self.negtive_pairs <span class="keyword">for</span> i <span class="keyword">in</span> x]))</span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">set</span>(self.target_nodes) &lt; <span class="built_in">set</span>(self.unique_nodes_batch)</span><br><span class="line">        <span class="keyword">return</span> self.unique_nodes_batch</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_positive_nodes</span>(<span class="params">self, nodes</span>):</span><br><span class="line">        <span class="keyword">return</span> self._run_random_walks(nodes)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_negtive_nodes</span>(<span class="params">self, nodes, num_neg</span>):</span><br><span class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> nodes:</span><br><span class="line">            neighbors = <span class="built_in">set</span>([node])</span><br><span class="line">            frontier = <span class="built_in">set</span>([node])</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.N_WALK_LEN):</span><br><span class="line">                current = <span class="built_in">set</span>()</span><br><span class="line">                <span class="keyword">for</span> outer <span class="keyword">in</span> frontier:</span><br><span class="line">                    current |= self.adj_lists[<span class="built_in">int</span>(outer)]</span><br><span class="line">                frontier = current - neighbors</span><br><span class="line">                neighbors |= current</span><br><span class="line">            far_nodes = <span class="built_in">set</span>(self.train_nodes) - neighbors</span><br><span class="line">            neg_samples = random.sample(far_nodes, num_neg) <span class="keyword">if</span> num_neg &lt; <span class="built_in">len</span>(far_nodes) <span class="keyword">else</span> far_nodes</span><br><span class="line">            self.negtive_pairs.extend([(node, neg_node) <span class="keyword">for</span> neg_node <span class="keyword">in</span> neg_samples])</span><br><span class="line">            self.node_negtive_pairs[node] = [(node, neg_node) <span class="keyword">for</span> neg_node <span class="keyword">in</span> neg_samples]</span><br><span class="line">        <span class="keyword">return</span> self.negtive_pairs</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_run_random_walks</span>(<span class="params">self, nodes</span>):</span><br><span class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> nodes:</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(self.adj_lists[<span class="built_in">int</span>(node)]) == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            cur_pairs = []</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.N_WALKS):</span><br><span class="line">                curr_node = node</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(self.WALK_LEN):</span><br><span class="line">                    neighs = self.adj_lists[<span class="built_in">int</span>(curr_node)]</span><br><span class="line">                    next_node = random.choice(<span class="built_in">list</span>(neighs))</span><br><span class="line">                    <span class="comment"># self co-occurrences are useless</span></span><br><span class="line">                    <span class="keyword">if</span> next_node != node <span class="keyword">and</span> next_node <span class="keyword">in</span> self.train_nodes:</span><br><span class="line">                        self.positive_pairs.append((node,next_node))</span><br><span class="line">                        cur_pairs.append((node,next_node))</span><br><span class="line">                    curr_node = next_node</span><br><span class="line"></span><br><span class="line">            self.node_positive_pairs[node] = cur_pairs</span><br><span class="line">        <span class="keyword">return</span> self.positive_pairs</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Simba</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>乳虎啸谷，百兽震惶</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Note/"># Note</a>
+                    
+                        <a href="/tags/GNN/"># GNN</a>
+                    
+                        <a href="/tags/Paper-Reading/"># Paper Reading</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/09/17/GNN-3-1-GCN/">GNN3.1 GCN (PaperReading&Implement)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Simba | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
