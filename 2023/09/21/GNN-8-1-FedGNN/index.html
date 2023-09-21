@@ -328,7 +328,7 @@
 <li>$u_i$ -&gt; Embedding -&gt; $e_i^u$ -&gt; GNN -&gt; $h_i^u$</li>
 <li>Item nodes $[t_{i,1},t_{i,2},\dots,t_{i,K}]$ -&gt; Embedding -&gt; $[e^t_{i,1},e^t_{i,2},\dots,e^t_{i,K}]$ -&gt; GNN -&gt; $[h^t_{i,1},h^t_{i,2},\dots,h^t_{i,K}]$</li>
 <li>Neighboring user node $[u_{i,1},u_{i,2},\dots,u_{i,N}]$ -&gt; Embedding -&gt; $[e^u_{i,1},e^u_{i,2},\dots,e^u_{i,K}]$ -&gt; GNN -&gt; $[h^u_{i,1},h^u_{i,2},\dots,h^u_{i,K}]$</li>
-<li>Loss function: $\mathcal{L}<em>i &#x3D; \frac{i}{K}\Simga</em>{j&#x3D;1}^K\vert\hat{y}<em>{i,j} - y</em>{i,j}\vert$</li>
+<li>Loss function: $\mathcal{L}<em>i &#x3D; \frac{1}{K} \Sigma</em>{j&#x3D;1}^K \vert \hat{y}<em>{i,j} - y</em>{i,j} \vert$</li>
 <li>Gradients of model: $g_i^m$</li>
 <li>Gradients of embeddings: $g_i^e$</li>
 <li>$g_i &#x3D;(g_i^m, g_i^e)$</li>
