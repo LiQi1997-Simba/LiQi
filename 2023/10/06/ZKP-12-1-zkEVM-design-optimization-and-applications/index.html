@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Simba">
+
+
+
+
+
+<title>ZKP12.1 zkEVM design, optimization and applications | Simba&#39;s Homepage</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Simba&#39;s Homepage</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Simba&#39;s Homepage</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">ZKP12.1 zkEVM design, optimization and applications</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Simba</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 06, 2023&nbsp;&nbsp;19:39:16</a>
+                        </span>
+                    
+                    <!-- 
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Zero-Knowledge-Proofs/">Zero Knowledge Proofs</a>
+                            
+                        </span>
+                     -->
+                    
+
+                        <span class="post-category">
+                        
+                        Category:
+                        
+                        
+                        
+                        <a href="/categories/Zero-Knowledge-Proofs/">Zero Knowledge Proofs</a>
+                        
+                        
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Words:
+                        
+                        <a href="">724</a> 
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Time:
+                        
+                        <a href="">4min</a> 
+                        
+                        </span>
+                        
+                        
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learing MOOC</a>课程笔记</p>
+<h2 id="Lecture-12-1-zkEVM-design-optimization-and-applications"><a href="#Lecture-12-1-zkEVM-design-optimization-and-applications" class="headerlink" title="Lecture 12.1 zkEVM design, optimization and applications"></a>Lecture 12.1 zkEVM design, optimization and applications</h2><ul>
+<li>Scroll<ul>
+<li>A scaling solution for Ethereum</li>
+<li>An EVM-equivalent zk-Rollup</li>
+</ul>
+</li>
+<li>Background &amp; motivation<ul>
+<li>The diagram of Layer 1 blockchain<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/1.png"><ul>
+<li>Advantages: Secure, Decentralized</li>
+<li>Disadvantages: Expensive, Slow</li>
+</ul>
+</li>
+<li>Zk-Rollup<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/2.png"><ul>
+<li>Scroll: a native zkEVM solution<ul>
+<li>Advantages: Developer-friendly, Composability</li>
+<li>Disadvantages: Hard to build, Large proving overhead</li>
+</ul>
+</li>
+<li>zkEVM becomes possible<ul>
+<li>Polynomial commitment</li>
+<li>Lookup + Custom gate</li>
+<li>Hardware acceleration</li>
+<li>Recursive proof</li>
+</ul>
+</li>
+<li>zkEVM flavors (by Justin Drake)<ul>
+<li>Language level: Transpile an EVM-friendly language (Solidity or Yul) to a SNARK-friendly VM which differs from the EVM. (“Compiler” EVM to EVM-friendly language)</li>
+<li>Bytecode level: Interpret EVM bytecode directly, though potentially producing different state roots than the EVM, e.g. if certain implementation-level data structures are replaced with SNARK-friendly alternatives. (Scroll)</li>
+<li>Consensus level:  It proves validity of L1 Ethereum state roots.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Build a zkEVM from scratch<ul>
+<li>The workflow of zero-knowledge proof<ul>
+<li>Program &#x3D;&gt; Constraints &#x3D;&gt; Proof</li>
+<li>Scroll<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/3.png"></li>
+</ul>
+</li>
+<li>Plonkish Arithmetization<ul>
+<li>Custom gate</li>
+<li>Permutation</li>
+<li>Lookup argument (range proof &amp; xor, reduce the circuit size)</li>
+</ul>
+</li>
+<li>How should we choose “front-end”?<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/4.png"></li>
+<li>What you need to prove<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/5.png"><ul>
+<li>zkEVM takes the execution traces as witness and proves it. (spec: constrains)</li>
+<li>The verifier only knows the input tx &#x2F; world state and the output world state.</li>
+</ul>
+</li>
+<li>EVM circuit<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/6.png"><ul>
+<li>ADD<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/7.png"><ul>
+<li>Step context: When sADD &#x3D;&#x3D; 1, pc’ - pc &#x3D;&#x3D; 1</li>
+<li>Case switch: sADD is binary, sADD &#x3D;&#x3D; 1, 1-sADD &#x3D;&#x3D; 0; only one variable is 1.</li>
+<li>Opcode specific witness: prove that a and b are consistent with that have been pushed into EVM.<ul>
+<li>RAM circuit (E.g., prove write after read)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Hash<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/8.png"><ul>
+<li>Hash is complex calculation</li>
+<li>Hash lookup table: preserve (input, hash) pair; use the hash circuit to prove the lookup table is correct.</li>
+</ul>
+</li>
+<li>The architecture of zkEVM circuits<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/9.png"></li>
+</ul>
+</li>
+<li>The proof system for zkEVM:<ul>
+<li>Two-layer architecture: Aggregation circuit</li>
+<li>The first layer<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/10.png"></li>
+<li>The second layer<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/11.png"><ul>
+<li>Aggregation circuit: prove the proof is valid</li>
+</ul>
+</li>
+<li>Scroll Implementation<ul>
+<li>The first layer is Halo2-KZG (Poseidon hash transcript)<ul>
+<li>Custom gate, Lookup support</li>
+<li>Good enough prover performance (GPU prover)</li>
+<li>The verification circuit is “small”</li>
+<li>Universal trusted setup</li>
+</ul>
+</li>
+<li>The first layer needs to be “expressive” <ul>
+<li>EVM circuit has 116 columns, 2496 custom gates, 50 lookups</li>
+<li>Highest custom gate degree: 9</li>
+<li>For 1M gas, EVM circuit needs 2^18 rows (more gas, more rows)</li>
+</ul>
+</li>
+<li>The second layer is Halo2-KZG (Keccak hash transcript)<ul>
+<li>Custom gate, Lookup support (express non-native efficiently)</li>
+<li>Good enough prover performance (GPU prover)</li>
+<li>The final verification cost can be configured to be really small</li>
+</ul>
+</li>
+<li>The second layer needs to aggregate proofs into one proof<ul>
+<li>Aggregation circuit has 23 columns, 1 custom gate, 7 lookups </li>
+<li>Highest custom gate degree: 5</li>
+<li>For aggregating EVM, RAM, Storage circuits, it needs 2^25 rows</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Interesting problems<ul>
+<li>Circuit: Randomness(Random Linear Combination, RLC)<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/12.png"><ul>
+<li>Using a super circuit includes all small circuits (ECDSA, Keccak, EVM…)</li>
+</ul>
+</li>
+<li>Circuit: Layout<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/13.png"><ul>
+<li>Plonkish: layout permutation (in R1CS, we need to implement like if-else)</li>
+</ul>
+</li>
+<li>Circuit: Dynamic size<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/14.png"><ul>
+<li>Padding for all circuits to the same rows</li>
+<li>Link all circuits together</li>
+</ul>
+</li>
+<li>Prover: Hardware &amp; Algorithm<ul>
+<li>Our prover<ul>
+<li>GPU can make MSM &amp; NTT really fast </li>
+<li>Bottleneck moves to witness generation &amp; data copy</li>
+<li>Need large CPU memory (1TB -&gt; 300GB+)</li>
+</ul>
+</li>
+<li>Hardware friendly prover?<ul>
+<li>Parallelizable &amp; Low peak memory</li>
+<li>Don’t ignore the witness generation</li>
+<li>Run on cheap machines, more decentralized</li>
+</ul>
+</li>
+<li>Best way to compose different proof system?<ul>
+<li>he first layer needs to be “expressive”</li>
+<li>The second layer needs to be verifier efficient (in EVM) </li>
+<li>Should we move to a smaller field? <ul>
+<li>(Breakdown&#x2F;FRI with Goldilocks, Mersenne prime)</li>
+</ul>
+</li>
+<li>Should we stick to EC-based constructions? <ul>
+<li>(SuperNova, Cyclic elliptic curve with fast MSM)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Security: Audit &amp; Soundness<ul>
+<li>The best way to audit zkEVM circuit? (In general, VM circuit based on IR)<ul>
+<li>Audit Manually</li>
+<li>Formal verification for some opcodes</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Other applications using zkEVM<ul>
+<li>zkRollup<ul>
+<li>Prove n Txs on layer 2 are valid</li>
+<li>Verify proof in smart contract</li>
+</ul>
+</li>
+<li>Enshrine blockchain<ul>
+<li>Prove layer 1 block directly</li>
+<li>Recursive proof</li>
+<li>One proof for blockchain</li>
+</ul>
+</li>
+<li>Proof of exploit<ul>
+<li>Prove I know a Tx that can change the state root to state root’ (Prove I know a bug that can change your balance, etc) </li>
+<li>Prove to the applications without revealing the bug (to get reward from the application).</li>
+</ul>
+</li>
+<li>Attestation (“zk oracle”)<ul>
+<li>Read state, compute and verify i.e. Axiom (a zk co-processor)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Simba</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>乳虎啸谷，百兽震惶</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Note/"># Note</a>
+                    
+                        <a href="/tags/ZKP/"># ZKP</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/09/21/GNN-8-1-FedGNN/">GNN8.1 FedGNN (PaperReading)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Simba | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
