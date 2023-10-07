@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP12.1 zkEVM design, optimization and applications | Simba&#39;s Homepage</title>
+<title>ZKP-14-1-zkBridge: Trustless Bridge Made Practical | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP12.1 zkEVM design, optimization and applications</h1>
+            <h1 class="post-title">ZKP-14-1-zkBridge: Trustless Bridge Made Practical</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 06, 2023&nbsp;&nbsp;19:39:16</a>
+                        Date: <a href="#">October 07, 2023&nbsp;&nbsp;23:36:39</a>
                         </span>
                     
                     <!-- 
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">724</a> 
+                        <a href="">443</a> 
                         
                         </span>
                         
@@ -254,7 +254,7 @@
                         
                         Time:
                         
-                        <a href="">4min</a> 
+                        <a href="">2min</a> 
                         
                         </span>
                         
@@ -265,189 +265,115 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-12-1-zkEVM-design-optimization-and-applications"><a href="#Lecture-12-1-zkEVM-design-optimization-and-applications" class="headerlink" title="Lecture 12.1 zkEVM design, optimization and applications"></a>Lecture 12.1 zkEVM design, optimization and applications</h2><ul>
-<li>Scroll<ul>
-<li>A scaling solution for Ethereum</li>
-<li>An EVM-equivalent zk-Rollup</li>
-</ul>
-</li>
-<li>Background &amp; motivation<ul>
-<li>The diagram of Layer 1 blockchain<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/1.png"><ul>
-<li>Advantages: Secure, Decentralized</li>
-<li>Disadvantages: Expensive, Slow</li>
-</ul>
-</li>
-<li>Zk-Rollup<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/2.png"><ul>
-<li>Scroll: a native zkEVM solution<ul>
-<li>Advantages: Developer-friendly, Composability</li>
-<li>Disadvantages: Hard to build, Large proving overhead</li>
-</ul>
-</li>
-<li>zkEVM becomes possible<ul>
-<li>Polynomial commitment</li>
-<li>Lookup + Custom gate</li>
-<li>Hardware acceleration</li>
-<li>Recursive proof</li>
-</ul>
-</li>
-<li>zkEVM flavors (by Justin Drake)<ul>
-<li>Language level: Transpile an EVM-friendly language (Solidity or Yul) to a SNARK-friendly VM which differs from the EVM. (“Compiler” EVM to EVM-friendly language)</li>
-<li>Bytecode level: Interpret EVM bytecode directly, though potentially producing different state roots than the EVM, e.g. if certain implementation-level data structures are replaced with SNARK-friendly alternatives. (Scroll)</li>
-<li>Consensus level:  It proves validity of L1 Ethereum state roots.</li>
+<h2 id="Lecture-14-1-zkBridge-Trustless-Bridge-Made-Practical"><a href="#Lecture-14-1-zkBridge-Trustless-Bridge-Made-Practical" class="headerlink" title="Lecture 14.1 zkBridge: Trustless Bridge Made Practical"></a>Lecture 14.1 zkBridge: Trustless Bridge Made Practical</h2><ul>
+<li>Cross-chain Bridges<ul>
+<li>Multi-chain Universe</li>
+<li>Bridge: generic and efficient communication cross blockchains</li>
+<li>Desirable properties<ul>
+<li>Generality (support many applications)</li>
+<li>Efficient</li>
+<li>Secure with trust minimization (particularly crucial)</li>
 </ul>
 </li>
 </ul>
 </li>
+<li>Current Common Bridge Approach: Trust Intermediary<ul>
+<li>Existing Approach: intermediary<ul>
+<li>Side chain (PolyNetwork, Axelar) - 2&#x2F;3 honest nodes</li>
+<li>Committee (Wormhole, Ronin) - 2&#x2F;3 honest committee</li>
+<li>External oracles (LayerZero) - independence between Oracle and Relayer</li>
 </ul>
 </li>
-<li>Build a zkEVM from scratch<ul>
-<li>The workflow of zero-knowledge proof<ul>
-<li>Program &#x3D;&gt; Constraints &#x3D;&gt; Proof</li>
-<li>Scroll<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/3.png"></li>
+<li>Pros: Simple &amp; efficient on-chain verification (e.g., multisig) </li>
+<li>Cons: Need to rely on external trust on intermediaries</li>
 </ul>
 </li>
-<li>Plonkish Arithmetization<ul>
-<li>Custom gate</li>
-<li>Permutation</li>
-<li>Lookup argument (range proof &amp; xor, reduce the circuit size)</li>
+<li>Remove Trust on Intermediary<ul>
+<li>Light client verification: (only verify the block header rather than the whole block)<ul>
+<li>Verifying certain correctness properties of state transition in consensus protocol </li>
+<li>E.g., for BFT-based consensus, a light client needs to verify validator signatures and keeps track of validator rotation</li>
 </ul>
 </li>
-<li>How should we choose “front-end”?<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/4.png"></li>
-<li>What you need to prove<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/5.png"><ul>
-<li>zkEVM takes the execution traces as witness and proves it. (spec: constrains)</li>
-<li>The verifier only knows the input tx &#x2F; world state and the output world state.</li>
+<li>Cosmos IBC (a protocol in Cosmos)<ul>
+<li>Validators verifies block header information of another chain, performing light client verification</li>
+<li>Cons: require each chain to implement an IBC client to perform the verification</li>
 </ul>
 </li>
-<li>EVM circuit<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/6.png"><ul>
-<li>ADD<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/7.png"><ul>
-<li>Step context: When sADD &#x3D;&#x3D; 1, pc’ - pc &#x3D;&#x3D; 1</li>
-<li>Case switch: sADD is binary, sADD &#x3D;&#x3D; 1, 1-sADD &#x3D;&#x3D; 0; only one variable is 1.</li>
-<li>Opcode specific witness: prove that a and b are consistent with that have been pushed into EVM.<ul>
-<li>RAM circuit (E.g., prove write after read)</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Hash<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/8.png"><ul>
-<li>Hash is complex calculation</li>
-<li>Hash lookup table: preserve (input, hash) pair; use the hash circuit to prove the lookup table is correct.</li>
-</ul>
-</li>
-<li>The architecture of zkEVM circuits<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/9.png"></li>
-</ul>
-</li>
-<li>The proof system for zkEVM:<ul>
-<li>Two-layer architecture: Aggregation circuit</li>
-<li>The first layer<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/10.png"></li>
-<li>The second layer<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/11.png"><ul>
-<li>Aggregation circuit: prove the proof is valid</li>
-</ul>
-</li>
-<li>Scroll Implementation<ul>
-<li>The first layer is Halo2-KZG (Poseidon hash transcript)<ul>
-<li>Custom gate, Lookup support</li>
-<li>Good enough prover performance (GPU prover)</li>
-<li>The verification circuit is “small”</li>
-<li>Universal trusted setup</li>
-</ul>
-</li>
-<li>The first layer needs to be “expressive” <ul>
-<li>EVM circuit has 116 columns, 2496 custom gates, 50 lookups</li>
-<li>Highest custom gate degree: 9</li>
-<li>For 1M gas, EVM circuit needs 2^18 rows (more gas, more rows)</li>
-</ul>
-</li>
-<li>The second layer is Halo2-KZG (Keccak hash transcript)<ul>
-<li>Custom gate, Lookup support (express non-native efficiently)</li>
-<li>Good enough prover performance (GPU prover)</li>
-<li>The final verification cost can be configured to be really small</li>
-</ul>
-</li>
-<li>The second layer needs to aggregate proofs into one proof<ul>
-<li>Aggregation circuit has 23 columns, 1 custom gate, 7 lookups </li>
-<li>Highest custom gate degree: 5</li>
-<li>For aggregating EVM, RAM, Storage circuits, it needs 2^25 rows</li>
+<li>NEAR Rainbow bridge<ul>
+<li>Implement light client verification as a smart contract in Ethereum</li>
+<li>Cons: on-chain verification is very expensive</li>
 </ul>
 </li>
 </ul>
 </li>
+<li>zkBridge—Trustless Bridge Made Practical<br>Xie-Zhang-Cheng-Zhang-Zhang-Jia-Boneh-Song, “zkBridge: trustless bridge made practical”, ACM CCS 2022 (zkbridge.org)<ul>
+<li>With ZKP, we replace honesty assumptions with Cryptographic assurance</li>
+<li>Efficient on-chain verification using ZKP<br><img src="/1.png"></li>
+</ul>
+</li>
+<li>Advantages of zkBridge<ul>
+<li>Minimized trust<ul>
+<li>Cryptographic soundness instead of honest assumptions</li>
+</ul>
+</li>
+<li>Efficient on-chain verification<ul>
+<li>purpose-built zkSNARK enables efficient on-chain verification</li>
+</ul>
+</li>
+<li>Permissionless and Decentralized<ul>
+<li>Provers are not trusted so anyone can join</li>
+</ul>
+</li>
+<li>Extensible and Universal<ul>
+<li>Developers can develop their own application on top</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Interesting problems<ul>
-<li>Circuit: Randomness(Random Linear Combination, RLC)<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/12.png"><ul>
-<li>Using a super circuit includes all small circuits (ECDSA, Keccak, EVM…)</li>
+<li>Challenges<ul>
+<li>SNARKs are expensive</li>
+<li>Blockchains are not designed to be “ZK friendly”<ul>
+<li>EdDSA digital signature is expensive to express as anarithmetic circuit (~2M gates)</li>
 </ul>
 </li>
-<li>Circuit: Layout<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/13.png"><ul>
-<li>Plonkish: layout permutation (in R1CS, we need to implement like if-else)</li>
+<li>Each state transition can involve hundreds of sig verifications &#x3D;&gt; Computing $\Pi$ naively can be prohibitively expensive</li>
 </ul>
 </li>
-<li>Circuit: Dynamic size<br><img src="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/14.png"><ul>
-<li>Padding for all circuits to the same rows</li>
-<li>Link all circuits together</li>
+<li>Making zkBridge practical<ul>
+<li>deVirgo: a distributed version of Virgo (IEEE S&amp;P 2020)<ul>
+<li>Exploits “data parallelism” </li>
+<li>Optimal parallelization —- 100x speedup with 128 machines</li>
+<li>Practical communication —- less than 20% of proving time</li>
 </ul>
 </li>
-<li>Prover: Hardware &amp; Algorithm<ul>
-<li>Our prover<ul>
-<li>GPU can make MSM &amp; NTT really fast </li>
-<li>Bottleneck moves to witness generation &amp; data copy</li>
-<li>Need large CPU memory (1TB -&gt; 300GB+)</li>
+<li>Reducing proof size by recursion<ul>
+<li>run deVirgo verifier in Groth16</li>
 </ul>
 </li>
-<li>Hardware friendly prover?<ul>
-<li>Parallelizable &amp; Low peak memory</li>
-<li>Don’t ignore the witness generation</li>
-<li>Run on cheap machines, more decentralized</li>
+<li>Batching<br><img src="/2.png"></li>
 </ul>
 </li>
-<li>Best way to compose different proof system?<ul>
-<li>he first layer needs to be “expressive”</li>
-<li>The second layer needs to be verifier efficient (in EVM) </li>
-<li>Should we move to a smaller field? <ul>
-<li>(Breakdown&#x2F;FRI with Goldilocks, Mersenne prime)</li>
-</ul>
-</li>
-<li>Should we stick to EC-based constructions? <ul>
-<li>(SuperNova, Cyclic elliptic curve with fast MSM)</li>
+<li>Approach: deVirgo &amp; 2-layer Proof Composition<br>  <img src="/3.png"></li>
+<li>Extensibility &amp; Applications of zkBridge<ul>
+<li>Extensibility<br><img src="/4.png"></li>
+<li>Applications:<ul>
+<li>Message Passing<br><img src="/5.png"></li>
+<li>Cross-chain Assets Transfer&#x2F;Swap</li>
+<li>Cross-chain NFT Interoperations</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Security: Audit &amp; Soundness<ul>
-<li>The best way to audit zkEVM circuit? (In general, VM circuit based on IR)<ul>
-<li>Audit Manually</li>
-<li>Formal verification for some opcodes</li>
+<li>zkBridge Technology Enables Other Capabilities<ul>
+<li>State proof<ul>
+<li>A cryptographic proof of state changes that occur in a given set of blocks (e.g., Algorand State Proof)</li>
 </ul>
 </li>
+<li>zk-based light client verification<ul>
+<li>Support efficient light client verification, including mobile use cases (e.g., Celo Plumo)</li>
 </ul>
 </li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Other applications using zkEVM<ul>
-<li>zkRollup<ul>
-<li>Prove n Txs on layer 2 are valid</li>
-<li>Verify proof in smart contract</li>
-</ul>
-</li>
-<li>Enshrine blockchain<ul>
-<li>Prove layer 1 block directly</li>
-<li>Recursive proof</li>
-<li>One proof for blockchain</li>
-</ul>
-</li>
-<li>Proof of exploit<ul>
-<li>Prove I know a Tx that can change the state root to state root’ (Prove I know a bug that can change your balance, etc) </li>
-<li>Prove to the applications without revealing the bug (to get reward from the application).</li>
-</ul>
-</li>
-<li>Attestation (“zk oracle”)<ul>
-<li>Read state, compute and verify i.e. Axiom (a zk co-processor)</li>
-</ul>
-</li>
+<li>zkBridge can be extended to privacy chains with privacy protection</li>
 </ul>
 </li>
 </ul>
@@ -499,10 +425,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/10/07/ZKP-14-1-zkBridge-Trustless-Bridge-Made-Practical/">ZKP-14-1-zkBridge: Trustless Bridge Made Practical</a>
             
-            
-            <a class="next" rel="next" href="/2023/09/21/GNN-8-1-FedGNN/">GNN8.1 FedGNN (PaperReading)</a>
+            <a class="next" rel="next" href="/2023/10/06/ZKP-12-1-zkEVM-design-optimization-and-applications/">ZKP12.1 zkEVM design, optimization and applications</a>
             
         </section>
 
