@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP14.2 Other ZKP Applications | Simba&#39;s Homepage</title>
+<title>ZKP1.1 Introduction and History of ZKP | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP14.2 Other ZKP Applications</h1>
+            <h1 class="post-title">ZKP1.1 Introduction and History of ZKP</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 08, 2023&nbsp;&nbsp;20:33:51</a>
+                        Date: <a href="#">October 10, 2023&nbsp;&nbsp;13:16:39</a>
                         </span>
                     
                     <!-- 
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">270</a> 
+                        <a href="">207</a> 
                         
                         </span>
                         
@@ -265,78 +265,28 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-14-2-Other-ZKP-Applications-Yupeng-Zhang"><a href="#Lecture-14-2-Other-ZKP-Applications-Yupeng-Zhang" class="headerlink" title="Lecture 14.2 Other ZKP Applications (Yupeng Zhang)"></a>Lecture 14.2 Other ZKP Applications (Yupeng Zhang)</h2><ul>
-<li>ZKP for Machine Learning<ul>
-<li>Zero-knowledge proof without revealing the ML models<ul>
-<li>Fairness of ML models</li>
-<li>Integrity of ML inferences (The decision is made by the ML model)</li>
+<h2 id="Lecture-1-Introduction-and-History-of-ZKP-Shafi-Goldwasser"><a href="#Lecture-1-Introduction-and-History-of-ZKP-Shafi-Goldwasser" class="headerlink" title="Lecture 1: Introduction and History of ZKP (Shafi Goldwasser)"></a>Lecture 1: Introduction and History of ZKP (Shafi Goldwasser)</h2><h3 id="1-1-Introduction"><a href="#1-1-Introduction" class="headerlink" title="1.1 Introduction"></a>1.1 Introduction</h3><ul>
+<li>Proofs: Interactive process<ul>
+<li>Prover, verifier</li>
+<li>Prover gives proof and the verifier accept&#x2F;rejests</li>
 </ul>
 </li>
-<li>Challenges<ul>
-<li>Efficiency and Scalability of general-purpose SNARKs<ul>
-<li>scale to &lt;230 &#x3D; 1 billion gates (64 GB RAM), prover time minutes to hours</li>
+<li>Efficiently Verifiable Proofs (NP-proofs)<br><img src="/2023/10/10/ZKP-1-1-Introduction-and-History-of-ZKP/1.png"></li>
+<li>NP-languages<br><img src="/2023/10/10/ZKP-1-1-Introduction-and-History-of-ZKP/2.png"></li>
+<li>Zero-knowledge: Prove that I could prove it If I felt like it</li>
+</ul>
+<h3 id="1-2-Zero-Knowledge-Interactive-Proofs"><a href="#1-2-Zero-Knowledge-Interactive-Proofs" class="headerlink" title="1.2 Zero Knowledge Interactive Proofs"></a>1.2 Zero Knowledge Interactive Proofs</h3><ul>
+<li>Zero Knowledge Interactive Proofs<ul>
+<li>Interaction: rather than passively “reading” proof, verifier engages in a non-trivial interaction with the prover.</li>
+<li>Randomness: the verifier is randomized (tosses coins as a primitive operation), and can err in accept&#x2F;reject with small probability.</li>
 </ul>
 </li>
-<li>VGG 16 on CIFAR-10 15 million parameters in the model 1.1 billion gates for an inference</li>
-</ul>
-</li>
-<li>Solution: Special-Purpose ZKPs<ul>
-<li>ZKP for Matrix Multiplication [Thaler’13]<br><img src="/2023/10/08/ZKP-14-2-Other-ZKP-Applications/1.png"></li>
-<li>ZKP for 2-D Convolutions [LXZ’21]<br><img src="/2023/10/08/ZKP-14-2-Other-ZKP-Applications/2.png"><br><img src="/2023/10/08/ZKP-14-2-Other-ZKP-Applications/3.png"></li>
-</ul>
-</li>
-<li>Other Related Works on ZKML<ul>
-<li>ZKDT[ZFZD20], vCNN [LKKO20], ZEN [FQZ+21], Mystique [WYX+21], pvCNN [WWT+22], [KHSS22], …</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>ZKP for Program Analysis<ul>
-<li>Zero-knowledge Program Analysis<ul>
-<li>secret program P</li>
-<li>public function: static analysis algorithm</li>
-<li>Prove the safety properties of P</li>
-</ul>
-</li>
-<li>Zero-knowledge Vulnerability Disclosure<ul>
-<li>secret vulnerability</li>
-<li>public program</li>
-<li>Running the program leads to crash</li>
-</ul>
-</li>
-<li>Challenges<ul>
-<li>ZKP schemes support circuits.</li>
-<li>Program analysis is usually RAM computation</li>
-</ul>
-</li>
-<li>Solution: Auxiliary Inputs<ul>
-<li>Ask the prover to provide additional data as the input of ZKP<ul>
-<li>Not trusted</li>
-<li>Not sent to the verifier</li>
-<li>Significantly improves the efficiency of ZKP</li>
-</ul>
-</li>
-<li>Example<br><img src="/2023/10/08/ZKP-14-2-Other-ZKP-Applications/4.png"><ul>
-<li>Prover provides the final state of the list</li>
-<li>Prover provides head and tail of each step</li>
-<li>The circuit checks the correctness (offline memory checking [BEGKN’91,Setty’20, …])</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Related works<ul>
-<li>Static analysis: [FDNZ’21, LAHPTW’22, …]</li>
-<li>Vulnerabilities: [GHHKPV’22, CHPPT’23, …]</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>ZKP for Middlebox<ul>
-<li>Middleboxes inspect traffic to ensure security policy</li>
-<li>Zero-Knowledge Middleboxes [GAZBW’22]</li>
-<li>Challenges<ul>
-<li>Work with TLS 1.3</li>
-<li>Legacy cryptographic functions such as AES, SHA</li>
+<li>Example: How to prove colors are different to a blind verifier<br><img src="/2023/10/10/ZKP-1-1-Introduction-and-History-of-ZKP/3.png"></li>
+<li>Example: Prove that exsit an x that $y &#x3D; x^2 mod N$<br><img src="/2023/10/10/ZKP-1-1-Introduction-and-History-of-ZKP/4.png"><ul>
+<li>What Made it possible?<ul>
+<li>The statement to be proven has many possible proofs of which the prover chooses one at random.</li>
+<li>Each such proof is made up of exactly 2 parts: seeing either part on its own gives the verifier no knowledge; seeing both parts implies 100% correctness. </li>
+<li>Verifier chooses at random which of the two parts of the proof he wants the prover to give him. The ability of the prover to provide either part, convinces the verifier</li>
 </ul>
 </li>
 </ul>
@@ -390,10 +340,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/10/10/ZKP-1-1-Introduction-and-History-of-ZKP/">ZKP1.1 Introduction and History of ZKP</a>
             
-            
-            <a class="next" rel="next" href="/2023/10/07/ZKP-14-1-zkBridge-Trustless-Bridge-Made-Practical/">ZKP14.1 zkBridge: Trustless Bridge Made Practical</a>
+            <a class="next" rel="next" href="/2023/10/08/ZKP-14-2-Other-ZKP-Applications/">ZKP14.2 Other ZKP Applications</a>
             
         </section>
 
