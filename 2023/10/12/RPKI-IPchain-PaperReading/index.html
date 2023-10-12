@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP1.2 Definitions of Zero Knowledge Interactive Proofs | Simba&#39;s Homepage</title>
+<title>RPKI IPchain (PaperReading) | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP1.2 Definitions of Zero Knowledge Interactive Proofs</h1>
+            <h1 class="post-title">RPKI IPchain (PaperReading)</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +205,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 12, 2023&nbsp;&nbsp;12:48:40</a>
+                        Date: <a href="#">October 12, 2023&nbsp;&nbsp;12:52:56</a>
                         </span>
                     
                     <!-- 
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/Zero-Knowledge-Proofs/">Zero Knowledge Proofs</a>
+                                <a href="/categories/Resource-Public-Key-Infrastructure/">Resource Public Key Infrastructure</a>
                             
                         </span>
                      -->
@@ -224,7 +224,7 @@
                         
                         
                         
-                        <a href="/categories/Zero-Knowledge-Proofs/">Zero Knowledge Proofs</a>
+                        <a href="/categories/Resource-Public-Key-Infrastructure/">Resource Public Key Infrastructure</a>
                         
                         
                         
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">168</a> 
+                        <a href="">601</a> 
                         
                         </span>
                         
@@ -254,7 +254,7 @@
                         
                         Time:
                         
-                        <a href="">1min</a> 
+                        <a href="">3min</a> 
                         
                         </span>
                         
@@ -264,28 +264,52 @@
         </header>
 
         <div class="post-content">
-            <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-1-Introduction-and-History-of-ZKP-Shafi-Goldwasser"><a href="#Lecture-1-Introduction-and-History-of-ZKP-Shafi-Goldwasser" class="headerlink" title="Lecture 1: Introduction and History of ZKP (Shafi Goldwasser)"></a>Lecture 1: Introduction and History of ZKP (Shafi Goldwasser)</h2><h3 id="1-3-Definitions-of-Zero-Knowledge-Interactive-Proofs"><a href="#1-3-Definitions-of-Zero-Knowledge-Interactive-Proofs" class="headerlink" title="1.3 Definitions of Zero Knowledge Interactive Proofs"></a>1.3 Definitions of Zero Knowledge Interactive Proofs</h3><ul>
-<li>Interactive Proofs: Notation<br><img src="/2023/10/12/ZKP-1-2-Definitions-of-Zero-Knowledge-Interactive-Proofs/1.png"></li>
-<li>What is zero-knowledge？<ul>
-<li>For true Statements What the verifier can compute after the interaction &#x3D; What the verifier could have computed before interaction</li>
-<li>The Simulation Paradigm<ul>
-<li>V’s view gives him nothing new, if he could have simulated it its own s.t ‘simulated view’ and ‘real-view’ are computationally-Indistinguishable</li>
-<li>Computational Indistinguishability: For all distinguisher algorithms D, even after receiving a polynomial number of samples from $D_b$, Prob[D guesses b]&lt;1&#x2F;2+negl(k)</li>
+            <h1 id="IPchain-Securing-IP-Prefix-Allocation-and-Delegation-with-Blockchain"><a href="#IPchain-Securing-IP-Prefix-Allocation-and-Delegation-with-Blockchain" class="headerlink" title="IPchain: Securing IP Prefix Allocation and Delegation with Blockchain"></a>IPchain: Securing IP Prefix Allocation and Delegation with Blockchain</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li>We present IPchain, a blockchain to store the allocations and delegations of IP addresses, with the aim of easing the deployment of secure interdomain routing systems.</li>
+</ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>Unfortunately, the global deployment of the RPKI is slower than expected with only ∼9% of the total &#x2F;24 IPv4 address blocks owned by the five Internet Registries being protected by the RPKI.</li>
+<li>In this paper we propose IPchain: a blockchain to store IP address allocation and delegation data. </li>
+<li>Three of these properties stand out when compared to the RPKI: (i) the ability to create flexible trust models, providing a different balance of power between CAs and downstream users, (ii) simplified management, especially regarding common PKI operations such as key rollover and (iii) auditability: blockchain’s append-only ledger can detect possible configuration errors even before a modification.</li>
+<li>IPchain allows its participants to exchange IP prefixes just like in coins are transferred in Bitcoin.</li>
+</ul>
+<h2 id="Why-blockchain"><a href="#Why-blockchain" class="headerlink" title="Why blockchain?"></a>Why blockchain?</h2><ul>
+<li>Flexible trust models: Some researchers argue that the centralized nature of the RPKI hinders its deployment[6]. This is due to the fact that its users (typically ISPs) have to trust the RPKI CA, which can arbitrarily revoke any downstream certificate[9].</li>
+<li>Simplified management: A key rollover in a blockchain can be easily performed transferring a coin&#x2F;asset to a new address (keypair).</li>
+<li>Privacy: Blockchain transactions are not linked to the user’s identity, just to a public key.</li>
+<li>Consistent vision of the state: Exactly like in Bitcoin, in the RPKI we need to keep track of the owner of each IP prefix (coins), e.g. to avoid the transfer of the same prefix to two different users (double-spending).</li>
+<li>Auditability: Given the permanent nature of blockchain records, it is possible to determine if an object (e.g. a ROA) utilizing a particular resource (e.g. an IP address) has been made obsolete by a new object.</li>
+</ul>
+<h2 id="Which-consensus-algorithm"><a href="#Which-consensus-algorithm" class="headerlink" title="Which consensus algorithm?"></a>Which consensus algorithm?</h2><ul>
+<li>In a Proof of Stake (PoS [14]) blockchain, participants with more assets&#x2F;coins are more likely to add blocks. </li>
+<li>This aspect is of particular importance in the context of IPchain: users holding a large number of IP addresses are more likely to add blocks. </li>
+<li>In a blockchain for IP addresses, this would mean buying IP addresses from other parties. These parties do not have a clear incentive to sell their blocks of addresses to the attacker since IP addresses are an important economical asset.</li>
+</ul>
+<h2 id="Architecture-of-IPchain"><a href="#Architecture-of-IPchain" class="headerlink" title="Architecture of IPchain"></a>Architecture of IPchain</h2><ul>
+<li>IP prefixes as coins</li>
+<li>Supported Operation：Allocate, Delegate, Metadata<ul>
+<li>A delegated prefix cannot be further allocated.</li>
 </ul>
 </li>
-<li>Definition<br><img src="/2023/10/12/ZKP-1-2-Definitions-of-Zero-Knowledge-Interactive-Proofs/2.png"></li>
-<li>Def: (P,V) is a zero-knowledge interactive protocol if it is complete, sound and zero-knowledge</li>
-<li>What if V is NOT HONEST?<br><img src="/2023/10/12/ZKP-1-2-Definitions-of-Zero-Knowledge-Interactive-Proofs/3.png"></li>
-<li>Perfect Zero Knowledge<ul>
-<li>verifier’s view can be exactly efficiently simulated ‘Simulated views’ &#x3D; ‘real views’</li>
+<li>Deployment<ul>
+<li>The deployment of our proposed blockchain mimics the current procedure used to allocate IP addresses, which is typically conformed of three tiers (figure 5). IANA, as the top-level regulator of Internet numbers, owns the genesis block keys. First, IANA allocates huge blocks of addresses to the Regional Internet Registries (1). Those, in turn, allocate or delegate blocks to its customers, usually ISPs (2). Finally, ISPs can also assign addresses to their users (3).</li>
+</ul>
+</li>
+<li>Other considerations<ul>
+<li>Rekeying: we only have to add a new transaction re-allocating the IP prefix to a new keypair controlled by ourselves.</li>
+<li>Privacy: Since IP addresses are linked to their owners’ public key, it is not possible to identify the holder only with the data in the blockchain.</li>
+<li>IPv6 Support: We create alternative blocks of v4 or v6 transactions.</li>
 </ul>
 </li>
 </ul>
+<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h2><ul>
+<li>IPchain: <a target="_blank" rel="noopener" href="https://github.com/OpenOverlayRouter/blockchain-mapping-system">https://github.com/OpenOverlayRouter/blockchain-mapping-system</a></li>
+<li>PoS Consensus Algorithm: <ul>
+<li>NIST’s random beacon: <a target="_blank" rel="noopener" href="https://www.nist.gov/programs-projects/nistrandomness-beacon">https://www.nist.gov/programs-projects/nistrandomness-beacon</a></li>
+</ul>
 </li>
-<li>Working through a Simulation for QR Protocol<ul>
-<li>(Honest Verifier) Perfect Zero Knowledge<br><img src="/2023/10/12/ZKP-1-2-Definitions-of-Zero-Knowledge-Interactive-Proofs/4.png"></li>
-<li>Perfect Zero Knowledge: for all V*<br><img src="/2023/10/12/ZKP-1-2-Definitions-of-Zero-Knowledge-Interactive-Proofs/5.png"></li>
+<li>Peer-to-Peer Network: <ul>
+<li>The P2P module: Pyhton’s Twisted10 library <a target="_blank" rel="noopener" href="https://twistedmatrix.com/trac/">https://twistedmatrix.com/trac/</a></li>
 </ul>
 </li>
 </ul>
@@ -324,7 +348,9 @@
                     
                         <a href="/tags/Note/"># Note</a>
                     
-                        <a href="/tags/ZKP/"># ZKP</a>
+                        <a href="/tags/Paper-Reading/"># Paper Reading</a>
+                    
+                        <a href="/tags/RPKI/"># RPKI</a>
                     
                         
                 </span>
@@ -337,10 +363,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/10/12/RPKI-IPchain-PaperReading/">RPKI IPchain (PaperReading)</a>
             
-            
-            <a class="next" rel="next" href="/2023/10/10/ZKP-1-1-Introduction-and-History-of-ZKP/">ZKP1.1 Introduction and History of ZKP</a>
+            <a class="next" rel="next" href="/2023/10/12/ZKP-1-2-Definitions-of-Zero-Knowledge-Interactive-Proofs/">ZKP1.2 Definitions of Zero Knowledge Interactive Proofs</a>
             
         </section>
 
