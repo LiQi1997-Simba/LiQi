@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP1.3 ZK proof of Knowledge | Simba&#39;s Homepage</title>
+<title>ZKP2 Overview of Modern SNARK Constructions (Dan Boneh) | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP1.3 ZK proof of Knowledge</h1>
+            <h1 class="post-title">ZKP2 Overview of Modern SNARK Constructions (Dan Boneh)</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 14, 2023&nbsp;&nbsp;19:41:13</a>
+                        Date: <a href="#">October 14, 2023&nbsp;&nbsp;23:47:02</a>
                         </span>
                     
                     <!-- 
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">99</a> 
+                        <a href="">502</a> 
                         
                         </span>
                         
@@ -254,7 +254,7 @@
                         
                         Time:
                         
-                        <a href="">1min</a> 
+                        <a href="">3min</a> 
                         
                         </span>
                         
@@ -265,25 +265,118 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-1-Introduction-and-History-of-ZKP-Shafi-Goldwasser"><a href="#Lecture-1-Introduction-and-History-of-ZKP-Shafi-Goldwasser" class="headerlink" title="Lecture 1: Introduction and History of ZKP (Shafi Goldwasser)"></a>Lecture 1: Introduction and History of ZKP (Shafi Goldwasser)</h2><h3 id="1-4-ZK-proof-of-Knowledge"><a href="#1-4-ZK-proof-of-Knowledge" class="headerlink" title="1.4 ZK proof of Knowledge"></a>1.4 ZK proof of Knowledge</h3><ul>
-<li>PoK<br><img src="/2023/10/14/ZKP-1-3-ZK-proof-of-Knowledge/1.png"></li>
-<li>Application: Identity Theft [FS86]<ul>
-<li>To identify itself prover proves a hard theorem.</li>
+<h2 id="Lecture-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh"><a href="#Lecture-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh" class="headerlink" title="Lecture 2 Overview of Modern SNARK Constructions (Dan Boneh)"></a>Lecture 2 Overview of Modern SNARK Constructions (Dan Boneh)</h2><ul>
+<li>What is a zk-SNARK (intuition)<ul>
+<li>SNARK is a succinct proof that a certain statement is true.</li>
+<li>The proof is short and fast to verify</li>
+<li>zk-SNARK: the proof reveals nothing about the privacy of a message</li>
+<li>Babai-Fortnow-Levin-Szegedy 1991: In this setup, a single reliable PC can monitor the operation of a herd of supercomputers working with unreliable software.</li>
 </ul>
 </li>
-<li>All NP is in Zero Knowledge<ul>
-<li>Theorem[GMW86,Naor]: If one-way functions exist, then every L in NP has computational zero knowledge interactive proofs Ideas of the proof</li>
-<li>Commit Scheme<ul>
-<li>commit(m)-&gt;h, decommit(h)-&gt;m<br><img src="/2023/10/14/ZKP-1-3-ZK-proof-of-Knowledge/2.png"></li>
+<li>Applications<ul>
+<li>Blockchain<ul>
+<li>Scalability: proof-based Rollups (zkRollup)</li>
+<li>Bridging blockchains: proof of consensus (zkBridge)</li>
+<li>Private Tx on a public blockchain: zk proof that a private Tx is valid (Tornado cash, Zcash, IronFish, Aleo)</li>
+<li>Compliance: Proof that a private Tx is compliant with banking laws (Espresso); Proof that an exchange is solvent in zero-knowledge (Raposa)</li>
+</ul>
+</li>
+<li>C2PA: a standard for content provenance, T. Datta, 2022 (fighting disinformation)<ul>
+<li>Solve the problem: post-processing (resized photo)<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/1.png"></li>
+</ul>
+</li>
+<li>A. Naveh and E. Tromer, “PhotoProof: Cryptographic Image Authentication for Any Set of Permissible Transformations,” 2016 IEEE Symposium on Security and Privacy (SP), San Jose, CA, USA, 2016, pp. 255-271, doi: 10.1109&#x2F;SP.2016.23.</li>
+</ul>
+</li>
+<li>Review: Arithmetic circuits<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/2.png"><ul>
+<li>Input: n elements in finite field</li>
+<li>Output: an element in finite field</li>
+</ul>
+</li>
+<li>Structured vs. Unstructured circuits<ul>
+<li>An unstructured circuit: a circuit with arbitrary wires<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/3.png"></li>
+<li>M: Micro processor</li>
+<li>Some SNARK techniques only apply to structured circuits</li>
+</ul>
+</li>
+<li>NARK: Non-interactive ARgument of Knowledge<ul>
+<li>A preprocessing NARK is a triple (S, P, V)</li>
+<li>S(C) -&gt; public parameters (pp,vp) for prover and verifier</li>
+<li>P(pp, x, w) -&gt; proof $\Pi$</li>
+<li>V(vp, x, $\Pi$) -&gt; accept or reject</li>
+<li>requirements (informal)<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/4.png"><ul>
+<li>A trivial NARK: $\Pi$ &#x3D; w</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>G3-COLORABLE Example<br><img src="/2023/10/14/ZKP-1-3-ZK-proof-of-Knowledge/3.png"></li>
+<li>SNARK: a Succinct ARgument of Knowledge<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/5.png"><ul>
+<li>The trivial NARK is not a SNARK</li>
 </ul>
-<h3 id="1-5-Applications-in-practice-and-in-theory"><a href="#1-5-Applications-in-practice-and-in-theory" class="headerlink" title="1.5 Applications in practice and in theory"></a>1.5 Applications in practice and in theory</h3><ul>
-<li>Graph Non-Isomorphism in IP<br><img src="/2023/10/14/ZKP-1-3-ZK-proof-of-Knowledge/4.png"></li>
-<li>the Fiat-Shamir Paradigm[FS87]<br><img src="/2023/10/14/ZKP-1-3-ZK-proof-of-Knowledge/5.png"></li>
+</li>
+<li>Types of preprocessing Setup<ul>
+<li>Setup of a Circuit C: S(C, r)-&gt; public parameters (pp, vp)<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/6.png"></li>
+<li>for a circuit with ≈$2^20$ gates<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/7.png"></li>
+</ul>
+</li>
+<li>Definitions: knowledge soundness<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/8.png"></li>
+<li>Building an efficient SNARK: General paradigm<ul>
+<li>Step 1: A functional commitment scheme (cryptographic object)</li>
+<li>Step 2: A compatible interactive oracle proof (IOP)</li>
+</ul>
+</li>
+<li>Review: commitment scheme<ul>
+<li>commit(m,r) -&gt; com (r chosen at random)</li>
+<li>verify(m, com, r) -&gt; accept or reject</li>
+<li>Properties (Informat):<ul>
+<li>Binding: cannot produce com and two valid openings</li>
+<li>Hiding: com reveals nothing about committed data</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Committing to a function: syntax<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/9.png"></li>
+<li>Four important functional commitments<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/10.png"></li>
+<li>Polynomial commitments<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/11.png"></li>
+<li>Examples<ul>
+<li>Using bilinear groups: KZG10(trusted setup), Dory’20</li>
+<li>Using hash function only: based on FRI</li>
+<li>Using elliptic curve: Bulletproofs</li>
+<li>Using groups of unknown order: Dark’20</li>
+</ul>
+</li>
+<li>trivial commitment scheme<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/12.png"><ul>
+<li>Proof $\Pi$ is not succint: prove size and verification time are all linear to d</li>
+<li>It is not a polynomial commitment</li>
+</ul>
+</li>
+<li>A useful observation<ul>
+<li>Zero test<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/13.png"></li>
+<li>Equality test<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/14.png"></li>
+<li>The equality test protocol<ul>
+<li>Interactive protocol<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/15.png"></li>
+<li>Making it a SNARK (non-interactive)<ul>
+<li>The Fiat-Shamir transform</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/16.png"></p>
+<ul>
+<li>F-IOP<ul>
+<li>boost functional commitment -&gt; SNARK for general circuits<br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/17.png"><br><img src="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/18.png"></li>
+<li>Just like the SumCheck Protocol</li>
+</ul>
+</li>
+<li>The IOP Zoo<ul>
+<li>Poly-IOP: Sonic, Marlin, Plonk,… (+Poly-Commit)</li>
+<li>Multilinear-IOP: Spartan, Clover, Hyperplonk,… (+Multilinear-Commit)</li>
+<li>Vector-IOP: STARK, Breakdown, Orion,… (+Merkle-Commit)</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -333,10 +426,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/10/14/ZKP-2-Overview-of-Modern-SNARK-Constructions-Dan-Boneh/">ZKP2 Overview of Modern SNARK Constructions (Dan Boneh)</a>
             
-            
-            <a class="next" rel="next" href="/2023/10/13/RPKI-MaxLength-Considered-Harmful-to-the-RPKI-PaperReading/">RPKI MaxLength Considered Harmful to the RPKI (PaperReading)</a>
+            <a class="next" rel="next" href="/2023/10/14/ZKP-1-3-ZK-proof-of-Knowledge/">ZKP1.3 ZK proof of Knowledge</a>
             
         </section>
 
