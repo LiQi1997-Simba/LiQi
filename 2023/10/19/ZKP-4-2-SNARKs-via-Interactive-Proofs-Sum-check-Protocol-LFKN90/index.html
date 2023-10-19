@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP4.1 SNARKs via Interactive Proofs | Simba&#39;s Homepage</title>
+<title>ZKP4.2 SNARKs via Interactive Proofs (Sum-check Protocol[LFKN90]) | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP4.1 SNARKs via Interactive Proofs</h1>
+            <h1 class="post-title">ZKP4.2 SNARKs via Interactive Proofs (Sum-check Protocol[LFKN90])</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 18, 2023&nbsp;&nbsp;20:31:39</a>
+                        Date: <a href="#">October 19, 2023&nbsp;&nbsp;14:58:52</a>
                         </span>
                     
                     <!-- 
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">259</a> 
+                        <a href="">505</a> 
                         
                         </span>
                         
@@ -254,7 +254,7 @@
                         
                         Time:
                         
-                        <a href="">1min</a> 
+                        <a href="">2min</a> 
                         
                         </span>
                         
@@ -265,69 +265,96 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-4-SNARKs-via-Interactive-Proofs-Justin-Thaler"><a href="#Lecture-4-SNARKs-via-Interactive-Proofs-Justin-Thaler" class="headerlink" title="Lecture 4: SNARKs via Interactive Proofs (Justin Thaler)"></a>Lecture 4: SNARKs via Interactive Proofs (Justin Thaler)</h2><h3 id="4-1-Interactive-Proofs-Motivation-and-Model"><a href="#4-1-Interactive-Proofs-Motivation-and-Model" class="headerlink" title="4.1 Interactive Proofs: Motivation and Model"></a>4.1 Interactive Proofs: Motivation and Model</h3><ul>
-<li>Interactive Proofs<br><img src="/2023/10/18/ZKP-4-1-SNARKs-via-Interactive-Proofs/1.png"><ul>
-<li>P solves problem, tells V the answer.<ul>
-<li>Then they have a conversation.</li>
-<li>P’s goal: convince V the answer is correct.</li>
+<h2 id="Lecture-4-SNARKs-via-Interactive-Proofs-Justin-Thaler"><a href="#Lecture-4-SNARKs-via-Interactive-Proofs-Justin-Thaler" class="headerlink" title="Lecture 4: SNARKs via Interactive Proofs (Justin Thaler)"></a>Lecture 4: SNARKs via Interactive Proofs (Justin Thaler)</h2><h3 id="4-3-Interactive-proof-design-Technical-Preliminaries"><a href="#4-3-Interactive-proof-design-Technical-Preliminaries" class="headerlink" title="4.3 Interactive proof design: Technical Preliminaries"></a>4.3 Interactive proof design: Technical Preliminaries</h3><ul>
+<li>SZDL Lemma<ul>
+<li>Equal test (in multivariate polynomials)<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/1.png"></li>
 </ul>
 </li>
-<li>Requirements: <ul>
-<li>Completeness: an honest P can convince V to accept.</li>
-<li>(Statistical) Soundness: V will catch a lying P with high probability.</li>
-<li>If soundness holds only against polynomial-time provers, then the protocol is called an interactive argument.</li>
+<li>Low-Defree and Multilinear Extensions<ul>
+<li>Extensions<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/2.png"></li>
+<li>Multilinear Extensions<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/3.png"></li>
+<li>Examples<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/4.png"><br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/5.png"><ul>
+<li>f(0,0) &#x3D; 1; f(0,1) &#x3D; 2; f(1,0) &#x3D; 8; f(1,1) &#x3D; 10</li>
+<li>$\Tilde{f}(0,0) &#x3D; 1; \Tilde{f}(0,1) &#x3D; 2; \Tilde{f}(1,0) &#x3D; 8; \Tilde{f}(1,1) &#x3D; 10$</li>
+<li>$\Tilde{f}(x_1,x_2) &#x3D; (1-x_1)(1-x_2)+2(1-x_1)x_2+8x_1(1-x_2)+10x_1x_2$: unique!<ul>
+<li>(1-x_1)(1-x_2) term maps inputs (0,0) to 1</li>
+<li>2(1-x_1)x_2 term maps inputs (0,1) to 2</li>
+<li>…</li>
 </ul>
 </li>
-</ul>
-</li>
-<li>Interactive Proofs and Arguments<ul>
-<li>Compare soundness to knowledge soundness for circuit-satisfiability<br><img src="/2023/10/18/ZKP-4-1-SNARKs-via-Interactive-Proofs/2.png"></li>
-<li>Knowledge soundness is stronger.</li>
-</ul>
-</li>
-<li>Public Verifiability<ul>
-<li>Interactive proofs and arguments only convince the party that is choosing&#x2F;sending the random challenges</li>
-<li>This is bad if there are many verifiers (as in most blockchain applications).<ul>
-<li>P would have to convince each verifier separately.</li>
-</ul>
-</li>
-<li>For public coin protocols, we have a solution: Fiat-Shamir.<ul>
-<li>Makes the protocol non-interactive + publicly verifiable.</li>
+<li>Evaluating multilinear extensions quickly<ul>
+<li>Use Lagrange Interpolation</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-<h3 id="4-2-SNARKs-from-interactive-proofs"><a href="#4-2-SNARKs-from-interactive-proofs" class="headerlink" title="4.2 SNARKs from interactive proofs"></a>4.2 SNARKs from interactive proofs</h3><ul>
-<li>Actual SNARK<ul>
-<li>P commits cryptographically to W.<ul>
-<li>Uses an IP to prove that w satisfies the claimed property.</li>
-<li>Reveals just enough information about the committed witness wto allow V to run its checks in the IP.</li>
-<li>Render non-interactive via Fiat-Shamir.</li>
+</li>
+</ul>
+<p><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/6.png"><br>        - $\Tilde{\delta}_w(r) maps (0,0) to 1; others to 0<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/7.png"></p>
+<h3 id="4-4-The-Sum-check-Protocol-LFKN90"><a href="#4-4-The-Sum-check-Protocol-LFKN90" class="headerlink" title="4.4 The Sum-check Protocol [LFKN90]"></a>4.4 The Sum-check Protocol [LFKN90]</h3><ul>
+<li>Input: V given oracle access to a l-variate polynomial g over filed F.<ul>
+<li>Prover负责计算，并把计算结果和proof给Verifier。</li>
+<li>Verifier验证计算结果的正确性</li>
+</ul>
+</li>
+<li>Goal: compute the quantity<ul>
+<li>$\SIgma_{b1\in{0,1}} \SIgma_{b2\in{0,1}} \dots \SIgma_{bl\in{0,1}} g(b_1,\dots,b_l)$</li>
+</ul>
+</li>
+<li>最简单的方法，verifier问prover每个点的值然后加起来，需要$2^l$次</li>
+<li>Sum-check Protocol<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/8.png"><ul>
+<li>s1 is the prover actually sent and H1 is what the prover would send if the prover is honest<ul>
+<li>H1 is equal to the true answer except it have been cut off the first sum</li>
+<li>H1 is a univariate polynomial<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/9.png"><br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/10.png"></li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Functional Commitments<ul>
-<li>Polynomial commitments</li>
-<li>Multilinear commitments</li>
-<li>Vector commitments (e.g., Merkle trees)</li>
+<li>Analysis of the sum-check protocol<ul>
+<li>Completeness</li>
+<li>Soundness<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/11.png"></li>
+<li>Costs of the sum-check protocol<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/12.png"></li>
 </ul>
 </li>
-<li>Merkle trees:<ul>
-<li>The commitment<br><img src="/2023/10/18/ZKP-4-1-SNARKs-via-Interactive-Proofs/3.png"></li>
-<li>Opening Leaf T<br><img src="/2023/10/18/ZKP-4-1-SNARKs-via-Interactive-Proofs/4.png"><ul>
-<li>Provers need to provide T, C, m4, h1, and k1<ul>
-<li>“Opening proof” size is O(log n) hash values.</li>
+<li>Application: Counting Triangles<ul>
+<li>Input $A \in {0,1}^{n \times n}$, representing the adjacency matrix of a graph</li>
+<li>Output: $\Sigma_{i,j,k}\in[n]^3 A_{ij}A_{jk}A_{ik}$<ul>
+<li>Time cost in matrix-multiplication: $n^{2.37}$</li>
+</ul>
+</li>
+<li>The Protocol:<ul>
+<li>View A as a function mapping ${0,1}^{\log n} \times {0,1}^{\log n}$ to F<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/13.png"><br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/14.png"></li>
+</ul>
+</li>
+<li>Cost<ul>
+<li>Communication: O(log n)</li>
+<li>V runtime is O(n^2)</li>
+<li>P runtime is O(n^3)</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>(Attampt to) Commit to a univariate f(X) in $F_7[X]$<br><img src="/2023/10/18/ZKP-4-1-SNARKs-via-Interactive-Proofs/5.png"></li>
-<li>Reveal f(4)<br><img src="/2023/10/18/ZKP-4-1-SNARKs-via-Interactive-Proofs/6.png"></li>
-<li>Problems<br><img src="/2023/10/18/ZKP-4-1-SNARKs-via-Interactive-Proofs/7.png"></li>
+<li>A SNARK for circuit-satisfiability<ul>
+<li>SNARKs for circuit-satisfiability<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/15.png"></li>
+<li>Viewing a transcript T as a function with domain ${0,1}^{\log S}$<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/16.png"></li>
 </ul>
 </li>
+</ul>
+<h3 id="4-5-The-polynomial-IOP-underlying-the-SNARK"><a href="#4-5-The-polynomial-IOP-underlying-the-SNARK" class="headerlink" title="4.5 The polynomial IOP underlying the SNARK"></a>4.5 The polynomial IOP underlying the SNARK</h3><ul>
+<li>The start of the polynomial IOP<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/17.png"><ul>
+<li>Intuition for why h is a useful object for P to send<ul>
+<li>Think of h as a distance-amplified encoding of the transcript T<ul>
+<li>the domain of T is ${0,1}^{\log S}$. The domain of h is $F^{\log S}$</li>
+<li>Even tiny differences in transcripts can get blown up by the extension polynomials into easily detectable differences, in particular that are detectable  even by a verifier that is only allowed to evaluate those extension polynomials at a single point.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Two-step plan of attack (这部分没听懂QAQ)<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/18.png"><br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/19.png"><br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/20.png"><br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/21.png"></li>
+<li>The polynomial IOP for circuit-satisfiability<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/22.png"><br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/23.png"></li>
 </ul>
 
         </div>
@@ -379,10 +406,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/">ZKP4.2 SNARKs via Interactive Proofs (Sum-check Protocol[LFKN90])</a>
             
-            
-            <a class="next" rel="next" href="/2023/10/17/ZKP-3-2-Programming-ZKPs-Part-2/">ZKP3.2 Programming ZKPs</a>
+            <a class="next" rel="next" href="/2023/10/18/ZKP-4-1-SNARKs-via-Interactive-Proofs/">ZKP4.1 SNARKs via Interactive Proofs</a>
             
         </section>
 
