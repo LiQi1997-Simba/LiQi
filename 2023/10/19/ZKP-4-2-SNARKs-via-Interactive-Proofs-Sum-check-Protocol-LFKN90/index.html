@@ -275,8 +275,8 @@
 <li>Multilinear Extensions<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/3.png"></li>
 <li>Examples<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/4.png"><br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/5.png"><ul>
 <li>f(0,0) &#x3D; 1; f(0,1) &#x3D; 2; f(1,0) &#x3D; 8; f(1,1) &#x3D; 10</li>
-<li>$\Tilde{f}(0,0) &#x3D; 1; \Tilde{f}(0,1) &#x3D; 2; \Tilde{f}(1,0) &#x3D; 8; \Tilde{f}(1,1) &#x3D; 10$</li>
-<li>$\Tilde{f}(x_1,x_2) &#x3D; (1-x_1)(1-x_2)+2(1-x_1)x_2+8x_1(1-x_2)+10x_1x_2$: unique!<ul>
+<li>$\tilde{f}(0,0) &#x3D; 1; \tilde{f}(0,1) &#x3D; 2; \tilde{f}(1,0) &#x3D; 8; \tilde{f}(1,1) &#x3D; 10$</li>
+<li>$\tilde{f}(x_1,x_2) &#x3D; (1-x_1)(1-x_2)+2(1-x_1)x_2+8x_1(1-x_2)+10x_1x_2$: unique!<ul>
 <li>(1-x_1)(1-x_2) term maps inputs (0,0) to 1</li>
 <li>2(1-x_1)x_2 term maps inputs (0,1) to 2</li>
 <li>…</li>
@@ -291,7 +291,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/6.png"><br>        - $\Tilde{\delta}_w(r) maps (0,0) to 1; others to 0<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/7.png"></p>
+<p><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/6.png"><br>        - $\tilde{\delta}_w(r)$ maps (0,0) to 1; others to 0<br><img src="/2023/10/19/ZKP-4-2-SNARKs-via-Interactive-Proofs-Sum-check-Protocol-LFKN90/7.png"></p>
 <h3 id="4-4-The-Sum-check-Protocol-LFKN90"><a href="#4-4-The-Sum-check-Protocol-LFKN90" class="headerlink" title="4.4 The Sum-check Protocol [LFKN90]"></a>4.4 The Sum-check Protocol [LFKN90]</h3><ul>
 <li>Input: V given oracle access to a l-variate polynomial g over filed F.<ul>
 <li>Prover负责计算，并把计算结果和proof给Verifier。</li>
@@ -299,7 +299,7 @@
 </ul>
 </li>
 <li>Goal: compute the quantity<ul>
-<li>$\SIgma_{b1\in{0,1}} \SIgma_{b2\in{0,1}} \dots \SIgma_{bl\in{0,1}} g(b_1,\dots,b_l)$</li>
+<li>$\Sigma_{b_1\in{0,1}} \Sigma_{b_2\in{0,1}} \dots \Sigma_{b_l\in{0,1}} g(b_1,\dots,b_l)$</li>
 </ul>
 </li>
 <li>最简单的方法，verifier问prover每个点的值然后加起来，需要$2^l$次</li>
@@ -319,7 +319,7 @@
 </li>
 <li>Application: Counting Triangles<ul>
 <li>Input $A \in {0,1}^{n \times n}$, representing the adjacency matrix of a graph</li>
-<li>Output: $\Sigma_{i,j,k}\in[n]^3 A_{ij}A_{jk}A_{ik}$<ul>
+<li>Output: $\Sigma_{i,j,k\in[n]^3} A_{ij}A_{jk}A_{ik}$<ul>
 <li>Time cost in matrix-multiplication: $n^{2.37}$</li>
 </ul>
 </li>
