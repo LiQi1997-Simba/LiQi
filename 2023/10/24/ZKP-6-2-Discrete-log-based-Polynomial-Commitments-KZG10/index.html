@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP6.1 Discrete-log-based Polynomial Commitments (Preliminary) | Simba&#39;s Homepage</title>
+<title>ZKP-6-2-Discrete-log-based Polynomial Commitments (KZG10) | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP6.1 Discrete-log-based Polynomial Commitments (Preliminary)</h1>
+            <h1 class="post-title">ZKP-6-2-Discrete-log-based Polynomial Commitments (KZG10)</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 23, 2023&nbsp;&nbsp;13:31:27</a>
+                        Date: <a href="#">October 24, 2023&nbsp;&nbsp;12:35:35</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">245</a> 
+                        <a href="">180</a> 
                         
                         </span>
                         
@@ -304,46 +304,49 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-6-Discrete-log-based-Polynomial-Commitments-Yupeng-Zhang"><a href="#Lecture-6-Discrete-log-based-Polynomial-Commitments-Yupeng-Zhang" class="headerlink" title="Lecture 6: Discrete-log-based Polynomial Commitments (Yupeng Zhang)"></a>Lecture 6: Discrete-log-based Polynomial Commitments (Yupeng Zhang)</h2><ul>
-<li>Recall<ul>
-<li>How to build an efficient SNARK?<ul>
-<li>A polynomial commitment scheme + A polynomial interactive oracle proof (IOP) &#x3D; SNARK for general circuits</li>
-</ul>
-</li>
-<li>Plonk<ul>
-<li>Univariate polynomial commitment + Plonk Polynomial IOP &#x3D; SNARK for general circuits</li>
-</ul>
-</li>
-<li>Interactive proofs<ul>
-<li>Multivariate polynomial commitment + Sumcheck protocol &#x3D; SNARK for general circuits</li>
-</ul>
-</li>
-<li>polynomial commitment<br><img src="/2023/10/23/ZKP-6-1-Discrete-log-based-Polynomial-Commitments/1.png"><br><img src="/2023/10/23/ZKP-6-1-Discrete-log-based-Polynomial-Commitments/2.png"></li>
+<h2 id="Lecture-6-Discrete-log-based-Polynomial-Commitments-Yupeng-Zhang"><a href="#Lecture-6-Discrete-log-based-Polynomial-Commitments-Yupeng-Zhang" class="headerlink" title="Lecture 6: Discrete-log-based Polynomial Commitments (Yupeng Zhang)"></a>Lecture 6: Discrete-log-based Polynomial Commitments (Yupeng Zhang)</h2><h3 id="6-2-KZG-polynomial-commitment-and-its-variants"><a href="#6-2-KZG-polynomial-commitment-and-its-variants" class="headerlink" title="6.2 KZG polynomial commitment and its variants"></a>6.2 KZG polynomial commitment and its variants</h3><ul>
+<li>KZG: [Kate-Zaverucha-Goldberg ‘2010]</li>
+<li>Procedure<br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/1.png"><br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/2.png"><br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/3.png"><br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/4.png"><ul>
+<li>Soundness: q-Strong Bilinear Diffie-Hellman (q-SBDH) assumption<br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/5.png"><ul>
+<li>Formal Security Proof<br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/6.png"><ul>
+<li>The key idea: decompose the fack value $v*$ into a correct value $f(u)$ and a difference $\delta$</li>
 </ul>
 </li>
 </ul>
-<h3 id="6-1-Background"><a href="#6-1-Background" class="headerlink" title="6.1 Background"></a>6.1 Background</h3><ul>
-<li>Group: Closure, Associativity, Identity, Inverse.</li>
-<li>Generator of a group: An element $g$ that generates all elements in the group by taking all powers of $g$</li>
-<li>Discrete logarithm assumption<ul>
-<li>A group $G$ has an alternative representation as the powers of the generator $g$: ${g, g^2, g^3,…,g^{p-1}}$</li>
-<li>Discrete logarithm problem: given $y \in G$, find $x$ s.t. $g^x &#x3D; y$</li>
-<li>Discrete-log assumption: discrete-log problem is computationally hard.</li>
+</li>
+<li>Knowledge soundness and KoE assumption<br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/7.png"><ul>
+<li>KZG with knowledge soundness: the commitment size is doubled</li>
+<li>Solution: Generic group model (GGM) [Shoup’97, Maurer’05]<ul>
+<li>GGM can replace the KoE assumption and reduce the commitment size in KZG.</li>
 </ul>
 </li>
-<li>(Computational) Diffie-Hellman assumption: Given $G, g, g^x, g^y$, cannot compute $g^{xy}$</li>
-<li>Bilinear pairing:<ul>
-<li>$(p, G, g, G_T, e)$</li>
-<li>$G$ and $G_T$ are both multiplicative cyclic groups of order $p$, $g$ is the generator of $G$. </li>
-<li>$G$: base group, $G_T$ target group</li>
-<li>Pairing: $e(P^x,Q^y) &#x3D; e(P,Q)^{xy}$<ul>
-<li>Example: $e(g^x,g^y) &#x3D; e(g,g)^{xy} &#x3D; e(g^{xy},g)$</li>
 </ul>
 </li>
-<li>Given $g^x$ and $g^y$ , a pairing can check that some element $h &#x3D; g^{xy}$ without knowing $x$ and $y$.</li>
+<li>Properties of the KZG poly-commit<br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/8.png"></li>
+<li>Ceremony: A distributed generation of gp s.t. No one can reconstruct the trapdoor if at least one of the participants is honest and discards their secrets<br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/9.png"></li>
 </ul>
 </li>
-<li>BLS signature [Boneh–Lynn–Shacham’2001]<br><img src="/2023/10/23/ZKP-6-1-Discrete-log-based-Polynomial-Commitments/3.png"></li>
+<li>Variants of KZG polynomial commitment<ul>
+<li>Multivariate poly-commit [Papamanthou-Shi-Tamassia’13]<br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/10.png"></li>
+<li>Achieving zero-knowledge [ZGKPP’2018]<br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/11.png"></li>
+<li>Batch opening<ul>
+<li>single polynomial<br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/12.png"></li>
+<li>multiple polynomials<br><img src="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/13.png"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Application<ul>
+<li>Plonk [Gabizon-Williamson-Ciobotaru’20]<ul>
+<li>Univariate KZG + Plonk Polynomial IOP</li>
+</ul>
+</li>
+<li>vSQL[ZGKPP’17], Libra[XZZPS’19]<ul>
+<li>Multivariate KZG + Sumcheck protocol &#x2F; GKR protocol</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -395,10 +398,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/">ZKP-6-2-Discrete-log-based Polynomial Commitments (KZG10)</a>
             
-            
-            <a class="next" rel="next" href="/2023/10/22/ZKP-5-2-PLONK/">ZKP5.2 PLONK IOP</a>
+            <a class="next" rel="next" href="/2023/10/23/ZKP-6-1-Discrete-log-based-Polynomial-Commitments/">ZKP6.1 Discrete-log-based Polynomial Commitments (Preliminary)</a>
             
         </section>
 
