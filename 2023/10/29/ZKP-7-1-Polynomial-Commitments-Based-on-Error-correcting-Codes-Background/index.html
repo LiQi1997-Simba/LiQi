@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP6.3 Discrete-log-based Polynomial Commitments (Bulletproofs) | Simba&#39;s Homepage</title>
+<title>ZKP-7-1-Polynomial Commitments Based on Error-correcting Codes(Background) | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP6.3 Discrete-log-based Polynomial Commitments (Bulletproofs)</h1>
+            <h1 class="post-title">ZKP-7-1-Polynomial Commitments Based on Error-correcting Codes(Background)</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 25, 2023&nbsp;&nbsp;21:23:48</a>
+                        Date: <a href="#">October 29, 2023&nbsp;&nbsp;22:33:15</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">236</a> 
+                        <a href="">187</a> 
                         
                         </span>
                         
@@ -304,59 +304,48 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-6-Discrete-log-based-Polynomial-Commitments-Yupeng-Zhang"><a href="#Lecture-6-Discrete-log-based-Polynomial-Commitments-Yupeng-Zhang" class="headerlink" title="Lecture 6: Discrete-log-based Polynomial Commitments (Yupeng Zhang)"></a>Lecture 6: Discrete-log-based Polynomial Commitments (Yupeng Zhang)</h2><h3 id="6-3-Bulletproofs-and-other-schemes-based-on-discrete-log"><a href="#6-3-Bulletproofs-and-other-schemes-based-on-discrete-log" class="headerlink" title="6.3 Bulletproofs and other schemes based on discrete-log"></a>6.3 Bulletproofs and other schemes based on discrete-log</h3><ul>
-<li>KZG: <ul>
-<li>Pros:<ul>
-<li>Commitment and proof size: O(1), 1 group element</li>
-<li>Verifier time: O(1) pairing</li>
+<h2 id="Lecture-7-Polynomial-Commitments-Based-on-Error-correcting-Codes-Yupeng-Zhang"><a href="#Lecture-7-Polynomial-Commitments-Based-on-Error-correcting-Codes-Yupeng-Zhang" class="headerlink" title="Lecture 7: Polynomial Commitments Based on Error-correcting Codes (Yupeng Zhang)"></a>Lecture 7: Polynomial Commitments Based on Error-correcting Codes (Yupeng Zhang)</h2><ul>
+<li>Recall: common paradigm for efficient SNARK<ul>
+<li>A polynomial commitment scheme + A polynomial interactive oracle proof (IOP) &#x3D; SNARK for general circuits</li>
 </ul>
 </li>
-<li>Cons: trusted setup</li>
+<li>Poly-commit based on error-correcting codes<ul>
+<li>Motivations: <ul>
+<li>Plausibly post-quantum secure</li>
+<li>No group exponentiations (prover only uses hashes, additions and multiplications)</li>
+<li>Small global parameters</li>
 </ul>
 </li>
-<li>Bulletproofs [BCCGP’16, BBBPWM’18]</li>
-<li>Transparent setup: sample random $g_0, g_1, g_2, …, g_d$ in $G$<br><img src="/2023/10/25/ZKP-6-3-Discrete-log-based-Polynomial-Commitments-Bulletproofs/1.png"></li>
-<li>High-level idea<ul>
-<li>Example: 3-degree polynomial<br><img src="/2023/10/25/ZKP-6-3-Discrete-log-based-Polynomial-Commitments-Bulletproofs/2.png"></li>
-<li>Degree reduction: 3 degree -&gt; 1 degree -&gt; constant degree<br><img src="/2023/10/25/ZKP-6-3-Discrete-log-based-Polynomial-Commitments-Bulletproofs/3.png"></li>
-<li>Cross term to commit L and R</li>
-<li>Similar with FFT</li>
-</ul>
-</li>
-<li>Correctness<br><img src="/2023/10/25/ZKP-6-3-Discrete-log-based-Polynomial-Commitments-Bulletproofs/4.png"></li>
-<li>Eval and Verify<br><img src="/2023/10/25/ZKP-6-3-Discrete-log-based-Polynomial-Commitments-Bulletproofs/5.png"></li>
-<li>Properties of Bulletproofs<ul>
-<li>Keygen: O(d), transparent setup!</li>
-<li>Commit: O(d) group exponentiations, O(1) commitment size</li>
-<li>Eval: O(d) group exponentiations (non-interactive via Fiat Shamir)</li>
-<li>Proof size: O(log d)</li>
-<li>Verifier time: O(d)</li>
-</ul>
-</li>
-<li>Other improvement<ul>
-<li>Hyrax [Wahby-Tzialla-shelat-Thaler-Walfish’18]<ul>
-<li>Improves the verifier time to O(d) by representing the coefficients as a 2-D matrix</li>
-<li>Proof size: O($\sqrt{d}$)</li>
-</ul>
-</li>
-<li>Dory [Lee’2021]<ul>
-<li>Base on pairing</li>
-<li>Improving verifier time to O(log d)</li>
-<li>Key idea: delegating the structured verifier computation to the prover using inner pairing product arguments [BMMTV’2021]</li>
-<li>Also improves the prover time to O($\sqrt{d}$)exponentiations plus O(d) field operations</li>
-</ul>
-</li>
-<li>Dark [Bünz-Fisch-Szepieniec’20]<ul>
-<li>Based on group of unknown order</li>
-<li>Achieves O(log d) proof size and verifier time<ul>
-<li>Delegate some part of verifier to the prover</li>
+<li>Drawbacks: <ul>
+<li>Large proof size</li>
+<li>Not homomorphic and hard to aggregate</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
+<h3 id="7-1-Background-on-error-correcting-codes"><a href="#7-1-Background-on-error-correcting-codes" class="headerlink" title="7.1 Background on error-correcting codes"></a>7.1 Background on error-correcting codes</h3><ul>
+<li>Error-correcting code<ul>
+<li>$[n,k,\Delta]$ code<ul>
+<li>Enc(m): Encode a message of size k to a codeword of size n<br><img src="/2023/10/29/ZKP-7-1-Polynomial-Commitments-Based-on-Error-correcting-Codes-Background/1.png"></li>
+<li>Rate: $\frac{k}{n}$: [0,1], as close to 1 as possible </li>
+<li>Relative distance: $\frac{\Delta}{n}$ [0,1], as close to 1 as possible <ul>
+<li>Trade-off between the rate and the distance of a code</li>
+</ul>
 </li>
-<li>Summary<br><img src="/2023/10/25/ZKP-6-3-Discrete-log-based-Polynomial-Commitments-Bulletproofs/6.png"></li>
+</ul>
+</li>
+<li>Linear code<ul>
+<li>Any linear combination of codewords is also a codeword<ul>
+<li>Encoding can always be represented as vector-matrix multiplication between 𝑚 and the generator matrix</li>
+<li>Minimum distance is the same as the codeword with the least number of non-zeros (weight)</li>
+</ul>
+</li>
+<li>Example: Reed-Solomon Code<br><img src="/2023/10/29/ZKP-7-1-Polynomial-Commitments-Based-on-Error-correcting-Codes-Background/2.png"></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -408,10 +397,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/10/29/ZKP-7-1-Polynomial-Commitments-Based-on-Error-correcting-Codes-Background/">ZKP-7-1-Polynomial Commitments Based on Error-correcting Codes(Background)</a>
             
-            
-            <a class="next" rel="next" href="/2023/10/24/ZKP-6-2-Discrete-log-based-Polynomial-Commitments-KZG10/">ZKP6.2 Discrete-log-based Polynomial Commitments (KZG10)</a>
+            <a class="next" rel="next" href="/2023/10/25/ZKP-6-3-Discrete-log-based-Polynomial-Commitments-Bulletproofs/">ZKP6.3 Discrete-log-based Polynomial Commitments (Bulletproofs)</a>
             
         </section>
 
