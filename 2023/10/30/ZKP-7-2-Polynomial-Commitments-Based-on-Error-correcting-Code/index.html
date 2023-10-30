@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP7.1 Polynomial Commitments Based on Error-correcting Codes (Background) | Simba&#39;s Homepage</title>
+<title>ZKP7.2 Polynomial Commitments Based on Error-correcting Code | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP7.1 Polynomial Commitments Based on Error-correcting Codes (Background)</h1>
+            <h1 class="post-title">ZKP7.2 Polynomial Commitments Based on Error-correcting Code</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 29, 2023&nbsp;&nbsp;22:33:15</a>
+                        Date: <a href="#">October 30, 2023&nbsp;&nbsp;23:13:31</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">187</a> 
+                        <a href="">352</a> 
                         
                         </span>
                         
@@ -293,7 +293,7 @@
                         
                         Time:
                         
-                        <a href="">1min</a> 
+                        <a href="">2min</a> 
                         
                         </span>
                         
@@ -304,46 +304,74 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-7-Polynomial-Commitments-Based-on-Error-correcting-Codes-Yupeng-Zhang"><a href="#Lecture-7-Polynomial-Commitments-Based-on-Error-correcting-Codes-Yupeng-Zhang" class="headerlink" title="Lecture 7: Polynomial Commitments Based on Error-correcting Codes (Yupeng Zhang)"></a>Lecture 7: Polynomial Commitments Based on Error-correcting Codes (Yupeng Zhang)</h2><ul>
-<li>Recall: common paradigm for efficient SNARK<ul>
-<li>A polynomial commitment scheme + A polynomial interactive oracle proof (IOP) &#x3D; SNARK for general circuits</li>
-</ul>
-</li>
-<li>Poly-commit based on error-correcting codes<ul>
-<li>Motivations: <ul>
-<li>Plausibly post-quantum secure</li>
-<li>No group exponentiations (prover only uses hashes, additions and multiplications)</li>
-<li>Small global parameters</li>
-</ul>
-</li>
-<li>Drawbacks: <ul>
-<li>Large proof size</li>
-<li>Not homomorphic and hard to aggregate</li>
+<h2 id="Lecture-7-Polynomial-Commitments-Based-on-Error-correcting-Codes-Yupeng-Zhang"><a href="#Lecture-7-Polynomial-Commitments-Based-on-Error-correcting-Codes-Yupeng-Zhang" class="headerlink" title="Lecture 7: Polynomial Commitments Based on Error-correcting Codes (Yupeng Zhang)"></a>Lecture 7: Polynomial Commitments Based on Error-correcting Codes (Yupeng Zhang)</h2><h3 id="7-2-Polyneomial-commitment-based-on-error-correcting-codes"><a href="#7-2-Polyneomial-commitment-based-on-error-correcting-codes" class="headerlink" title="7.2 Polyneomial commitment based on error-correcting codes"></a>7.2 Polyneomial commitment based on error-correcting codes</h3><ul>
+<li>Recall: polynomial commitment<ul>
+<li>Four algorithms<ul>
+<li>Keygen, Commit, Eval, Verify<br><img src="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/1.png"></li>
 </ul>
 </li>
 </ul>
 </li>
-</ul>
-<h3 id="7-1-Background-on-error-correcting-codes"><a href="#7-1-Background-on-error-correcting-codes" class="headerlink" title="7.1 Background on error-correcting codes"></a>7.1 Background on error-correcting codes</h3><ul>
-<li>Error-correcting code<ul>
-<li>$[n,k,\Delta]$ code<ul>
-<li>Enc(m): Encode a message of size k to a codeword of size n<br><img src="/2023/10/29/ZKP-7-1-Polynomial-Commitments-Based-on-Error-correcting-Codes-Background/1.png"></li>
-<li>Rate: $\frac{k}{n}$: [0,1], as close to 1 as possible </li>
-<li>Relative distance: $\frac{\Delta}{n}$ [0,1], as close to 1 as possible <ul>
-<li>Trade-off between the rate and the distance of a code</li>
+<li>Polynomial coefficients in a matrix<br><img src="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/2.png"><ul>
+<li>The coefficients of the polynomial is a matrix</li>
+<li>If the number of degrees of the polynomial is not the power of an integer, you can pad it.<br><img src="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/3.png"></li>
+<li>Argument for Vec-Mat product<ul>
+<li>Polynomial commitment with $\sqrt{d}$ proof size</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Linear code<ul>
-<li>Any linear combination of codewords is also a codeword<ul>
-<li>Encoding can always be represented as vector-matrix multiplication between 𝑚 and the generator matrix</li>
-<li>Minimum distance is the same as the codeword with the least number of non-zeros (weight)</li>
+<li>Encoding the polynomial<ul>
+<li>Design a scheme to test the Vec-Mat product without sending the matrix directly to the verifier<br><img src="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/4.png"><ul>
+<li>Encode each row of the matrix to a linear code</li>
 </ul>
 </li>
-<li>Example: Reed-Solomon Code<br><img src="/2023/10/29/ZKP-7-1-Polynomial-Commitments-Based-on-Error-correcting-Codes-Background/2.png"></li>
 </ul>
 </li>
+<li>Committing the polynomial: Merkle Hash Tree<ul>
+<li>Commit to each column of the encoded matrix using Merkle tree (each column is a leaf, verifier can choose a column to ask prover to open)</li>
+</ul>
+</li>
+<li>Step 1: Proximity test<br><img src="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/5.png"><ul>
+<li>Ligero [AHIV’2017] and [BCGGHJ’2017]<ul>
+<li>[BCGGHJ’2017] : Ideal linear commitment model. Linear-time encodable code → first SNARK with linear prover time</li>
+</ul>
+</li>
+<li>One optimization<ul>
+<li>Prover decodes the proof to a message (size k), and sends k to the verifier<ul>
+<li>Decrease the size of proof from n to k</li>
+<li>The Verifier does not take the first step of check</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Step 2: Consistency check<ul>
+<li>The vector u is not random chosen, so the Proximity test is necessary.<br><img src="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/6.png"></li>
+</ul>
+</li>
+<li>Summary: Poly-commit based on linear code<ul>
+<li>Keygen: sample a hash function</li>
+<li>Commit: encode the coefficient matrix of f row-wise with a linear code, compute the Merkle tree commitment</li>
+<li>Eval and Verify: <ul>
+<li>Proximity test: random linear combination of all rows, check its consistency with t random columns</li>
+<li>Consistency test: $u \times F &#x3D; m$, encode m and check its consistency with t random columns</li>
+<li>f(u) &#x3D; $m \times u^’$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Properties of the polynomial commitment<ul>
+<li>Keygen: O(1), transparent setup!</li>
+<li>Commit:<ul>
+<li>Encoding: O(d logd) field multiplications using RS code, O(d) using linear-time encodable code</li>
+<li>Merkle tree: O(d) hashes, O(1) commitment size</li>
+</ul>
+</li>
+<li>Eval: O(d) field multiplications (non-interactive via Fiat Shamir)</li>
+<li>Proof size: O($\sqrt{d}$)</li>
+<li>Verifier time: O($\sqrt{d}$)</li>
 </ul>
 </li>
 </ul>
@@ -397,10 +425,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/">ZKP7.2 Polynomial Commitments Based on Error-correcting Code</a>
             
-            
-            <a class="next" rel="next" href="/2023/10/25/ZKP-6-3-Discrete-log-based-Polynomial-Commitments-Bulletproofs/">ZKP6.3 Discrete-log-based Polynomial Commitments (Bulletproofs)</a>
+            <a class="next" rel="next" href="/2023/10/29/ZKP-7-1-Polynomial-Commitments-Based-on-Error-correcting-Codes-Background/">ZKP7.1 Polynomial Commitments Based on Error-correcting Codes (Background)</a>
             
         </section>
 
