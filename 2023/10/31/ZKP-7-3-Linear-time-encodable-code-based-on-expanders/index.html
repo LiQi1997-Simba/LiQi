@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP7.2 Polynomial Commitments Based on Error-correcting Code | Simba&#39;s Homepage</title>
+<title>ZKP-7-3-Linear-time encodable code based on expanders | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP7.2 Polynomial Commitments Based on Error-correcting Code</h1>
+            <h1 class="post-title">ZKP-7-3-Linear-time encodable code based on expanders</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 30, 2023&nbsp;&nbsp;23:13:31</a>
+                        Date: <a href="#">October 31, 2023&nbsp;&nbsp;09:55:46</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">352</a> 
+                        <a href="">235</a> 
                         
                         </span>
                         
@@ -293,7 +293,7 @@
                         
                         Time:
                         
-                        <a href="">2min</a> 
+                        <a href="">1min</a> 
                         
                         </span>
                         
@@ -304,74 +304,56 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-7-Polynomial-Commitments-Based-on-Error-correcting-Codes-Yupeng-Zhang"><a href="#Lecture-7-Polynomial-Commitments-Based-on-Error-correcting-Codes-Yupeng-Zhang" class="headerlink" title="Lecture 7: Polynomial Commitments Based on Error-correcting Codes (Yupeng Zhang)"></a>Lecture 7: Polynomial Commitments Based on Error-correcting Codes (Yupeng Zhang)</h2><h3 id="7-2-Polyneomial-commitment-based-on-error-correcting-codes"><a href="#7-2-Polyneomial-commitment-based-on-error-correcting-codes" class="headerlink" title="7.2 Polyneomial commitment based on error-correcting codes"></a>7.2 Polyneomial commitment based on error-correcting codes</h3><ul>
-<li>Recall: polynomial commitment<ul>
-<li>Four algorithms<ul>
-<li>Keygen, Commit, Eval, Verify<br><img src="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/1.png"></li>
+<h2 id="Lecture-7-Polynomial-Commitments-Based-on-Error-correcting-Codes-Yupeng-Zhang"><a href="#Lecture-7-Polynomial-Commitments-Based-on-Error-correcting-Codes-Yupeng-Zhang" class="headerlink" title="Lecture 7: Polynomial Commitments Based on Error-correcting Codes (Yupeng Zhang)"></a>Lecture 7: Polynomial Commitments Based on Error-correcting Codes (Yupeng Zhang)</h2><h3 id="7-3-Linear-time-encodable-code-based-on-expanders"><a href="#7-3-Linear-time-encodable-code-based-on-expanders" class="headerlink" title="7.3 Linear-time encodable code based on expanders"></a>7.3 Linear-time encodable code based on expanders</h3><ul>
+<li>SNARKs with linear prover time<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/1.png"></li>
+<li>Linear-time encodable code [Spielman’96][Druk-Ishai’14]<ul>
+<li>Bi-parties graph<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/2.png"></li>
+<li>Left nodes: message</li>
+<li>Right nodes: codeword &#x3D; sum of the connected node in the left (summation of the values of the its neighbers)</li>
 </ul>
 </li>
-</ul>
-</li>
-<li>Polynomial coefficients in a matrix<br><img src="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/2.png"><ul>
-<li>The coefficients of the polynomial is a matrix</li>
-<li>If the number of degrees of the polynomial is not the power of an integer, you can pad it.<br><img src="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/3.png"></li>
-<li>Argument for Vec-Mat product<ul>
-<li>Polynomial commitment with $\sqrt{d}$ proof size</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Encoding the polynomial<ul>
-<li>Design a scheme to test the Vec-Mat product without sending the matrix directly to the verifier<br><img src="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/4.png"><ul>
-<li>Encode each row of the matrix to a linear code</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Committing the polynomial: Merkle Hash Tree<ul>
-<li>Commit to each column of the encoded matrix using Merkle tree (each column is a leaf, verifier can choose a column to ask prover to open)</li>
-</ul>
-</li>
-<li>Step 1: Proximity test<br><img src="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/5.png"><ul>
-<li>Ligero [AHIV’2017] and [BCGGHJ’2017]<ul>
-<li>[BCGGHJ’2017] : Ideal linear commitment model. Linear-time encodable code → first SNARK with linear prover time</li>
-</ul>
-</li>
-<li>One optimization<ul>
-<li>Prover decodes the proof to a message (size k), and sends k to the verifier<ul>
-<li>Decrease the size of proof from n to k</li>
-<li>The Verifier does not take the first step of check</li>
+<li>Lossless Expander<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/3.png"></li>
+<li>In the real definition, we just relax the conditions<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/4.png"></li>
+<li>Overview of the recursive encoding<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/5.png"><ul>
+<li>$\Alpha &#x3D; 1&#x2F;2$ means the number of right nodes is the half of the left nodes.</li>
+<li>How to encode a 2&#x2F;k message into 2k codeword $c_1$<ul>
+<li>Recursive encoding! Use the same procedure.<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/6.png"><br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/7.png"></li>
+<li>constant relative distance: $\Delta’ &#x3D; min{\Delta, \frac{\delta}{4g}}$<ul>
+<li>Proof<ul>
+<li>Recall</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Step 2: Consistency check<ul>
-<li>The vector u is not random chosen, so the Proximity test is necessary.<br><img src="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/6.png"></li>
-</ul>
-</li>
-<li>Summary: Poly-commit based on linear code<ul>
-<li>Keygen: sample a hash function</li>
-<li>Commit: encode the coefficient matrix of f row-wise with a linear code, compute the Merkle tree commitment</li>
-<li>Eval and Verify: <ul>
-<li>Proximity test: random linear combination of all rows, check its consistency with t random columns</li>
-<li>Consistency test: $u \times F &#x3D; m$, encode m and check its consistency with t random columns</li>
-<li>f(u) &#x3D; $m \times u’$</li>
 </ul>
 </li>
 </ul>
-</li>
-<li>Properties of the polynomial commitment<ul>
-<li>Keygen: O(1), transparent setup!</li>
-<li>Commit:<ul>
-<li>Encoding: O(d logd) field multiplications using RS code, O(d) using linear-time encodable code</li>
-<li>Merkle tree: O(d) hashes, O(1) commitment size</li>
+<p><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/8.png"><br>        - Prove<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/9.png"></p>
+<ul>
+<li>How to construct the lossless expander in practise<ul>
+<li>[Capalbo-Reingold-Vadhan-Wigderson’2002]: Explicit construction of lossless expander (large hidden constant)<ul>
+<li>Random sampling: 1&#x2F;poly(n) failure probability</li>
 </ul>
 </li>
-<li>Eval: O(d) field multiplications (non-interactive via Fiat Shamir)</li>
+<li>Brakedown [Golovnev-Lee-Setty-Thaler-Wahby’21]: random summations with better concrete distance analysis</li>
+<li>Orion [Xie-Zhang-Song’22]: expander testing with a negligible failure probability via maximum density of the graph</li>
+</ul>
+</li>
+<li>Putting everything together<ul>
+<li>Polynomial commitment (and SNARK) based on linear code</li>
+<li>Pros: <ul>
+<li>Transparent setup: O(1)</li>
+<li>Commit and Prover time: O(d) field additions and multiplications</li>
+<li>Plausibly post-quantum secure</li>
+<li>Field agnostic</li>
+</ul>
+</li>
+<li>Cons:<ul>
 <li>Proof size: O($\sqrt{d}$)</li>
-<li>Verifier time: O($\sqrt{d}$)</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -423,10 +405,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/">ZKP-7-3-Linear-time encodable code based on expanders</a>
             
-            
-            <a class="next" rel="next" href="/2023/10/29/ZKP-7-1-Polynomial-Commitments-Based-on-Error-correcting-Codes-Background/">ZKP7.1 Polynomial Commitments Based on Error-correcting Codes (Background)</a>
+            <a class="next" rel="next" href="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/">ZKP7.2 Polynomial Commitments Based on Error-correcting Code</a>
             
         </section>
 
