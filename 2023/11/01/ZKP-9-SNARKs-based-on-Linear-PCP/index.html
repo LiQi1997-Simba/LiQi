@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP7.3 Linear-time Encodable Code Based on Expanders | Simba&#39;s Homepage</title>
+<title>ZKP9 SNARKs based on Linear PCP (Pinocchio &amp; Groth16) | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP7.3 Linear-time Encodable Code Based on Expanders</h1>
+            <h1 class="post-title">ZKP9 SNARKs based on Linear PCP (Pinocchio &amp; Groth16)</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 31, 2023&nbsp;&nbsp;09:55:46</a>
+                        Date: <a href="#">November 01, 2023&nbsp;&nbsp;16:30:26</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">235</a> 
+                        <a href="">560</a> 
                         
                         </span>
                         
@@ -293,7 +293,7 @@
                         
                         Time:
                         
-                        <a href="">1min</a> 
+                        <a href="">3min</a> 
                         
                         </span>
                         
@@ -304,54 +304,118 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-7-Polynomial-Commitments-Based-on-Error-correcting-Codes-Yupeng-Zhang"><a href="#Lecture-7-Polynomial-Commitments-Based-on-Error-correcting-Codes-Yupeng-Zhang" class="headerlink" title="Lecture 7: Polynomial Commitments Based on Error-correcting Codes (Yupeng Zhang)"></a>Lecture 7: Polynomial Commitments Based on Error-correcting Codes (Yupeng Zhang)</h2><h3 id="7-3-Linear-time-encodable-code-based-on-expanders"><a href="#7-3-Linear-time-encodable-code-based-on-expanders" class="headerlink" title="7.3 Linear-time encodable code based on expanders"></a>7.3 Linear-time encodable code based on expanders</h3><ul>
-<li>SNARKs with linear prover time<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/1.png"></li>
-<li>Linear-time encodable code [Spielman’96][Druk-Ishai’14]<ul>
-<li>Bi-parties graph<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/2.png"></li>
-<li>Left nodes: message</li>
-<li>Right nodes: codeword &#x3D; sum of the connected node in the left (summation of the values of the its neighbers)</li>
+<h2 id="Lecture-9-SNARKs-based-on-Linear-PCP-Yupeng-Zhang"><a href="#Lecture-9-SNARKs-based-on-Linear-PCP-Yupeng-Zhang" class="headerlink" title="Lecture 9: SNARKs based on Linear PCP (Yupeng Zhang)"></a>Lecture 9: SNARKs based on Linear PCP (Yupeng Zhang)</h2><ul>
+<li>SNARKs learned so far<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/1.png"></li>
+<li>Earliest Implemented SNARKs<ul>
+<li>Pros<ul>
+<li>Shortest proof size (3 elements [Groth16])</li>
+<li>Fast verifier (bilinear pairing)</li>
 </ul>
 </li>
-<li>Lossless Expander<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/3.png"></li>
-<li>In the real definition, we just relax the conditions<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/4.png"></li>
-<li>Overview of the recursive encoding<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/5.png"><ul>
-<li>$\Alpha &#x3D; 1&#x2F;2$ means the number of right nodes is the half of the left nodes.</li>
-<li>How to encode a 2&#x2F;k message into 2k codeword $c_1$<ul>
-<li>Recursive encoding! Use the same procedure.<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/6.png"><br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/7.png"></li>
-<li>constant relative distance: $\Delta’ &#x3D; min{\Delta, \frac{\delta}{4g}}$<ul>
-<li>Proof<ul>
-<li>Recall</li>
+<li>Cons<ul>
+<li>FFT and group exponentiations on the prover</li>
+<li>Circuit-specific trusted setup</li>
 </ul>
 </li>
 </ul>
 </li>
+<li>History of SNARKs<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/2.png"></li>
+</ul>
+<h3 id="9-1-Quadratic-Arithmetic-Program-QAP"><a href="#9-1-Quadratic-Arithmetic-Program-QAP" class="headerlink" title="9.1 Quadratic Arithmetic Program (QAP)"></a>9.1 Quadratic Arithmetic Program (QAP)</h3><ul>
+<li>Recall: SNARKs for circuit-satisfiability<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/3.png"></li>
+<li>Transcript&#x2F;trace of Circuit<ul>
+<li>Interactive proof (lecture 4, slide 76): value of every gate</li>
+<li>Plonk (lecture 5, slide 42): left input, right input, output of every gate</li>
+<li>QAP: input + output of every multiplication gate</li>
+</ul>
+</li>
+<li>QAP<ul>
+<li>Ignore the output of the addition gates<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/4.png"></li>
+<li>Labeling multiplication gates</li>
+<li>Selector Polynomials<ul>
+<li>$l_i(x)$: is $c_i$ the left input of gate 𝑗, for 𝑗 &#x3D; 1,2,3?<ul>
+<li>Examples:</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-<p><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/8.png"><br>        - Prove<br><img src="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/9.png"></p>
+</li>
+</ul>
+<p><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/5.png"><br>        For $l_1(x)$:<br>        - 3 is the left input of gate 1? Yes! -&gt; 1<br>        - 3 is the left input of gate 2? No! -&gt; 0<br>        - 3 is the left input of gate 3? No! -&gt; 0<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/6.png"><br>        For $l_3(x)$:<br>        - 1 is the left input of gate 1? No! -&gt; 0<br>        - 1 is the left input of gate 2? No! -&gt; 0<br>        - 1 is the left input of gate 3?<br>          - Yes! -&gt; 1<br>          - Because “1” is the input of the addition gate, and the addition gate is the left input of gate 3<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/7.png"><br>    - Properties of the selector polynomials<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/8.png"><br>    - More Selector Polynomials<br>      - $r_i(x)$: is $c_i$ the right input of gate 𝑗, for 𝑗 &#x3D; 1,2,3?<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/9.png"><br>      - $o_i(x)$: is $c_i$ the output of gate 𝑗, for 𝑗 &#x3D; 1,2,3?<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/10.png"><br>    - Master polynomial<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/11.png"><br>    - Vanishing polynomial<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/12.png"></p>
 <ul>
-<li>How to construct the lossless expander in practise<ul>
-<li>[Capalbo-Reingold-Vadhan-Wigderson’2002]: Explicit construction of lossless expander (large hidden constant)<ul>
-<li>Random sampling: 1&#x2F;poly(n) failure probability</li>
+<li>Circuit-SAT to QAP [GGPR13, PGHR13]<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/13.png"><br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/14.png"><ul>
+<li>The table is sparse.</li>
 </ul>
 </li>
-<li>Brakedown [Golovnev-Lee-Setty-Thaler-Wahby’21]: random summations with better concrete distance analysis</li>
-<li>Orion [Xie-Zhang-Song’22]: expander testing with a negligible failure probability via maximum density of the graph</li>
+</ul>
+<h3 id="9-2-From-QAP-to-SNARK"><a href="#9-2-From-QAP-to-SNARK" class="headerlink" title="9.2 From QAP to SNARK"></a>9.2 From QAP to SNARK</h3><ul>
+<li>Probabilistically Checkable Proofs (PCP)<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/15.png"></li>
+<li>IPCP [Kalai-Raz’08] and IOP [Ben-Sasson-Chiesa-Spooner’16]<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/16.png"></li>
+<li>Polynomial IOP [Bünz-Fisch-Szepieniec’20]<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/17.png"></li>
+<li>Linear PCP [Ishai-Kushilevitz-Ostrovsky’07]<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/18.png"></li>
+<li>QAP and Linear PCP<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/19.png"><ul>
+<li>We don’t use random checks.</li>
 </ul>
 </li>
-<li>Putting everything together<ul>
-<li>Polynomial commitment (and SNARK) based on linear code</li>
-<li>Pros: <ul>
-<li>Transparent setup: O(1)</li>
-<li>Commit and Prover time: O(d) field additions and multiplications</li>
-<li>Plausibly post-quantum secure</li>
-<li>Field agnostic</li>
+<li>Key Generation<ul>
+<li>The $c_i$ and $q(x)$ are private</li>
+<li>The selector polynomials and the vanishing polynomial are public.</li>
+<li>The circuit can be pre-processed. (The preprocessing phase is circuit-dependent)<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/20.png"></li>
 </ul>
 </li>
-<li>Cons:<ul>
-<li>Proof size: O($\sqrt{d}$)</li>
+<li>Prove<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/21.png"></li>
+<li>Verify<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/22.png"></li>
+<li>Towards the real protocol<ul>
+<li>Q1: How to make sure $\pi_1$ is computed from $g^{l_i(\tau)}$<ul>
+<li>Solution:  Knowledge of Exponent assumption (KoE) or Generic Group Model (GGM)</li>
+<li>Recall: KoE<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/23.png"></li>
+<li>Recall: GGM<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/24.png"></li>
+</ul>
+</li>
+<li>Q2: how to make sure the same $c$ is used in $\pi_1$,$\pi_2$ and $\pi_3$?<ul>
+<li>Solution<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/25.png"></li>
+</ul>
+</li>
+<li>Q3: What about public input and output?<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/26.png"><ul>
+<li>$I_{mid}$: secret witness</li>
+<li>$I_{io}$: public input and public output</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Putting everything together<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/27.png"></li>
+<li>Properties of SNARK [PGHR13]<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/28.png"></li>
+</ul>
+<h3 id="9-3-Other-variants"><a href="#9-3-Other-variants" class="headerlink" title="9.3 Other variants"></a>9.3 Other variants</h3><ul>
+<li>Rank-1-Constraint-System (R1CS)<ul>
+<li>QAP<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/29.png"></li>
+<li>R1CS：<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/30.png"><ul>
+<li>Advantages<ul>
+<li>Can support generalized constraints or gates</li>
+<li>more convenient to use in practice</li>
+</ul>
+</li>
+<li>Matrix View of R1CS<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/31.png"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Groth16<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/32.png"><ul>
+<li>Combine the $\pi_3$, $\pi_4$, $\pi_5$ of [PGHR13] together <ul>
+<li>$\alpha$ and $\beta$ are secret keys in the trusted key generation, and $g^\alpha$ and $g^\beta$ are public parameters for the prover and the verifier</li>
+<li>$\pi_3$: move the $\Sigma_{i&#x3D;1}^m \c_i \times o_i(x)$ to the right side of the equation -&gt; $\Sigma_{i&#x3D;1}^m \c_i \times o_i(x) + V(x)q(x)$</li>
+</ul>
+</li>
+<li>Change the keygen accordingly</li>
+<li>Proof size: 3 group elements, 144 bytes</li>
+<li>Verifier time: 1 pairing equation</li>
+</ul>
+</li>
+<li>Achieving Zero-Knowledge<ul>
+<li>The above is not zero-knowledge, because the adversary can infer some information by brute force attack.</li>
+<li>Solution: add some random values (times the vanishing polynomial)<ul>
+<li>The [PGHR13] version:<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/33.png"></li>
 </ul>
 </li>
 </ul>
@@ -405,10 +469,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/">ZKP9 SNARKs based on Linear PCP (Pinocchio & Groth16)</a>
             
-            
-            <a class="next" rel="next" href="/2023/10/30/ZKP-7-2-Polynomial-Commitments-Based-on-Error-correcting-Code/">ZKP7.2 Polynomial Commitments Based on Error-correcting Code</a>
+            <a class="next" rel="next" href="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/">ZKP7.3 Linear-time Encodable Code Based on Expanders</a>
             
         </section>
 
