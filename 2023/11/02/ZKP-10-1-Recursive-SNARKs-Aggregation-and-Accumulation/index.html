@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP9 SNARKs based on Linear PCP (Pinocchio &amp; Groth16) | Simba&#39;s Homepage</title>
+<title>ZKP10.1 Recursive SNARKs, Aggregation and Accumulation | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP9 SNARKs based on Linear PCP (Pinocchio &amp; Groth16)</h1>
+            <h1 class="post-title">ZKP10.1 Recursive SNARKs, Aggregation and Accumulation</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">November 01, 2023&nbsp;&nbsp;16:30:26</a>
+                        Date: <a href="#">November 02, 2023&nbsp;&nbsp;13:38:25</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">560</a> 
+                        <a href="">286</a> 
                         
                         </span>
                         
@@ -293,7 +293,7 @@
                         
                         Time:
                         
-                        <a href="">3min</a> 
+                        <a href="">1min</a> 
                         
                         </span>
                         
@@ -304,37 +304,48 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-9-SNARKs-based-on-Linear-PCP-Yupeng-Zhang"><a href="#Lecture-9-SNARKs-based-on-Linear-PCP-Yupeng-Zhang" class="headerlink" title="Lecture 9: SNARKs based on Linear PCP (Yupeng Zhang)"></a>Lecture 9: SNARKs based on Linear PCP (Yupeng Zhang)</h2><ul>
-<li>SNARKs learned so far<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/1.png"></li>
-<li>Earliest Implemented SNARKs<ul>
-<li>Pros<ul>
-<li>Shortest proof size (3 elements [Groth16])</li>
-<li>Fast verifier (bilinear pairing)</li>
-</ul>
-</li>
-<li>Cons<ul>
-<li>FFT and group exponentiations on the prover</li>
-<li>Circuit-specific trusted setup</li>
+<h2 id="Lecture-10-Recursive-SNARKs-Aggregation-and-Accumulation-Dan-Boneh"><a href="#Lecture-10-Recursive-SNARKs-Aggregation-and-Accumulation-Dan-Boneh" class="headerlink" title="Lecture 10: Recursive SNARKs, Aggregation and Accumulation (Dan Boneh)"></a>Lecture 10: Recursive SNARKs, Aggregation and Accumulation (Dan Boneh)</h2><h2 id="10-1-Introduction-and-Applications-of-Recursive-SNARKs"><a href="#10-1-Introduction-and-Applications-of-Recursive-SNARKs" class="headerlink" title="10.1 Introduction and Applications of Recursive SNARKs"></a>10.1 Introduction and Applications of Recursive SNARKs</h2><ul>
+<li>Recall: SNARK algorithms<ul>
+<li>A preprocessing SNARK is a triple (S, P, V):<ul>
+<li>S(c) -&gt; public parameters (pp, vp) for prover and verifier</li>
+<li>P(pp, x, w) -&gt; proof $\pi$</li>
+<li>V(vp, x, $\pi$) -&gt; accept or reject</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>History of SNARKs<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/2.png"></li>
-</ul>
-<h3 id="9-1-Quadratic-Arithmetic-Program-QAP"><a href="#9-1-Quadratic-Arithmetic-Program-QAP" class="headerlink" title="9.1 Quadratic Arithmetic Program (QAP)"></a>9.1 Quadratic Arithmetic Program (QAP)</h3><ul>
-<li>Recall: SNARKs for circuit-satisfiability<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/3.png"></li>
-<li>Transcript&#x2F;trace of Circuit<ul>
-<li>Interactive proof (lecture 4, slide 76): value of every gate</li>
-<li>Plonk (lecture 5, slide 42): left input, right input, output of every gate</li>
-<li>QAP: input + output of every multiplication gate</li>
+<li>SNARK types<ul>
+<li>Groth16, Plonk-KZG: short proofs, but prover time is O(n log n)</li>
+<li>FRI-based proofs (as well as Breakdown, Orion, Orion+, …): faster prover, but longer proofs</li>
 </ul>
 </li>
-<li>QAP<ul>
-<li>Ignore the output of the addition gates<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/4.png"></li>
-<li>Labeling multiplication gates</li>
-<li>Selector Polynomials<ul>
-<li>$l_i(x)$: is $c_i$ the left input of gate 𝑗, for 𝑗 &#x3D; 1,2,3?<ul>
-<li>Examples:</li>
+<li>Two level SNARK recursion: proving knowledge of a proof<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/1.png"><ul>
+<li>Inner proof: prove P knows w</li>
+<li>Outer proof: prove P’ knows $\pi$</li>
+</ul>
+</li>
+<li>Application<ul>
+<li>proof compression<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/2.png"><ul>
+<li>fast overall prover, and final proof is short(used to prove complex statements)</li>
+</ul>
+</li>
+<li>Knowledge sound<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/3.png"></li>
+<li>Another difficulty: random oracles<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/4.png"></li>
+<li>streaming proof generation<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/5.png"><ul>
+<li>zk-Rollup<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/6.png"><br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/7.png"></li>
+</ul>
+</li>
+<li>Layer-3 zk-Rollups</li>
+<li>Incrementally Verifiable Computation (IVC)<ul>
+<li>Incrementally Verifiable Computation or Proofs of Knowledge Imply Time&#x2F;Space Efficiency [Valiant’08]<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/8.png"><br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/9.png"></li>
+<li>The statement at step number i<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/10.png"></li>
+<li>Applications of IVC<ul>
+<li>Break a long computation into a sequence of small steps<ul>
+<li>F: one microprocessor step (Risc5, EVM, …)</li>
+<li>Prover needs far less memory per step compared to a monolithic proof</li>
+</ul>
+</li>
+<li>A succinct proof that the current state of blockchain is correct</li>
 </ul>
 </li>
 </ul>
@@ -342,82 +353,21 @@
 </ul>
 </li>
 </ul>
-<p><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/5.png"><br>        For $l_1(x)$:<br>        - 3 is the left input of gate 1? Yes! -&gt; 1<br>        - 3 is the left input of gate 2? No! -&gt; 0<br>        - 3 is the left input of gate 3? No! -&gt; 0<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/6.png"><br>        For $l_3(x)$:<br>        - 1 is the left input of gate 1? No! -&gt; 0<br>        - 1 is the left input of gate 2? No! -&gt; 0<br>        - 1 is the left input of gate 3?<br>          - Yes! -&gt; 1<br>          - Because “1” is the input of the addition gate, and the addition gate is the left input of gate 3<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/7.png"><br>    - Properties of the selector polynomials<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/8.png"><br>    - More Selector Polynomials<br>      - $r_i(x)$: is $c_i$ the right input of gate 𝑗, for 𝑗 &#x3D; 1,2,3?<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/9.png"><br>      - $o_i(x)$: is $c_i$ the output of gate 𝑗, for 𝑗 &#x3D; 1,2,3?<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/10.png"><br>    - Master polynomial<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/11.png"><br>    - Vanishing polynomial<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/12.png"></p>
+<p><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/11.png"><br>      - Verifiable Delay Functions (VDF): succinct proof that $s_n$ is equal to $H^{(n)}(s_0)$<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/12.png"></p>
 <ul>
-<li>Circuit-SAT to QAP [GGPR13, PGHR13]<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/13.png"><br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/14.png"><ul>
-<li>The table is sparse.</li>
+<li>Application 5: a market for ZK provers<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/13.png"></li>
+</ul>
+<h2 id="10-2-Choosing-Curves-to-Support-Recursion"><a href="#10-2-Choosing-Curves-to-Support-Recursion" class="headerlink" title="10.2 Choosing Curves to Support Recursion"></a>10.2 Choosing Curves to Support Recursion</h2><ul>
+<li>Recursive SNARK<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/14.png"></li>
+<li>Algebraic Groups<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/15.png"><ul>
+<li>$F_q^l$: an element $F_q^l$ is a $l$ elements tuple of $F_q$</li>
 </ul>
 </li>
-</ul>
-<h3 id="9-2-From-QAP-to-SNARK"><a href="#9-2-From-QAP-to-SNARK" class="headerlink" title="9.2 From QAP to SNARK"></a>9.2 From QAP to SNARK</h3><ul>
-<li>Probabilistically Checkable Proofs (PCP)<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/15.png"></li>
-<li>IPCP [Kalai-Raz’08] and IOP [Ben-Sasson-Chiesa-Spooner’16]<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/16.png"></li>
-<li>Polynomial IOP [Bünz-Fisch-Szepieniec’20]<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/17.png"></li>
-<li>Linear PCP [Ishai-Kushilevitz-Ostrovsky’07]<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/18.png"></li>
-<li>QAP and Linear PCP<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/19.png"><ul>
-<li>We don’t use random checks.</li>
-</ul>
-</li>
-<li>Key Generation<ul>
-<li>The $c_i$ and $q(x)$ are private</li>
-<li>The selector polynomials and the vanishing polynomial are public.</li>
-<li>The circuit can be pre-processed. (The preprocessing phase is circuit-dependent)<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/20.png"></li>
-</ul>
-</li>
-<li>Prove<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/21.png"></li>
-<li>Verify<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/22.png"></li>
-<li>Towards the real protocol<ul>
-<li>Q1: How to make sure $\pi_1$ is computed from $g^{l_i(\tau)}$<ul>
-<li>Solution:  Knowledge of Exponent assumption (KoE) or Generic Group Model (GGM)</li>
-<li>Recall: KoE<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/23.png"></li>
-<li>Recall: GGM<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/24.png"></li>
-</ul>
-</li>
-<li>Q2: how to make sure the same $c$ is used in $\pi_1$,$\pi_2$ and $\pi_3$?<ul>
-<li>Solution<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/25.png"></li>
-</ul>
-</li>
-<li>Q3: What about public input and output?<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/26.png"><ul>
-<li>$I_{mid}$: secret witness</li>
-<li>$I_{io}$: public input and public output</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Putting everything together<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/27.png"></li>
-<li>Properties of SNARK [PGHR13]<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/28.png"></li>
-</ul>
-<h3 id="9-3-Other-variants"><a href="#9-3-Other-variants" class="headerlink" title="9.3 Other variants"></a>9.3 Other variants</h3><ul>
-<li>Rank-1-Constraint-System (R1CS)<ul>
-<li>QAP<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/29.png"></li>
-<li>R1CS：<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/30.png"><ul>
-<li>Advantages<ul>
-<li>Can support generalized constraints or gates</li>
-<li>more convenient to use in practice</li>
-</ul>
-</li>
-<li>Matrix View of R1CS<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/31.png"></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Groth16<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/32.png"><ul>
-<li>Combine the $\pi_3$, $\pi_4$, $\pi_5$ of [PGHR13] together <ul>
-<li>$\alpha$ and $\beta$ are secret keys in the trusted key generation, and $g^\alpha$ and $g^\beta$ are public parameters for the prover and the verifier</li>
-<li>$\pi_3$: move the $\Sigma_{i&#x3D;1}^m c_i \times o_i(x)$ to the right side of the equation -&gt; $\Sigma_{i&#x3D;1}^m c_i \times o_i(x) + V(x)q(x)$</li>
-</ul>
-</li>
-<li>Change the keygen accordingly</li>
-<li>Proof size: 3 group elements, 144 bytes</li>
-<li>Verifier time: 1 pairing equation</li>
-</ul>
-</li>
-<li>Achieving Zero-Knowledge<ul>
-<li>The above is not zero-knowledge, because the adversary can infer some information by brute force attack.</li>
-<li>Solution: add some random values (times the vanishing polynomial)<ul>
-<li>The [PGHR13] version:<br><img src="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/33.png"></li>
-</ul>
-</li>
+<li>Recursive proofs: the arithmetic problem<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/16.png"><ul>
+<li>What to do?<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/17.png"></li>
+<li>Solution: a chain of groups<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/18.png"><br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/19.png"></li>
+<li>Even better: a cycles of groups [BCTV’14]<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/20.png"><br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/21.png"></li>
+<li>Three types of cycles of length two<br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/22.png"><br><img src="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/23.png"></li>
 </ul>
 </li>
 </ul>
@@ -469,10 +419,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/">ZKP10.1 Recursive SNARKs, Aggregation and Accumulation</a>
             
-            
-            <a class="next" rel="next" href="/2023/10/31/ZKP-7-3-Linear-time-encodable-code-based-on-expanders/">ZKP7.3 Linear-time Encodable Code Based on Expanders</a>
+            <a class="next" rel="next" href="/2023/11/01/ZKP-9-SNARKs-based-on-Linear-PCP/">ZKP9 SNARKs based on Linear PCP (Pinocchio & Groth16)</a>
             
         </section>
 
