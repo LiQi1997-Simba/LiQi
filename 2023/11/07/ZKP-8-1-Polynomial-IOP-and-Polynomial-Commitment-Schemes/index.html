@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP16 Hardware Acceleration of ZKP | Simba&#39;s Homepage</title>
+<title>ZKP8.1 Polynomial-IOP and Polynomial Commitment Schemes | Simba&#39;s Homepage</title>
 
 
 
@@ -40,6 +40,45 @@
 
     
     
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
         
     
 
@@ -196,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP16 Hardware Acceleration of ZKP</h1>
+            <h1 class="post-title">ZKP8.1 Polynomial-IOP and Polynomial Commitment Schemes</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">November 06, 2023&nbsp;&nbsp;13:01:57</a>
+                        Date: <a href="#">November 07, 2023&nbsp;&nbsp;16:44:01</a>
                         </span>
                     
                     <!-- 
@@ -240,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">418</a> 
+                        <a href="">471</a> 
                         
                         </span>
                         
@@ -265,71 +304,114 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-16-Hardware-Acceleration-of-ZKP-Guest-Lecturer-Kelly-Olson"><a href="#Lecture-16-Hardware-Acceleration-of-ZKP-Guest-Lecturer-Kelly-Olson" class="headerlink" title="Lecture 16: Hardware Acceleration of ZKP (Guest Lecturer: Kelly Olson)"></a>Lecture 16: Hardware Acceleration of ZKP (Guest Lecturer: Kelly Olson)</h2><ul>
-<li>The What and Why of Hardware Acceleration <ul>
-<li>Hardware acceleration is the use of dedicated hardware to accelerate an operation so that it runs faster and&#x2F;or more efficiently.</li>
-<li>Hardware acceleration can involve optimizing functions and code to use existing hardware (COTS) or it may involve the development of new hardware designed for a specific task.<ul>
-<li>COTS (commercially available off-the-shelf) hardware includes CPUs, GPUs, and FPGAS</li>
-<li>Custom hardware is often referred to as an ASIC</li>
+<h2 id="Lecture-8-FRI-based-Polynomial-Commitments-and-Fiat-Shamir-Justin-Thaler"><a href="#Lecture-8-FRI-based-Polynomial-Commitments-and-Fiat-Shamir-Justin-Thaler" class="headerlink" title="Lecture 8: FRI-based Polynomial Commitments and Fiat-Shamir (Justin Thaler)"></a>Lecture 8: FRI-based Polynomial Commitments and Fiat-Shamir (Justin Thaler)</h2><h3 id="8-1-Polynomial-IOP-and-Polynomial-Commitment-Schemes"><a href="#8-1-Polynomial-IOP-and-Polynomial-Commitment-Schemes" class="headerlink" title="8.1 Polynomial-IOP and Polynomial Commitment Schemes"></a>8.1 Polynomial-IOP and Polynomial Commitment Schemes</h3><ul>
+<li>Recall: build an efficient SNARK<ul>
+<li>A polynomial commitment scheme + A polynomial interactive oracle proof (IOP) &#x3D; SNARK for general circuits</li>
 </ul>
 </li>
-<li>Examples<br><img src="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/1.png"></li>
+<li>Recall: Polynomial-IOP<ul>
+<li>P’s first message in the protocol is a polynomial h.</li>
+<li>V does not learn h in full.<ul>
+<li>The description size of h is as large as the circuit</li>
 </ul>
 </li>
-<li>Hardware acceleration for crytpo<br><img src="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/2.png"></li>
-<li>Why HW acceleration for ZKP<ul>
-<li>ZK （and non-ZK） proof generation has high overheads relative to native computation</li>
+<li>Rather, V is permitted to evaluate h at one point.</li>
+<li>After that, P and V execute a standard interactive proof.</li>
 </ul>
 </li>
-<li>Goals of HW acceleration for ZKP<ul>
-<li>Throughput: increase the number of operations per system</li>
-<li>Cost: reduce the cost of operation e.g. Bitcoin mining rigs are designed to reduce capital expenses ($&#x2F;hash) and operational expenses (watts&#x2F;hash)</li>
-<li>Latency: reduce the time of an individual operation e.g. 2kBridges may want to reduce the proof generation time for faster finality</li>
+<li>Recall:  Polynomial Commitment Scheme<ul>
+<li>High-level idea: <ul>
+<li>P binds itself to a polynomial h by sending a short string Com(h)</li>
+<li>V can choose x and ask P to evaluate h(x)</li>
+<li>P sends y, the purported evaluation, plus a proof $\pi$ that y is consistent with Com(h) and x.</li>
 </ul>
 </li>
-<li>Key Computational Primitives of ZKP <ul>
-<li>Each proof system, and associated implementation will have slightly different computational requirements.</li>
-<li>Across a variety of proof systems these are three of the most computationally expensive operations<ul>
-<li>Multiscalar Multiplication (MSM)<ul>
-<li>A ‘dot product’ of elliptic curve points and scalars</li>
-<li>Easily paralledizable</li>
-<li>Optimization</li>
+<li>Goals: <ul>
+<li>P cannot produce a convincing proof for an incorrect evaluation. </li>
+<li>Com(h) and $\pi$ are short and easy to generate; $\pi$ is easy to check.</li>
 </ul>
 </li>
 </ul>
 </li>
-</ul>
-</li>
-</ul>
-<p><img src="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/3.png"><br>        - When performing a MSM off of the host device, the scalars and sometimes points must be moved to the accelerator. The available communication bandwidth limits the maximum possible performance of the accelerator.<br>    - Number Theoretic Transformation (NTT)<br>      - Common algorithms like Cooley-Tukey reduce complexity from $O(N^2)$ to $O(NIogN)$<br>      - Not Easily paralledizable<br>      - Furthermore, these elements must be kept in memory to be operated on, imposing high memory requirements<br>    - Arithmetic Hashes (e.g., Poseidon)</p>
-<ul>
-<li>SNARK V.S. STARK<br><img src="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/4.png"><ul>
-<li>The MSM, NTT and Hashes take 2&#x2F;3 or more time in the proving system</li>
-</ul>
-</li>
-<li>Foundational Primitive: Finite Field Arithmetic (especially ModMul)</li>
-<li>Hardware Resources Required<ul>
-<li>Determining Computational Cost<br><img src="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/5.png"></li>
-<li>Selecting the Right Hardware<ul>
-<li>Given that these workload are driven predominately by modular multiplication, we should look for platforms can perform a large number of multiplications, quickly and cheaply</li>
-<li>Estimated HW performance can be evaluated by looking at # of hardware multipliers, size of hardware multipliers, and speed&#x2F;frequency of each instruction</li>
-<li>Examples<br><img src="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/6.png"></li>
-</ul>
-</li>
-<li>Two Key Components to HW Acceleration<ul>
-<li>‘HW friendly’ Algorithm</li>
-<li>Efficient Implementation</li>
+<li>Recall: Three classes of Polynomial IOPs<ul>
+<li>Based on interactive proofs (IPs)</li>
+<li>Based on multi-prover interactive proofs (MIPs)</li>
+<li>Based on constant-round polynomial IOPs<ul>
+<li>Examples: Marlin, PlonK.</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Limits of Acceleration<br><img src="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/7.png"><ul>
-<li>Acceleration Pitfalls<br><img src="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/8.png"></li>
-<li>Production Examples: Filecoin<br><img src="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/9.png"></li>
+<li>Recall: Three classes of Polynomial commitments<ul>
+<li>Based on pairings + trusted setup (not transparent nor post-quantum)<ul>
+<li>e.g., KZG10</li>
+<li>Unique property: constant sized evaluation proofs</li>
 </ul>
 </li>
-<li>Current Status of Hardware Acceleration<br><img src="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/10.png"></li>
-<li>Future Directions for Hardware Acceleration<br><img src="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/11.png"></li>
+<li>Based on discrete logarithm (transparent, not post-quantum)<ul>
+<li>Examples: IPA&#x2F;Bulletproofs, Hyrax, Dory</li>
+</ul>
+</li>
+<li>Based on IOPs + hashing (transparent and post-quantum)<ul>
+<li>e.g., FRI, Ligero, Brakedown, Orion</li>
+</ul>
+</li>
+<li>Note: <ul>
+<li>Classes 1. and 2. are homomorphic.<ul>
+<li>Leads to efficient batching&#x2F;amortization of P and V costs (e.g., when proving knowledge of several different witnesses).</li>
+</ul>
+</li>
+<li>The three classes are listed in an increasing verification cost.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Highlights of SNARK Taxonomy<ul>
+<li>Transparent SNARKs<ul>
+<li>[Any polynomial IOP] + IPA&#x2F;Bulletproofs polynomial commitment.<ul>
+<li>Ex: Halo2-ZCash</li>
+<li>Pros: Shortest proofs among transparent SNARKs</li>
+<li>Cons: Slow V (linear time)</li>
+</ul>
+</li>
+<li>[Any polynomial IOP] + FRI polynomial commitment.<ul>
+<li>Ex: STARKs, Fractal, Aurora, Virgo, Ligero++</li>
+<li>Pros: <ul>
+<li>Shortest proofs amongst plausibly post-quantum SNARKs.</li>
+<li>More flexibility for what field you work over</li>
+</ul>
+</li>
+<li>Cons: Proofs are large (100s of KBs depending on security)</li>
+</ul>
+</li>
+<li>MIPs and IPs + [fast-prover polynomial commitments].<ul>
+<li>Ex: Spartan, Brakedown, Orion, Orion+(HyperPlonk)</li>
+<li>Pros: Fastest P in the literature, plausibly post-quantum + transparent if polynomial commitment is.</li>
+<li>Cons: Bigger proofs than 1. and 2. above</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Non-transparent SNARKS<ul>
+<li>Linear-PCP based:<ul>
+<li>Ex: Groth16</li>
+<li>Pros: Shortest proofs (3 group elements), fastest V. </li>
+<li>Cons: Circuit-specific trusted setup, slow and space-intensive P, not postquantum</li>
+</ul>
+</li>
+<li>Constant-round polynomial IOP + KZG polynomial commitment:<ul>
+<li>Ex: Marlin-KZG, PlonK-KZG</li>
+<li>Pros: Universal trusted setup.</li>
+<li>Cons: Proofs are ~4x-6x larger than Groth16, P is slower than Groth16, also not post-quantum.<ul>
+<li>Counterpoint for P: can use more flexible intermediate representations than circuits and R1CS.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -379,10 +461,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/11/07/ZKP-8-1-Polynomial-IOP-and-Polynomial-Commitment-Schemes/">ZKP8.1 Polynomial-IOP and Polynomial Commitment Schemes</a>
             
-            
-            <a class="next" rel="next" href="/2023/11/05/Rust2-Common-Programming-Concepts-Understanding-Ownership/">Rust2 Common Programming Concepts & Understanding Ownership</a>
+            <a class="next" rel="next" href="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/">ZKP16 Hardware Acceleration of ZKP</a>
             
         </section>
 
