@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP8.1 Polynomial-IOP and Polynomial Commitment Schemes | Simba&#39;s Homepage</title>
+<title>ZKP8.2 FRI (Univariate) Polynomial Commitment | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP8.1 Polynomial-IOP and Polynomial Commitment Schemes</h1>
+            <h1 class="post-title">ZKP8.2 FRI (Univariate) Polynomial Commitment</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">November 07, 2023&nbsp;&nbsp;16:44:01</a>
+                        Date: <a href="#">November 08, 2023&nbsp;&nbsp;09:10:22</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">456</a> 
+                        <a href="">129</a> 
                         
                         </span>
                         
@@ -293,7 +293,7 @@
                         
                         Time:
                         
-                        <a href="">2min</a> 
+                        <a href="">1min</a> 
                         
                         </span>
                         
@@ -304,111 +304,31 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-8-FRI-based-Polynomial-Commitments-and-Fiat-Shamir-Justin-Thaler"><a href="#Lecture-8-FRI-based-Polynomial-Commitments-and-Fiat-Shamir-Justin-Thaler" class="headerlink" title="Lecture 8: FRI-based Polynomial Commitments and Fiat-Shamir (Justin Thaler)"></a>Lecture 8: FRI-based Polynomial Commitments and Fiat-Shamir (Justin Thaler)</h2><h3 id="8-1-Polynomial-IOP-and-Polynomial-Commitment-Schemes"><a href="#8-1-Polynomial-IOP-and-Polynomial-Commitment-Schemes" class="headerlink" title="8.1 Polynomial-IOP and Polynomial Commitment Schemes"></a>8.1 Polynomial-IOP and Polynomial Commitment Schemes</h3><ul>
-<li>Recall: build an efficient SNARK<br><img src="/2023/11/07/ZKP-8-1-Polynomial-IOP-and-Polynomial-Commitment-Schemes/1.png"></li>
-<li>Recall: Polynomial-IOP<ul>
-<li>P’s first message in the protocol is a polynomial h.</li>
-<li>V does not learn h in full.<ul>
-<li>The description size of h is as large as the circuit</li>
+<h2 id="Lecture-8-FRI-based-Polynomial-Commitments-and-Fiat-Shamir-Justin-Thaler"><a href="#Lecture-8-FRI-based-Polynomial-Commitments-and-Fiat-Shamir-Justin-Thaler" class="headerlink" title="Lecture 8: FRI-based Polynomial Commitments and Fiat-Shamir (Justin Thaler)"></a>Lecture 8: FRI-based Polynomial Commitments and Fiat-Shamir (Justin Thaler)</h2><h3 id="8-2-FRI-Univariate-Polynomial-Commitment"><a href="#8-2-FRI-Univariate-Polynomial-Commitment" class="headerlink" title="8.2 FRI (Univariate) Polynomial Commitment"></a>8.2 FRI (Univariate) Polynomial Commitment</h3><ul>
+<li>Recall: Univariate Polynomial Commitments<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/1.png"></li>
+<li>Initial Attempt from Lecture 4 (Merkle Tree)<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/2.png"><br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/3.png"></li>
+<li>Fixing the first problem (Want P time linear in degree, not field size)<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/4.png"><br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/5.png"><ul>
+<li>Biger blowup factor -&gt; more prover time, less verifier time, shorter proofs</li>
+<li>The key subset: roots of unity<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/6.png"><br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/7.png"></li>
+<li>Example<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/8.png"><br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/9.png"></li>
 </ul>
 </li>
-<li>Rather, V is permitted to evaluate h at one point.</li>
-<li>After that, P and V execute a standard interactive proof.</li>
+<li>Fixing the second problem<ul>
+<li>Merkle tree does not tell you any structure of the vertor at all<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/10.png"></li>
+<li>The (interactive) low-degree test: Folding Phase<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/11.png"><ul>
+<li>Example<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/12.png"></li>
 </ul>
 </li>
-<li>Recall:  Polynomial Commitment Scheme<ul>
-<li>High-level idea: <ul>
-<li>P binds itself to a polynomial h by sending a short string Com(h)</li>
-<li>V can choose x and ask P to evaluate h(x)</li>
-<li>P sends y, the purported evaluation, plus a proof $\pi$ that y is consistent with Com(h) and x.</li>
+<li>The (interactive) low-degree test: Query Phase<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/13.png"></li>
 </ul>
 </li>
-<li>Goals: <ul>
-<li>P cannot produce a convincing proof for an incorrect evaluation. </li>
-<li>Com(h) and $\pi$ are short and easy to generate; $\pi$ is easy to check.</li>
+<li>Back to the folding phase: more details<ul>
+<li>The (interactive) low-degree test: Folding Phase<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/14.png"><br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/15.png"></li>
+<li>Example<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/16.png"></li>
+<li>The (interactive) low-degree test: Folding Phase<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/17.png"></li>
 </ul>
 </li>
-</ul>
-</li>
-<li>Recall: Three classes of Polynomial IOPs<ul>
-<li>Based on interactive proofs (IPs)</li>
-<li>Based on multi-prover interactive proofs (MIPs)</li>
-<li>Based on constant-round polynomial IOPs<ul>
-<li>Examples: Marlin, PlonK.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Recall: Three classes of Polynomial commitments<ul>
-<li>Based on pairings + trusted setup (not transparent nor post-quantum)<ul>
-<li>e.g., KZG10</li>
-<li>Unique property: constant sized evaluation proofs</li>
-</ul>
-</li>
-<li>Based on discrete logarithm (transparent, not post-quantum)<ul>
-<li>Examples: IPA&#x2F;Bulletproofs, Hyrax, Dory</li>
-</ul>
-</li>
-<li>Based on IOPs + hashing (transparent and post-quantum)<ul>
-<li>e.g., FRI, Ligero, Brakedown, Orion</li>
-</ul>
-</li>
-<li>Note: <ul>
-<li>Classes 1. and 2. are homomorphic.<ul>
-<li>Leads to efficient batching&#x2F;amortization of P and V costs (e.g., when proving knowledge of several different witnesses).</li>
-</ul>
-</li>
-<li>The three classes are listed in an increasing verification cost.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Highlights of SNARK Taxonomy<ul>
-<li>Transparent SNARKs<ul>
-<li>[Any polynomial IOP] + IPA&#x2F;Bulletproofs polynomial commitment.<ul>
-<li>Ex: Halo2-ZCash</li>
-<li>Pros: Shortest proofs among transparent SNARKs</li>
-<li>Cons: Slow V (linear time)</li>
-</ul>
-</li>
-<li>[Any polynomial IOP] + FRI polynomial commitment.<ul>
-<li>Ex: STARKs, Fractal, Aurora, Virgo, Ligero++</li>
-<li>Pros: <ul>
-<li>Shortest proofs amongst plausibly post-quantum SNARKs.</li>
-<li>More flexibility for what field you work over</li>
-</ul>
-</li>
-<li>Cons: Proofs are large (100s of KBs depending on security)</li>
-</ul>
-</li>
-<li>MIPs and IPs + [fast-prover polynomial commitments].<ul>
-<li>Ex: Spartan, Brakedown, Orion, Orion+(HyperPlonk)</li>
-<li>Pros: Fastest P in the literature, plausibly post-quantum + transparent if polynomial commitment is.</li>
-<li>Cons: Bigger proofs than 1. and 2. above</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Non-transparent SNARKS<ul>
-<li>Linear-PCP based:<ul>
-<li>Ex: Groth16</li>
-<li>Pros: Shortest proofs (3 group elements), fastest V. </li>
-<li>Cons: Circuit-specific trusted setup, slow and space-intensive P, not postquantum</li>
-</ul>
-</li>
-<li>Constant-round polynomial IOP + KZG polynomial commitment:<ul>
-<li>Ex: Marlin-KZG, PlonK-KZG</li>
-<li>Pros: Universal trusted setup.</li>
-<li>Cons: Proofs are ~4x-6x larger than Groth16, P is slower than Groth16, also not post-quantum.<ul>
-<li>Counterpoint for P: can use more flexible intermediate representations than circuits and R1CS.</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<li>Compare to Lecture 7<br><img src="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/18.png"></li>
 </ul>
 
         </div>
@@ -458,10 +378,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/11/08/ZKP-8-2-FRI-Univariate-Polynomial-Commitment/">ZKP8.2 FRI (Univariate) Polynomial Commitment</a>
             
-            
-            <a class="next" rel="next" href="/2023/11/06/ZKP-16-Hardware-Acceleration-of-ZKP/">ZKP16 Hardware Acceleration of ZKP</a>
+            <a class="next" rel="next" href="/2023/11/07/ZKP-8-1-Polynomial-IOP-and-Polynomial-Commitment-Schemes/">ZKP8.1 Polynomial-IOP and Polynomial Commitment Schemes</a>
             
         </section>
 
