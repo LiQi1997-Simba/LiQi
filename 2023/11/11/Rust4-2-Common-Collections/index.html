@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Simba">
+
+
+
+
+
+<title>Rust4.2 Common Collections | Simba&#39;s Homepage</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Simba&#39;s Homepage</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Simba&#39;s Homepage</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Rust4.2 Common Collections</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Simba</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 11, 2023&nbsp;&nbsp;22:29:25</a>
+                        </span>
+                    
+                    <!-- 
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Rust-Programming-Language/">Rust Programming Language</a>
+                            
+                        </span>
+                     -->
+                    
+
+                        <span class="post-category">
+                        
+                        Category:
+                        
+                        
+                        
+                        <a href="/categories/Rust-Programming-Language/">Rust Programming Language</a>
+                        
+                        
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Words:
+                        
+                        <a href="">1.1k</a> 
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Time:
+                        
+                        <a href="">6min</a> 
+                        
+                        </span>
+                        
+                        
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust学习笔记"><a href="#Rust学习笔记" class="headerlink" title="Rust学习笔记"></a>Rust学习笔记</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1hp4y1k7SV">Rust编程语言入门教程</a>课程笔记</p>
+<p>参考教材: <a target="_blank" rel="noopener" href="https://rustwiki.org/en/book/">The Rust Programming Language (by Steve Klabnik and Carol Nichols, with contributions from the Rust Community)</a></p>
+<h2 id="Lecture-8-Common-Collections"><a href="#Lecture-8-Common-Collections" class="headerlink" title="Lecture 8: Common Collections"></a>Lecture 8: Common Collections</h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">//Vector</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">v</span>: <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt; = <span class="type">Vec</span>::<span class="title function_ invoke__">new</span>();<span class="comment">//new empty vector</span></span><br><span class="line">    v.<span class="title function_ invoke__">push</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">v2</span> = &amp;v[<span class="number">0</span>];<span class="comment">//immutable borrow</span></span><br><span class="line">    <span class="comment">//v.push(2);//mutable borrow</span></span><br><span class="line">    <span class="comment">//cannot borrow `v` as mutable because it is also borrowed as immutable</span></span><br><span class="line">    <span class="comment">//because v.push will cause the vector to reallocate and invalidate the reference</span></span><br><span class="line">    <span class="comment">//so v2 may be pointing to deallocated memory</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The first element is: &#123;&#125;&quot;</span>, v2);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">u</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];<span class="comment">//new vector with values</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;u[0] = &#123;:?&#125;&quot;</span>, u[<span class="number">0</span>]);<span class="comment">//access element with index</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;u[1] = &#123;:?&#125;&quot;</span>, u.<span class="title function_ invoke__">get</span>(<span class="number">1</span>));<span class="comment">//access element with get()</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> u.<span class="title function_ invoke__">get</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(second) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;The second element is &#123;&#125;&quot;</span>, second),</span><br><span class="line">        <span class="literal">None</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;There is no second element.&quot;</span>),</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    u.<span class="title function_ invoke__">insert</span>(<span class="number">0</span>, <span class="number">0</span>);<span class="comment">//insert element at index</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> &amp;u &#123;<span class="comment">//immutable borrow</span></span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> &amp;<span class="keyword">mut</span> u &#123;<span class="comment">//mutable borrow</span></span><br><span class="line">        *i += <span class="number">50</span>; <span class="comment">//dereference i and add 50 to it</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//using enum to store multiple types in a vector</span></span><br><span class="line">    <span class="keyword">enum</span> <span class="title class_">SpreadsheetCell</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">Int</span>(<span class="type">i32</span>),</span><br><span class="line">        <span class="title function_ invoke__">Float</span>(<span class="type">f64</span>),</span><br><span class="line">        <span class="title function_ invoke__">Text</span>(<span class="type">String</span>),</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">row</span> = <span class="built_in">vec!</span>[</span><br><span class="line">        SpreadsheetCell::<span class="title function_ invoke__">Int</span>(<span class="number">3</span>),</span><br><span class="line">        SpreadsheetCell::<span class="title function_ invoke__">Float</span>(<span class="number">10.12</span>),</span><br><span class="line">        SpreadsheetCell::<span class="title function_ invoke__">Text</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;blue&quot;</span>)),</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> &amp;row &#123;<span class="comment">//for + match</span></span><br><span class="line">        <span class="keyword">match</span> i &#123;</span><br><span class="line">            SpreadsheetCell::<span class="title function_ invoke__">Int</span>(i) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Int: &#123;&#125;&quot;</span>, i),</span><br><span class="line">            SpreadsheetCell::<span class="title function_ invoke__">Float</span>(f) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Float: &#123;&#125;&quot;</span>, f),</span><br><span class="line">            SpreadsheetCell::<span class="title function_ invoke__">Text</span>(s) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Text: &#123;&#125;&quot;</span>, s),</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//String</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">new</span>();<span class="comment">//new empty string</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">data</span> = <span class="string">&quot;initial contents 0&quot;</span>;<span class="comment">//new string from string literal</span></span><br><span class="line">    s = data.<span class="title function_ invoke__">to_string</span>();<span class="comment">//new string from string literal</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br><span class="line">    s = <span class="string">&quot;initial contents 1&quot;</span>.<span class="title function_ invoke__">to_string</span>();<span class="comment">//new string from string literal</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br><span class="line">    s = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;initial contents 2&quot;</span>);<span class="comment">//new string from string literal</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br><span class="line"></span><br><span class="line">    s.<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;bar&quot;</span>);<span class="comment">//append string literal</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br><span class="line"></span><br><span class="line">    s.<span class="title function_ invoke__">push</span>(<span class="string">&#x27;l&#x27;</span>);<span class="comment">//append char</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//concatenation</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hello, &quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s2</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;world!&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s3</span> = s1 + &amp;s2;<span class="comment">//s1 has been moved here and can no longer be used</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s3);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//format! macro</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;tic&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s2</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;tac&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s3</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;toe&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s4</span> = <span class="built_in">format!</span>(<span class="string">&quot;&#123;&#125;-&#123;&#125;-&#123;&#125;&quot;</span>, s1, s2, s3);<span class="comment">//s1, s2, s3 not moved</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s1);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s2);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s3);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s4);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//indexing</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    <span class="comment">//let h = s1[0];//cannot index into a String</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">h</span> = &amp;s1[<span class="number">0</span>..<span class="number">1</span>];<span class="comment">//indexing with range</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, h);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//length</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">len</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hola&quot;</span>).<span class="title function_ invoke__">len</span>();<span class="comment">//length in bytes</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, len);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">len</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Здравствуйте&quot;</span>).<span class="title function_ invoke__">len</span>();<span class="comment">//length in bytes</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, len);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">len</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Здравствуйте&quot;</span>).<span class="title function_ invoke__">chars</span>().<span class="title function_ invoke__">count</span>();<span class="comment">//length in chars</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, len);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//iteration</span></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">c</span> <span class="keyword">in</span> <span class="string">&quot;नमस्ते&quot;</span>.<span class="title function_ invoke__">chars</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">b</span> <span class="keyword">in</span> <span class="string">&quot;नमस्ते&quot;</span>.<span class="title function_ invoke__">bytes</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, b);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//Hash Map</span></span><br><span class="line">    <span class="comment">//HashMap&lt;K, V&gt; stores a mapping of keys of type K to values of type V</span></span><br><span class="line">    <span class="keyword">use</span> std::collections::HashMap;<span class="comment">//hashmap is not in the prelude</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">scores</span> = HashMap::<span class="title function_ invoke__">new</span>();<span class="comment">//new empty HashMap</span></span><br><span class="line">    scores.<span class="title function_ invoke__">insert</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Blue&quot;</span>), <span class="number">10</span>);<span class="comment">//insert key-value pair</span></span><br><span class="line">    scores.<span class="title function_ invoke__">insert</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Yellow&quot;</span>), <span class="number">50</span>);<span class="comment">//insert key-value pair</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, scores);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//collecting into a hashmap</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">teams</span> = <span class="built_in">vec!</span>[<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Blue&quot;</span>), <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Yellow&quot;</span>)];<span class="comment">//new vector</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">initial_scores</span> = <span class="built_in">vec!</span>[<span class="number">10</span>, <span class="number">50</span>];<span class="comment">//new vector</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">scores</span>: HashMap&lt;_, _&gt; = teams.<span class="title function_ invoke__">iter</span>().<span class="title function_ invoke__">zip</span>(initial_scores.<span class="title function_ invoke__">iter</span>()).<span class="title function_ invoke__">collect</span>();<span class="comment">//collect into hashmap</span></span><br><span class="line">    <span class="comment">//HashMap&lt;_,_&gt; type annotation is needed because collect can collect into many different data structures</span></span><br><span class="line">    <span class="comment">//zip() creates a vector of tuples</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, scores);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//ownership</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">field_name</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Favorite color&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">field_value</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Blue&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">map</span> = HashMap::<span class="title function_ invoke__">new</span>();<span class="comment">//new empty hashmap</span></span><br><span class="line">    <span class="comment">//map.insert(field_name, field_value);//field_name and field_value are moved into map</span></span><br><span class="line">    <span class="comment">//println!(&quot;&#123;&#125;&quot;, field_name);//field_name and field_value are moved into map</span></span><br><span class="line">    map.<span class="title function_ invoke__">insert</span>(&amp;field_name, &amp;field_value);<span class="comment">//field_name and field_value are borrowed</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, field_name);<span class="comment">//field_name and field_value are borrowed</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//accessing values in a hashmap</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">team_name</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Blue&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">score</span> = scores.<span class="title function_ invoke__">get</span>(&amp;team_name);<span class="comment">//get() returns an Option&lt;&amp;V&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">match</span> score &#123;</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(s) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s),</span><br><span class="line">        <span class="literal">None</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;No score&quot;</span>),</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//iterating over a hashmap</span></span><br><span class="line">    <span class="title function_ invoke__">for</span> (key, value) <span class="keyword">in</span> &amp;scores &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;: &#123;&#125;&quot;</span>, key, value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//updating a hashmap</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//overwriting a value</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">scores</span> = HashMap::<span class="title function_ invoke__">new</span>();<span class="comment">//new empty hashmap</span></span><br><span class="line">    scores.<span class="title function_ invoke__">insert</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Blue&quot;</span>), <span class="number">10</span>);<span class="comment">//insert key-value pair</span></span><br><span class="line">    scores.<span class="title function_ invoke__">insert</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Blue&quot;</span>), <span class="number">25</span>);<span class="comment">//overwrite value</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, scores);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//only inserting a value if the key has no value</span></span><br><span class="line">    scores.<span class="title function_ invoke__">entry</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Yellow&quot;</span>));<span class="comment">//insert key-value pair if key has no value</span></span><br><span class="line">    scores.<span class="title function_ invoke__">entry</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Yellow&quot;</span>)).<span class="title function_ invoke__">or_insert</span>(<span class="number">50</span>);<span class="comment">//insert key-value pair if key has no value</span></span><br><span class="line">    scores.<span class="title function_ invoke__">entry</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Blue&quot;</span>)).<span class="title function_ invoke__">or_insert</span>(<span class="number">50</span>);<span class="comment">//do not insert key-value pair if key has value</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, scores);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//updating a value based on the old value</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">text</span> = <span class="string">&quot;hello world wonderful world&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">map</span> = HashMap::<span class="title function_ invoke__">new</span>();<span class="comment">//new empty hashmap</span></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">word</span> <span class="keyword">in</span> text.<span class="title function_ invoke__">split_whitespace</span>() &#123;<span class="comment">//split string into words</span></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">count</span> = map.<span class="title function_ invoke__">entry</span>(word).<span class="title function_ invoke__">or_insert</span>(<span class="number">0</span>);<span class="comment">//insert key-value pair if key has no value</span></span><br><span class="line">        *count += <span class="number">1</span>;<span class="comment">//dereference count and increment it</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, map);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Simba</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>乳虎啸谷，百兽震惶</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Note/"># Note</a>
+                    
+                        <a href="/tags/Code/"># Code</a>
+                    
+                        <a href="/tags/Rust/"># Rust</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/11/10/Rust4-1-Managing-Growing-Projects-with-Packages-Crates-and-Modules/">Rust4.1 Managing Growing Projects with Packages, Crates, and Modules</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Simba | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
