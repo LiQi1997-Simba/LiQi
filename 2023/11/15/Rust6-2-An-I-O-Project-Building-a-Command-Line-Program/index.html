@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Simba">
+
+
+
+
+
+<title>Rust6-2 An I/O Project Building a Command Line Program | Simba&#39;s Homepage</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Simba&#39;s Homepage</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Simba&#39;s Homepage</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Rust6-2 An I/O Project Building a Command Line Program</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Simba</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 15, 2023&nbsp;&nbsp;09:40:53</a>
+                        </span>
+                    
+                    <!-- 
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Rust-Programming-Language/">Rust Programming Language</a>
+                            
+                        </span>
+                     -->
+                    
+
+                        <span class="post-category">
+                        
+                        Category:
+                        
+                        
+                        
+                        <a href="/categories/Rust-Programming-Language/">Rust Programming Language</a>
+                        
+                        
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Words:
+                        
+                        <a href="">991</a> 
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Time:
+                        
+                        <a href="">6min</a> 
+                        
+                        </span>
+                        
+                        
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust学习笔记"><a href="#Rust学习笔记" class="headerlink" title="Rust学习笔记"></a>Rust学习笔记</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1hp4y1k7SV">Rust编程语言入门教程</a>课程笔记</p>
+<p>参考教材: <a target="_blank" rel="noopener" href="https://rustwiki.org/en/book/">The Rust Programming Language (by Steve Klabnik and Carol Nichols, with contributions from the Rust Community)</a></p>
+<h2 id="Lecture-12-An-I-O-Project-Building-a-Command-Line-Program"><a href="#Lecture-12-An-I-O-Project-Building-a-Command-Line-Program" class="headerlink" title="Lecture 12: An I&#x2F;O Project: Building a Command Line Program"></a>Lecture 12: An I&#x2F;O Project: Building a Command Line Program</h2><p>project: minigrep</p>
+<p>src&#x2F;main.rs</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//grep: globally search a regular expression and print</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> std::env;<span class="comment">//command line arguments</span></span><br><span class="line"><span class="keyword">use</span> std::process;<span class="comment">//exit</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> minigrep::Config;<span class="comment">//Config struct</span></span><br><span class="line"><span class="keyword">use</span> minigrep::run;<span class="comment">//run function</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//Separation of Concerns for Binary Projects</span></span><br><span class="line"><span class="comment">//Splitting code into a main.rs and a lib.rs is a good default choice when starting a binary project.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//1. Split your program into a main.rs and a lib.rs and move your program’s logic to lib.rs.</span></span><br><span class="line"><span class="comment">//2. As long as your command line parsing logic is small, it can remain in main.rs.</span></span><br><span class="line"><span class="comment">//3. When the command line parsing logic starts getting complicated, extract it from main.rs and move it to lib.rs.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">args</span>: <span class="type">Vec</span>&lt;<span class="type">String</span>&gt; = env::<span class="title function_ invoke__">args</span>().<span class="title function_ invoke__">collect</span>();<span class="comment">//collect command line arguments</span></span><br><span class="line">    <span class="comment">// println!(&quot;&#123;:?&#125;&quot;, args);//print command line arguments //[./target/debug/minigrep, xxxx, yyyy]</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// let query = &amp;args[1];//query string </span></span><br><span class="line">    <span class="comment">// let filename = &amp;args[2];//filename</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//let (query, filename) = parse_config(&amp;args[1..]);//parse command line arguments</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// let config = parse_config(&amp;args);//parse command line arguments</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// let config = Config::new(&amp;args);//parse command line arguments</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">config</span> = Config::<span class="title function_ invoke__">build</span>(&amp;args).<span class="title function_ invoke__">unwrap_or_else</span>(|err| &#123;</span><br><span class="line">        <span class="comment">// println!(&quot;Problem parsing arguments: &#123;&#125;&quot;, err);</span></span><br><span class="line">        eprintln!(<span class="string">&quot;Problem parsing arguments: &#123;&#125;&quot;</span>, err);<span class="comment">//error handling: print to stderr</span></span><br><span class="line">        process::<span class="title function_ invoke__">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;);<span class="comment">//parse command line arguments</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// println!(&quot;Searching for &#123;&#125;&quot;, query);</span></span><br><span class="line">    <span class="comment">// println!(&quot;In file &#123;&#125;&quot;, filename);</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// let contents = fs::read_to_string(config.filename)</span></span><br><span class="line">    <span class="comment">//     .expect(&quot;Something went wrong reading the file&quot;);//read file</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// println!(&quot;With text:\n&#123;&#125;&quot;, contents);</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">Err</span>(e) = <span class="title function_ invoke__">run</span>(config)&#123;</span><br><span class="line">        <span class="comment">// println!(&quot;Application error: &#123;&#125;&quot;, e);</span></span><br><span class="line">        eprintln!(<span class="string">&quot;Application error: &#123;&#125;&quot;</span>, e);<span class="comment">//error handling: print to stderr</span></span><br><span class="line">        process::<span class="title function_ invoke__">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>lib.rs</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::fs;<span class="comment">//file system</span></span><br><span class="line"><span class="keyword">use</span> std::error::Error;<span class="comment">//error handling</span></span><br><span class="line"><span class="keyword">use</span> std::env;<span class="comment">//environment variables</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// fn parse_config(args: &amp;[String]) -&gt; (&amp;str, &amp;str) &#123;</span></span><br><span class="line"><span class="comment">//     let query = &amp;args[1];//query string </span></span><br><span class="line"><span class="comment">//     let filename = &amp;args[2];//filename</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//     (query, filename)</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">run</span>(config: Config) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;(), <span class="type">Box</span>&lt;<span class="keyword">dyn</span> Error&gt;&gt;&#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">contents</span> = fs::<span class="title function_ invoke__">read_to_string</span>(config.filename)?;</span><br><span class="line">    <span class="comment">//.expect(&quot;Something went wrong reading the file&quot;);//read file</span></span><br><span class="line">    <span class="comment">//println!(&quot;With text:\n&#123;&#125;&quot;, contents);</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">results</span> = <span class="keyword">if</span> config.case_sensitive &#123;<span class="comment">//if case sensitive</span></span><br><span class="line">        <span class="title function_ invoke__">search</span>(&amp;config.query, &amp;contents)<span class="comment">//search case sensitive</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">search_case_insensitive</span>(&amp;config.query, &amp;contents)<span class="comment">//search case insensitive</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// for line in search(&amp;config.query, &amp;contents) &#123;//iterate over each line</span></span><br><span class="line">    <span class="comment">//     println!(&quot;&#123;&#125;&quot;, line);//print line</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">line</span> <span class="keyword">in</span> results &#123;<span class="comment">//iterate over each line</span></span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, line);<span class="comment">//print line</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">Config</span> &#123;</span><br><span class="line">    query: <span class="type">String</span>,</span><br><span class="line">    filename: <span class="type">String</span>,</span><br><span class="line">    case_sensitive: <span class="type">bool</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// fn parse_config(args: &amp;[String]) -&gt; Config &#123;</span></span><br><span class="line"><span class="comment">//     let query = args[1].clone();//query string </span></span><br><span class="line"><span class="comment">//     let filename = args[2].clone();//filename</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//     Config &#123; query, filename &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Config</span> &#123;</span><br><span class="line">    <span class="comment">// fn new(args: &amp;[String]) -&gt; Config &#123;</span></span><br><span class="line">    <span class="comment">//     if args.len() &lt; 3 &#123;</span></span><br><span class="line">    <span class="comment">//         panic!(&quot;not enough arguments&quot;);</span></span><br><span class="line">    <span class="comment">//     &#125;</span></span><br><span class="line">    <span class="comment">//     let query = args[1].clone();//query string </span></span><br><span class="line">    <span class="comment">//     let filename = args[2].clone();//filename</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//     Config &#123; query, filename &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">build</span>(args: &amp;[<span class="type">String</span>]) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;Config, &amp;<span class="symbol">&#x27;static</span> <span class="type">str</span>&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> args.<span class="title function_ invoke__">len</span>() &lt; <span class="number">3</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_ invoke__">Err</span>(<span class="string">&quot;not enough arguments&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">query</span> = args[<span class="number">1</span>].<span class="title function_ invoke__">clone</span>();</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">filename</span> = args[<span class="number">2</span>].<span class="title function_ invoke__">clone</span>();</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">case_sensitive</span> = env::<span class="title function_ invoke__">var</span>(<span class="string">&quot;CASE_INSENSITIVE&quot;</span>).<span class="title function_ invoke__">is_err</span>();<span class="comment">//case sensitive</span></span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(Config &#123; query, filename, case_sensitive &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">search</span>&lt;<span class="symbol">&#x27;a</span>&gt;(query: &amp;<span class="type">str</span>, contents: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>) <span class="punctuation">-&gt;</span> <span class="type">Vec</span>&lt;&amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>&gt; &#123;<span class="comment">//&lt;&#x27;a&gt; lifetime annotation</span></span><br><span class="line">    <span class="comment">// let mut results = Vec::new();//mutable vector</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// for line in contents.lines() &#123;//iterate over each line</span></span><br><span class="line">    <span class="comment">//     if line.contains(query) &#123;//if line contains query</span></span><br><span class="line">    <span class="comment">//         results.push(line);//add line to results</span></span><br><span class="line">    <span class="comment">//     &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// results//return results</span></span><br><span class="line"></span><br><span class="line">    contents.<span class="title function_ invoke__">lines</span>()<span class="comment">//iterate over each line</span></span><br><span class="line">        .<span class="title function_ invoke__">filter</span>(|line| line.<span class="title function_ invoke__">contains</span>(query))<span class="comment">//if line contains query</span></span><br><span class="line">        .<span class="title function_ invoke__">collect</span>()<span class="comment">//collect into vector</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">search_case_insensitive</span>&lt;<span class="symbol">&#x27;a</span>&gt;(query: &amp;<span class="type">str</span>, contents: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>) <span class="punctuation">-&gt;</span> <span class="type">Vec</span>&lt;&amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>&gt; &#123;<span class="comment">//&lt;&#x27;a&gt; lifetime annotation</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">results</span> = <span class="type">Vec</span>::<span class="title function_ invoke__">new</span>();<span class="comment">//mutable vector</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">query</span> = query.<span class="title function_ invoke__">to_lowercase</span>();<span class="comment">//convert query to lowercase</span></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">line</span> <span class="keyword">in</span> contents.<span class="title function_ invoke__">lines</span>() &#123;<span class="comment">//iterate over each line</span></span><br><span class="line">        <span class="keyword">if</span> line.<span class="title function_ invoke__">to_lowercase</span>().<span class="title function_ invoke__">contains</span>(&amp;query) &#123;<span class="comment">//if line contains query</span></span><br><span class="line">            results.<span class="title function_ invoke__">push</span>(line);<span class="comment">//add line to results</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    results<span class="comment">//return results</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//TDD: Test-Driven Development </span></span><br><span class="line"><span class="comment">//Writing a Failing Test and Seeing It Pass</span></span><br><span class="line"><span class="comment">//1. Write a test that fails and run it to make sure it fails for the reason you expect.</span></span><br><span class="line"><span class="comment">//2. Write or modify just enough code to make the new test pass.</span></span><br><span class="line"><span class="comment">//3. Refactor the code you just added or changed and make sure the tests continue to pass.</span></span><br><span class="line"><span class="comment">//4. Repeat from step 1!</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#[cfg(test)]</span></span><br><span class="line"><span class="keyword">mod</span> tests &#123;</span><br><span class="line">    <span class="keyword">use</span> super::*;<span class="comment">//import outer scope</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">one_result</span>() &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">query</span> = <span class="string">&quot;duct&quot;</span>;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">contents</span> = <span class="string">&quot;\</span></span><br><span class="line"><span class="string">Rust:</span></span><br><span class="line"><span class="string">safe, fast, productive.</span></span><br><span class="line"><span class="string">Pick three.&quot;</span>;</span><br><span class="line">        <span class="built_in">assert_eq!</span>(</span><br><span class="line">            <span class="built_in">vec!</span>[<span class="string">&quot;safe, fast, productive.&quot;</span>],</span><br><span class="line">            <span class="title function_ invoke__">search</span>(query, contents)</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">case_sensitive</span>() &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">query</span> = <span class="string">&quot;duct&quot;</span>;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">contents</span> = <span class="string">&quot;\</span></span><br><span class="line"><span class="string">Rust:</span></span><br><span class="line"><span class="string">safe, fast, productive.</span></span><br><span class="line"><span class="string">Pick three.</span></span><br><span class="line"><span class="string">Duct tape.&quot;</span>;</span><br><span class="line">        <span class="built_in">assert_eq!</span>(</span><br><span class="line">            <span class="built_in">vec!</span>[<span class="string">&quot;safe, fast, productive.&quot;</span>],</span><br><span class="line">            <span class="title function_ invoke__">search</span>(query, contents)</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">case_insensitive</span>() &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">query</span> = <span class="string">&quot;rUsT&quot;</span>;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">contents</span> = <span class="string">&quot;\</span></span><br><span class="line"><span class="string">Rust:</span></span><br><span class="line"><span class="string">safe, fast, productive.</span></span><br><span class="line"><span class="string">Pick three.</span></span><br><span class="line"><span class="string">Trust me.&quot;</span>;</span><br><span class="line">        <span class="built_in">assert_eq!</span>(</span><br><span class="line">            <span class="built_in">vec!</span>[<span class="string">&quot;Rust:&quot;</span>, <span class="string">&quot;Trust me.&quot;</span>],</span><br><span class="line">            <span class="title function_ invoke__">search_case_insensitive</span>(query, contents)</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Simba</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>乳虎啸谷，百兽震惶</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Note/"># Note</a>
+                    
+                        <a href="/tags/Code/"># Code</a>
+                    
+                        <a href="/tags/Rust/"># Rust</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/11/14/Rust6-1-Writing-Automated-Tests/">Rust6.1 Writing Automated Tests</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Simba | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
