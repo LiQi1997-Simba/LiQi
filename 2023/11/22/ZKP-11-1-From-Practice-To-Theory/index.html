@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP10.2 Recursive SNARKs, Aggregation and Accumulation (Nova) | Simba&#39;s Homepage</title>
+<title>ZKP11.1 From Practice To Theory | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP10.2 Recursive SNARKs, Aggregation and Accumulation (Nova)</h1>
+            <h1 class="post-title">ZKP11.1 From Practice To Theory</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">November 03, 2023&nbsp;&nbsp;09:21:09</a>
+                        Date: <a href="#">November 22, 2023&nbsp;&nbsp;13:30:32</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">180</a> 
+                        <a href="">205</a> 
                         
                         </span>
                         
@@ -304,42 +304,45 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-10-Recursive-SNARKs-Aggregation-and-Accumulation-Dan-Boneh"><a href="#Lecture-10-Recursive-SNARKs-Aggregation-and-Accumulation-Dan-Boneh" class="headerlink" title="Lecture 10: Recursive SNARKs, Aggregation and Accumulation (Dan Boneh)"></a>Lecture 10: Recursive SNARKs, Aggregation and Accumulation (Dan Boneh)</h2><h3 id="10-3-Efficient-Recursion-via-Statement-Folding-Nova-Supernova-and-generalizations"><a href="#10-3-Efficient-Recursion-via-Statement-Folding-Nova-Supernova-and-generalizations" class="headerlink" title="10.3 Efficient Recursion via Statement Folding: Nova, Supernova, and generalizations"></a>10.3 Efficient Recursion via Statement Folding: Nova, Supernova, and generalizations</h3><ul>
-<li>The difficulty with full recursion<ul>
-<li>Prover P needs to build a proof for a circuit C that runs the entire verification algorithm $V(vk, x, \pi)$.<ul>
-<li>Expensive: V needs to verify eval. proofs for a poly. commitment<ul>
-<li>Halo: takes eval proof verification out of C -&gt; simpler C</li>
-<li>Nova: takes (almost) all verification checks out of C ⇒ even simpler C</li>
+<h2 id="Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi"><a href="#Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi" class="headerlink" title="Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)"></a>Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)</h2><h3 id="11-1-The-Feasibility-of-Interactive-ZK"><a href="#11-1-The-Feasibility-of-Interactive-ZK" class="headerlink" title="11.1 The Feasibility of Interactive ZK"></a>11.1 The Feasibility of Interactive ZK</h3><ul>
+<li>SMPC: semi-honest protocol + ZKP &#x3D; malicious protocol<ul>
+<li>Parties use ZKP to prove that they follow the protocol</li>
+</ul>
+</li>
+<li>Theoretical Research on Cryptographic Proofs<ul>
+<li>Feasibility (do they exist in principle?)<ul>
+<li>SNAR(G&#x2F;K)s, other protocols (ZK, WI, WH, etc.)</li>
+<li>Strong attack models (Concurrent? Quantum?)</li>
+</ul>
+</li>
+<li>Minimize Assumptions (to the extent possible)<ul>
+<li>Trusted setup (CRS&#x2F;URS&#x2F;plain model)</li>
+<li>Security reduction based on simple, well-studied, falsifiable assumptions. Improve efficiency</li>
+</ul>
+</li>
+<li>Amount of communication, number of rounds<ul>
+<li>Prover&#x2F;verifier efficiency</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Example: Interactive ZK<ul>
+<li>No trusted setup allowed: Security against Malicious verifier is hard to guarantee.</li>
+<li>ZK for NP [GMW86] with inverse poly soundness error.</li>
+<li>Optimization<ul>
+<li>Sequential repetition works (but very inefficient).</li>
+<li>Parallel repetition reduces soundness error but may not preserve ZK</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-</li>
-<li>A folding scheme: compress two instances into one<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/1.png"><ul>
-<li>To make Folding Prover non-interactive<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/2.png"></li>
-</ul>
-</li>
-<li>A folding scheme for R1CS<ul>
-<li>Recall: circuit to R1CS<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/3.png"></li>
-<li>A folding scheme: compress two instances into one<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/4.png"><br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/5.png"></li>
-<li>relaxed R1CS<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/6.png"></li>
-<li>Folding the two relaxed R1CS instances into one<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/7.png"><ul>
-<li>Correctness<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/8.png"></li>
-</ul>
-</li>
-<li>Not good enough<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/9.png"></li>
-<li>Recall: homomorphic commitment scheme<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/10.png"><br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/11.png"></li>
-<li>Folding scheme for committed relaxed R1CS<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/12.png"><br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/13.png"></li>
-</ul>
-</li>
-<li>Putting folding to use<ul>
-<li>build an efficient IVC<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/14.png"><br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/15.png"><br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/16.png"><br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/17.png"><br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/18.png"><br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/19.png"></li>
-<li>The key point<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/20.png"></li>
-<li>Unfortunately … not so simple<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/21.png"><br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/22.png"></li>
-<li>Prover’s work at each step<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/23.png"></li>
-<li>Supernova<br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/24.png"></li>
-<li>Generalizations: Sangria[<a target="_blank" rel="noopener" href="https://geometry.xyz/notebook/sangria-a-folding-scheme-for-plonk]">https://geometry.xyz/notebook/sangria-a-folding-scheme-for-plonk]</a><br><img src="/2023/11/03/ZKP-10-2-Recursive-SNARKs-Aggregation-and-Accumulation-Nova/25.png"></li>
+<p><img src="/2023/11/22/ZKP-11-1-From-Practice-To-Theory/1.png"><br><img src="/2023/11/22/ZKP-11-1-From-Practice-To-Theory/2.png"><br>    - [DNRS99]: If you can do Fiat-Shamir for $\Pi$, then $\Pi$ wasn’t malicious-verifier ZK.</p>
+<ul>
+<li>Many lines of research devoted to understanding the feasibility of interactive ZK.<ul>
+<li>How many communication rounds? [BKP18] suggests that you can do it in 3. </li>
+<li>How efficient can you make the prover? [IKOS07, …]</li>
+<li>Stronger forms of security: quantum attacks, concurrency</li>
 </ul>
 </li>
 </ul>
@@ -391,10 +394,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/11/03/Rust1-Getting-Started/">Rust1 Getting Started & Programming a Guessing Game</a>
             
-            
-            <a class="next" rel="next" href="/2023/11/02/ZKP-10-1-Recursive-SNARKs-Aggregation-and-Accumulation/">ZKP10.1 Recursive SNARKs, Aggregation and Accumulation</a>
+            <a class="next" rel="next" href="/2023/11/21/Rust9-2-Patterns-and-Matching/">Rust9.2 Patterns and Matching</a>
             
         </section>
 
