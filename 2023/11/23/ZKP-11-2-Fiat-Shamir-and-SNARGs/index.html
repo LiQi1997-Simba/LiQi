@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP11.1 From Practice To Theory | Simba&#39;s Homepage</title>
+<title>ZKP11.2 Fiat-Shamir and SNARGs | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP11.1 From Practice To Theory</h1>
+            <h1 class="post-title">ZKP11.2 Fiat-Shamir and SNARGs</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">November 22, 2023&nbsp;&nbsp;13:30:32</a>
+                        Date: <a href="#">November 23, 2023&nbsp;&nbsp;10:49:52</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">205</a> 
+                        <a href="">275</a> 
                         
                         </span>
                         
@@ -304,45 +304,46 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi"><a href="#Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi" class="headerlink" title="Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)"></a>Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)</h2><h3 id="11-1-The-Feasibility-of-Interactive-ZK"><a href="#11-1-The-Feasibility-of-Interactive-ZK" class="headerlink" title="11.1 The Feasibility of Interactive ZK"></a>11.1 The Feasibility of Interactive ZK</h3><ul>
-<li>SMPC: semi-honest protocol + ZKP &#x3D; malicious protocol<ul>
-<li>Parties use ZKP to prove that they follow the protocol</li>
+<h2 id="Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi"><a href="#Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi" class="headerlink" title="Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)"></a>Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)</h2><h3 id="11-2-Fiat-Shamir-and-SNARGs"><a href="#11-2-Fiat-Shamir-and-SNARGs" class="headerlink" title="11.2 Fiat-Shamir and SNARGs"></a>11.2 Fiat-Shamir and SNARGs</h3><ul>
+<li>Succinct Non-Interactive Arguments (SNARGs)<br><img src="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/1.png"><ul>
+<li>This class so far: constructions of SNARGs using IOPs and a random oracle.</li>
 </ul>
 </li>
-<li>Theoretical Research on Cryptographic Proofs<ul>
-<li>Feasibility (do they exist in principle?)<ul>
-<li>SNAR(G&#x2F;K)s, other protocols (ZK, WI, WH, etc.)</li>
-<li>Strong attack models (Concurrent? Quantum?)</li>
+<li>The Fiat-Shamir Transform<ul>
+<li>Powerful, general proposal for removing interaction<br><img src="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/2.png"></li>
+<li>The Random Oracle Model [BR93]<ul>
+<li>Assumption about the structure of an attack on a hash function h<br><img src="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/3.png"></li>
 </ul>
 </li>
-<li>Minimize Assumptions (to the extent possible)<ul>
-<li>Trusted setup (CRS&#x2F;URS&#x2F;plain model)</li>
-<li>Security reduction based on simple, well-studied, falsifiable assumptions. Improve efficiency</li>
-</ul>
-</li>
-<li>Amount of communication, number of rounds<ul>
-<li>Prover&#x2F;verifier efficiency</li>
+<li>Fiat-Shamir in the ROM (Random Oracle Model)<br><img src="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/4.png"><ul>
+<li>Under such an assumption, h() can be thought of as a random function.</li>
+<li>In practice, h() is instantiated with (e.g.) SHA256, possibly salted.</li>
+<li>No matter what, h() is instantiated with a public efficient algorithm</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Example: Interactive ZK<ul>
-<li>No trusted setup allowed: Security against Malicious verifier is hard to guarantee.</li>
-<li>ZK for NP [GMW86] with inverse poly soundness error.</li>
-<li>Optimization<ul>
-<li>Sequential repetition works (but very inefficient).</li>
-<li>Parallel repetition reduces soundness error but may not preserve ZK</li>
+<li>Obvious (theoretical) problem: Public efficient algorithms can’t compute random functions<ul>
+<li>Example of an uninstantiable random oracle property [CGH98]<ul>
+<li>Random Oracles Do Not Exist<br><img src="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/5.png"></li>
+<li>For any fixed f, a RO is CI for f.</li>
+<li>Why? Each query x to the RO produces a random output y, which is equal to f(x) with probability $2^{-\lambda}$.<br><img src="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/6.png"></li>
+<li>Is this a reasonable counterexample?<ul>
+<li>Hash function&#x2F;random oracle must be able to hash inputs of arbitrary length. CI with bounded inputs might exist!</li>
+<li>[Barak01,GK03] apply to fixed-input length hash functions. </li>
+<li>Theorem [Barak ‘01, Goldwasser-Kalai ‘03]: $\exsit$ interactive protocol $\Pi$ such that $\Pi_{FS}$ is ROM-secure but insecure for any efficiently computable H (e.g. SHA-3).</li>
+</ul>
+</li>
+<li>Security property broken by running the hash function on its own description. Is this practically relevant?<ul>
+<li>Recursive SNARKs do something of this flavor</li>
+</ul>
+</li>
+<li>Does NOT imply RO-based SNARKs are broken in practice.<ul>
+<li>But it does imply a lack of theoretical understanding.</li>
 </ul>
 </li>
 </ul>
 </li>
-</ul>
-<p><img src="/2023/11/22/ZKP-11-1-From-Practice-To-Theory/1.png"><br><img src="/2023/11/22/ZKP-11-1-From-Practice-To-Theory/2.png"><br>    - [DNRS99]: If you can do Fiat-Shamir for $\Pi$, then $\Pi$ wasn’t malicious-verifier ZK.</p>
-<ul>
-<li>Many lines of research devoted to understanding the feasibility of interactive ZK.<ul>
-<li>How many communication rounds? [BKP18] suggests that you can do it in 3. </li>
-<li>How efficient can you make the prover? [IKOS07, …]</li>
-<li>Stronger forms of security: quantum attacks, concurrency</li>
 </ul>
 </li>
 </ul>
@@ -394,10 +395,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/">ZKP11.2 Fiat-Shamir and SNARGs</a>
             
-            
-            <a class="next" rel="next" href="/2023/11/21/Rust9-2-Patterns-and-Matching/">Rust9.2 Patterns and Matching</a>
+            <a class="next" rel="next" href="/2023/11/22/ZKP-11-1-From-Practice-To-Theory/">ZKP11.1 From Practice To Theory</a>
             
         </section>
 
