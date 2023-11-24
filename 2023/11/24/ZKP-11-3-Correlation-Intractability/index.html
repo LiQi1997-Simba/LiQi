@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP11.2 Fiat-Shamir and SNARGs | Simba&#39;s Homepage</title>
+<title>ZKP-11-3 Correlation Intractability | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP11.2 Fiat-Shamir and SNARGs</h1>
+            <h1 class="post-title">ZKP-11-3 Correlation Intractability</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">November 23, 2023&nbsp;&nbsp;10:49:52</a>
+                        Date: <a href="#">November 24, 2023&nbsp;&nbsp;17:16:42</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">275</a> 
+                        <a href="">259</a> 
                         
                         </span>
                         
@@ -304,46 +304,62 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi"><a href="#Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi" class="headerlink" title="Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)"></a>Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)</h2><h3 id="11-2-Fiat-Shamir-and-SNARGs"><a href="#11-2-Fiat-Shamir-and-SNARGs" class="headerlink" title="11.2 Fiat-Shamir and SNARGs"></a>11.2 Fiat-Shamir and SNARGs</h3><ul>
-<li>Succinct Non-Interactive Arguments (SNARGs)<br><img src="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/1.png"><ul>
-<li>This class so far: constructions of SNARGs using IOPs and a random oracle.</li>
+<h2 id="Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi"><a href="#Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi" class="headerlink" title="Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)"></a>Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)</h2><h3 id="11-3-What-can-we-do-without-random-oracle-model"><a href="#11-3-What-can-we-do-without-random-oracle-model" class="headerlink" title="11.3 What can we do without random oracle model"></a>11.3 What can we do without random oracle model</h3><ul>
+<li>Falsifiable Assumptions<ul>
+<li>Prove security assuming that some concrete algorithmic task is infeasible:<ul>
+<li>Computing discrete logarithms is hard.</li>
+<li>Solving random noisy linear equations (LWE) is hard.</li>
+<li>SHA256 is collision-resistant</li>
 </ul>
 </li>
-<li>The Fiat-Shamir Transform<ul>
-<li>Powerful, general proposal for removing interaction<br><img src="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/2.png"></li>
-<li>The Random Oracle Model [BR93]<ul>
-<li>Assumption about the structure of an attack on a hash function h<br><img src="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/3.png"></li>
+<li>Many cryptographic constructions use random oracles to get better efficiency, but can be based on falsifiable assumptions.<ul>
+<li>CCA-secure public key encryption</li>
+<li>Identity-based encryption.</li>
+<li>Non-interactive zero knowledge</li>
 </ul>
 </li>
-<li>Fiat-Shamir in the ROM (Random Oracle Model)<br><img src="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/4.png"><ul>
-<li>Under such an assumption, h() can be thought of as a random function.</li>
-<li>In practice, h() is instantiated with (e.g.) SHA256, possibly salted.</li>
-<li>No matter what, h() is instantiated with a public efficient algorithm</li>
+<li>Can (ZK-)SNARKs for NP be built based on falsifiable assumptions?<ul>
+<li>(minor caveats but) No!</li>
+<li>No way to extract a long witness from a short proof. Need assumption (RO, “knowledge assumption”) that guarantees adversary “knows” a long string given a short commitment.</li>
 </ul>
 </li>
-</ul>
-</li>
-<li>Obvious (theoretical) problem: Public efficient algorithms can’t compute random functions<ul>
-<li>Example of an uninstantiable random oracle property [CGH98]<ul>
-<li>Random Oracles Do Not Exist<br><img src="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/5.png"></li>
-<li>For any fixed f, a RO is CI for f.</li>
-<li>Why? Each query x to the RO produces a random output y, which is equal to f(x) with probability $2^{-\lambda}$.<br><img src="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/6.png"></li>
-<li>Is this a reasonable counterexample?<ul>
-<li>Hash function&#x2F;random oracle must be able to hash inputs of arbitrary length. CI with bounded inputs might exist!</li>
-<li>[Barak01,GK03] apply to fixed-input length hash functions. </li>
-<li>Theorem [Barak ‘01, Goldwasser-Kalai ‘03]: $\exsit$ interactive protocol $\Pi$ such that $\Pi_{FS}$ is ROM-secure but insecure for any efficiently computable H (e.g. SHA-3).</li>
-</ul>
-</li>
-<li>Security property broken by running the hash function on its own description. Is this practically relevant?<ul>
-<li>Recursive SNARKs do something of this flavor</li>
-</ul>
-</li>
-<li>Does NOT imply RO-based SNARKs are broken in practice.<ul>
-<li>But it does imply a lack of theoretical understanding.</li>
+<li>Can (ZK-)SNARGs for NP be built based on falsifiable assumptions?<ul>
+<li>It’s complicated. (We don’t know)</li>
+<li>Significant barriers [Gentry-Wichs ‘11]</li>
+<li>The community is still trying to understand this.</li>
 </ul>
 </li>
 </ul>
 </li>
+<li>SNARGs for limited computations from falsifiable assumptions (LWE)<ul>
+<li>Two tools&#x2F;techniques<ul>
+<li>Correlation-intractable hash functions [CCHLRRW19,PS19,HLR21]<ul>
+<li>Used to instantiate Fiat-Shamir without random oracles, for “nice enough” interactive protocols</li>
+</ul>
+</li>
+<li>Somewhere extractable commitments [HW15] <ul>
+<li>Used to make a “nice enough” interactive protocol </li>
+<li>Special variant of the typical IOP-based approach.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Correlation Intractability<ul>
+<li>Function<br><img src="/2023/11/24/ZKP-11-3-Correlation-Intractability/1.png"></li>
+<li>Binary relations<br><img src="/2023/11/24/ZKP-11-3-Correlation-Intractability/2.png"></li>
+<li>Weren’t these impossible to build?<ul>
+<li>Restrict to fixed input length (necessary)</li>
+<li>Restrict to fixed running time on f (unclear if necessary)</li>
+</ul>
+</li>
+<li>CI Construction<ul>
+<li>A simple construction [CLW18] using Fully Homomorphic Encryption (FHE)<br><img src="/2023/11/24/ZKP-11-3-Correlation-Intractability/3.png"><br><img src="/2023/11/24/ZKP-11-3-Correlation-Intractability/4.png"></li>
+</ul>
+</li>
+<li>Security Analysis<br><img src="/2023/11/24/ZKP-11-3-Correlation-Intractability/5.png"></li>
+<li>Correlation Intractability: what we know<br><img src="/2023/11/24/ZKP-11-3-Correlation-Intractability/6.png"></li>
 </ul>
 </li>
 </ul>
@@ -395,10 +411,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/11/24/ZKP-11-3-Correlation-Intractability/">ZKP-11-3 Correlation Intractability</a>
             
-            
-            <a class="next" rel="next" href="/2023/11/22/ZKP-11-1-From-Practice-To-Theory/">ZKP11.1 From Practice To Theory</a>
+            <a class="next" rel="next" href="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/">ZKP11.2 Fiat-Shamir and SNARGs</a>
             
         </section>
 
