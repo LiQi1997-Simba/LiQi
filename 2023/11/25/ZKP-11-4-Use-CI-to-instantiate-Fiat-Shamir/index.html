@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP11.3 Correlation Intractability | Simba&#39;s Homepage</title>
+<title>ZKP11.4 Use CI to instantiate Fiat-Shamir | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP11.3 Correlation Intractability</h1>
+            <h1 class="post-title">ZKP11.4 Use CI to instantiate Fiat-Shamir</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">November 24, 2023&nbsp;&nbsp;17:16:42</a>
+                        Date: <a href="#">November 25, 2023&nbsp;&nbsp;17:55:16</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">259</a> 
+                        <a href="">298</a> 
                         
                         </span>
                         
@@ -304,62 +304,50 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi"><a href="#Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi" class="headerlink" title="Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)"></a>Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)</h2><h3 id="11-3-What-can-we-do-without-random-oracle-model"><a href="#11-3-What-can-we-do-without-random-oracle-model" class="headerlink" title="11.3 What can we do without random oracle model"></a>11.3 What can we do without random oracle model</h3><ul>
-<li>Falsifiable Assumptions<ul>
-<li>Prove security assuming that some concrete algorithmic task is infeasible:<ul>
-<li>Computing discrete logarithms is hard.</li>
-<li>Solving random noisy linear equations (LWE) is hard.</li>
-<li>SHA256 is collision-resistant</li>
-</ul>
-</li>
-<li>Many cryptographic constructions use random oracles to get better efficiency, but can be based on falsifiable assumptions.<ul>
-<li>CCA-secure public key encryption</li>
-<li>Identity-based encryption.</li>
-<li>Non-interactive zero knowledge</li>
-</ul>
-</li>
-<li>Can (ZK-)SNARKs for NP be built based on falsifiable assumptions?<ul>
-<li>(minor caveats but) No!</li>
-<li>No way to extract a long witness from a short proof. Need assumption (RO, “knowledge assumption”) that guarantees adversary “knows” a long string given a short commitment.</li>
-</ul>
-</li>
-<li>Can (ZK-)SNARGs for NP be built based on falsifiable assumptions?<ul>
-<li>It’s complicated. (We don’t know)</li>
-<li>Significant barriers [Gentry-Wichs ‘11]</li>
-<li>The community is still trying to understand this.</li>
+<h2 id="Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi"><a href="#Lecture-11-From-Practice-to-Theory-Guest-Lecturer-Alex-Lombardi" class="headerlink" title="Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)"></a>Lecture 11: From Practice to Theory (Guest Lecturer:  Alex Lombardi)</h2><h3 id="11-4-Use-CI-to-instantiate-Fiat-Shamir"><a href="#11-4-Use-CI-to-instantiate-Fiat-Shamir" class="headerlink" title="11.4 Use CI to instantiate Fiat-Shamir"></a>11.4 Use CI to instantiate Fiat-Shamir</h3><ul>
+<li>Avoid Bad Challenges<br><img src="/2023/11/25/ZKP-11-4-Use-CI-to-instantiate-Fiat-Shamir/1.png"><ul>
+<li>Def: Given false claim $x$ and a first message $\alpha$, a challenge $\beta$ is “bad” if there exists a prover message $gamma$ making $V$ accept</li>
+<li>We want to say: if the (3 message) interactive protocol is sound, then (for all $x$, $\alpha$) most $\beta$ are not bad. True for statistically sound IPs.</li>
+<li>Exactly what CI is good for! Define relation $R_x &#x3D; {\alpha, \beta: \beta is bad}$. Then if $h$ is CI for $R_x$ (when $x \notin L$), $\Pi_{FS}$ is sound using $h$! </li>
+<li>Protocols with more than 3 messages: round-by-round soundness (each round has a type of “bad challenge” to avoid). </li>
+<li>Main technical challenges: <ul>
+<li>Sometimes our IP doesn’t have statistical soundness.</li>
+<li>We can only build CI for relations $R$ that can be decided efficiently</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>SNARGs for limited computations from falsifiable assumptions (LWE)<ul>
-<li>Two tools&#x2F;techniques<ul>
-<li>Correlation-intractable hash functions [CCHLRRW19,PS19,HLR21]<ul>
-<li>Used to instantiate Fiat-Shamir without random oracles, for “nice enough” interactive protocols</li>
+<li>Important example: SNARGs via IOPs (PCPs)<ul>
+<li>SNARGs from PCPs [Kilian, Micali]<br><img src="/2023/11/25/ZKP-11-4-Use-CI-to-instantiate-Fiat-Shamir/2.png"><ul>
+<li>Candidate SNARG: apply Fiat-Shamir to this protocol!</li>
+<li>Simplified (less efficient) version of modern SNARKs you’ve learned about.</li>
+<li>Not statistically sound, so it’s not clear how to analyze FS without random oracles.</li>
 </ul>
 </li>
-<li>Somewhere extractable commitments [HW15] <ul>
-<li>Used to make a “nice enough” interactive protocol </li>
-<li>Special variant of the typical IOP-based approach.</li>
+<li>SNARGs for Batch NP<br><img src="/2023/11/25/ZKP-11-4-Use-CI-to-instantiate-Fiat-Shamir/3.png"></li>
+<li>Interactive Batch Arguments from PCPs [CJJ21]<br><img src="/2023/11/25/ZKP-11-4-Use-CI-to-instantiate-Fiat-Shamir/4.png"><ul>
+<li>SSB Commitments<br><img src="/2023/11/25/ZKP-11-4-Use-CI-to-instantiate-Fiat-Shamir/5.png"></li>
+<li>Interactive Batch Arguments from PCPs [CJJ21]<br><img src="/2023/11/25/ZKP-11-4-Use-CI-to-instantiate-Fiat-Shamir/6.png"><br><img src="/2023/11/25/ZKP-11-4-Use-CI-to-instantiate-Fiat-Shamir/7.png"></li>
 </ul>
 </li>
 </ul>
 </li>
+<li>Summary of Fiat-Shamir without RO<ul>
+<li>Use hash functions that are CI for appropriate functions&#x2F;relations<ul>
+<li>[CCHLRRW19,PS19,BKM20,JJ21,HLR21]</li>
 </ul>
 </li>
-<li>Correlation Intractability<ul>
-<li>Function<br><img src="/2023/11/24/ZKP-11-3-Correlation-Intractability/1.png"></li>
-<li>Binary relations<br><img src="/2023/11/24/ZKP-11-3-Correlation-Intractability/2.png"></li>
-<li>Weren’t these impossible to build?<ul>
-<li>Restrict to fixed input length (necessary)</li>
-<li>Restrict to fixed running time on f (unclear if necessary)</li>
+<li>Carefully show that FS-soundness for protocols of interest follows from compatible forms of CI<ul>
+<li>[CCHLRRW19]: (non-succinct) NIZK</li>
+<li>[JKKZ21]: non-interactive sumcheck protocol</li>
+<li>[CJJ21]: batch NP arguments</li>
 </ul>
 </li>
-<li>CI Construction<ul>
-<li>A simple construction [CLW18] using Fully Homomorphic Encryption (FHE)<br><img src="/2023/11/24/ZKP-11-3-Correlation-Intractability/3.png"><br><img src="/2023/11/24/ZKP-11-3-Correlation-Intractability/4.png"></li>
+<li>Open problems:<ul>
+<li>Characterize which protocols can be FS-compiled (we know it doesn’t work in general [Bar01, GK03])</li>
+<li>SNARGs for NP from falsifiable assumptions?</li>
 </ul>
 </li>
-<li>Security Analysis<br><img src="/2023/11/24/ZKP-11-3-Correlation-Intractability/5.png"></li>
-<li>Correlation Intractability: what we know<br><img src="/2023/11/24/ZKP-11-3-Correlation-Intractability/6.png"></li>
 </ul>
 </li>
 </ul>
@@ -411,10 +399,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/11/25/ZKP-11-4-Use-CI-to-instantiate-Fiat-Shamir/">ZKP11.4 Use CI to instantiate Fiat-Shamir</a>
             
-            
-            <a class="next" rel="next" href="/2023/11/23/ZKP-11-2-Fiat-Shamir-and-SNARGs/">ZKP11.2 Fiat-Shamir and SNARGs</a>
+            <a class="next" rel="next" href="/2023/11/24/ZKP-11-3-Correlation-Intractability/">ZKP11.3 Correlation Intractability</a>
             
         </section>
 
