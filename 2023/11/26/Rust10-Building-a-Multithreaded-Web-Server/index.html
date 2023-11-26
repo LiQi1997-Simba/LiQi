@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Simba">
+
+
+
+
+
+<title>Rust10 Building a Multithreaded Web Server | Simba&#39;s Homepage</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Simba&#39;s Homepage</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Simba&#39;s Homepage</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Rust10 Building a Multithreaded Web Server</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Simba</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 26, 2023&nbsp;&nbsp;08:55:42</a>
+                        </span>
+                    
+                    <!-- 
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Rust-Programming-Language/">Rust Programming Language</a>
+                            
+                        </span>
+                     -->
+                    
+
+                        <span class="post-category">
+                        
+                        Category:
+                        
+                        
+                        
+                        <a href="/categories/Rust-Programming-Language/">Rust Programming Language</a>
+                        
+                        
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Words:
+                        
+                        <a href="">1.5k</a> 
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Time:
+                        
+                        <a href="">9min</a> 
+                        
+                        </span>
+                        
+                        
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust学习笔记"><a href="#Rust学习笔记" class="headerlink" title="Rust学习笔记"></a>Rust学习笔记</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1hp4y1k7SV">Rust编程语言入门教程</a>课程笔记</p>
+<p>参考教材: <a target="_blank" rel="noopener" href="https://rustwiki.org/en/book/">The Rust Programming Language (by Steve Klabnik and Carol Nichols, with contributions from the Rust Community)</a></p>
+<h2 id="Lecture-20-Final-Project-Building-a-Multithreaded-Web-Server"><a href="#Lecture-20-Final-Project-Building-a-Multithreaded-Web-Server" class="headerlink" title="Lecture 20: Final Project: Building a Multithreaded Web Server"></a>Lecture 20: Final Project: Building a Multithreaded Web Server</h2><p>src&#x2F;main.rs</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::fs;</span><br><span class="line"><span class="keyword">use</span> std::&#123;</span><br><span class="line">    io::&#123;prelude::*, BufReader&#125;,</span><br><span class="line">    net::&#123;TcpListener, TcpStream&#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"><span class="keyword">use</span> std::time::Duration;</span><br><span class="line"><span class="keyword">use</span> hello::ThreadPool;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// bind to a port</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">listener</span> = TcpListener::<span class="title function_ invoke__">bind</span>(<span class="string">&quot;127.0.0.1:7878&quot;</span>).<span class="title function_ invoke__">unwrap</span>(); </span><br><span class="line">    <span class="keyword">let</span> <span class="variable">pool</span> = ThreadPool::<span class="title function_ invoke__">new</span>(<span class="number">4</span>);<span class="comment">// set a limit on the number of threads in the pool</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// listen for incoming connections</span></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">stream</span> <span class="keyword">in</span> listener.<span class="title function_ invoke__">incoming</span>().<span class="title function_ invoke__">take</span>(<span class="number">2</span>) &#123;<span class="comment">// only accept two connections</span></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">stream</span> = stream.<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// println!(&quot;Connection established!&quot;);</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// handle each connection</span></span><br><span class="line">        <span class="comment">// handle_connection(stream);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// spawn a new thread for each connection</span></span><br><span class="line">        <span class="comment">// thread::spawn(|| &#123;</span></span><br><span class="line">        <span class="comment">//     handle_connection(stream);//suffer from ddos attack</span></span><br><span class="line">        <span class="comment">// &#125;);</span></span><br><span class="line"></span><br><span class="line">        pool.<span class="title function_ invoke__">execute</span>(|| &#123;</span><br><span class="line">            <span class="title function_ invoke__">handle_connection</span>(stream);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Shutting down.&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">handle_connection</span>(<span class="keyword">mut</span> stream: TcpStream) &#123;</span><br><span class="line">    <span class="comment">// let buf_reader = BufReader::new(&amp;mut stream);</span></span><br><span class="line">    <span class="comment">// let http_request: Vec&lt;_&gt; = buf_reader</span></span><br><span class="line">    <span class="comment">//     .lines()</span></span><br><span class="line">    <span class="comment">//     .map(|result| result.unwrap())</span></span><br><span class="line">    <span class="comment">//     .take_while(|line| !line.is_empty())</span></span><br><span class="line">    <span class="comment">//     .collect();</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// println!(&quot;Request: &#123;:#?&#125;&quot;, http_request);</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">buffer</span> = [<span class="number">0</span>; <span class="number">1024</span>];</span><br><span class="line">    stream.<span class="title function_ invoke__">read</span>(&amp;<span class="keyword">mut</span> buffer).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">get</span> = <span class="string">b&quot;GET / HTTP/1.1\r\n&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">sleep</span> = <span class="string">b&quot;GET /sleep HTTP/1.1\r\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//Reading a Request</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Request Format</span></span><br><span class="line">    <span class="comment">// Method Request-URI HTTP-Version CRLF</span></span><br><span class="line">    <span class="comment">// headers CRLF</span></span><br><span class="line">    <span class="comment">// message-body</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Example</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Request: [</span></span><br><span class="line">    <span class="comment">//     &quot;GET / HTTP/1.1&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;Host: 127.0.0.1:7878&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;Connection: keep-alive&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;sec-ch-ua: \&quot;Google Chrome\&quot;;v=\&quot;119\&quot;, \&quot;Chromium\&quot;;v=\&quot;119\&quot;, \&quot;Not?A_Brand\&quot;;v=\&quot;24\&quot;&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;sec-ch-ua-mobile: ?0&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;sec-ch-ua-platform: \&quot;macOS\&quot;&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;Upgrade-Insecure-Requests: 1&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;Sec-Fetch-Site: none&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;Sec-Fetch-Mode: navigate&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;Sec-Fetch-User: ?1&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;Sec-Fetch-Dest: document&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;Accept-Encoding: gzip, deflate, br&quot;,</span></span><br><span class="line">    <span class="comment">//     &quot;Accept-Language: zh-CN,zh;q=0.9,en;q=0.8&quot;,</span></span><br><span class="line">    <span class="comment">// ]   </span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//Writing a Response</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Response Format</span></span><br><span class="line">    <span class="comment">// HTTP-Version Status-Code Reason-Phrase CRLF</span></span><br><span class="line">    <span class="comment">// headers CRLF</span></span><br><span class="line">    <span class="comment">// message-body</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//let response = &quot;HTTP/1.1 200 OK\r\n\r\n&quot;;</span></span><br><span class="line">    <span class="comment">// let contents = fs::read_to_string(&quot;hello.html&quot;).unwrap();</span></span><br><span class="line">    <span class="comment">// let response = format!(&quot;HTTP/1.1 200 OK\r\n\r\n&#123;&#125;&quot;, contents);</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// write the response to the stream</span></span><br><span class="line">    <span class="comment">// stream.write(response.as_bytes()).unwrap();</span></span><br><span class="line">    <span class="comment">// stream.flush().unwrap();</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// if buffer.starts_with(get) &#123;</span></span><br><span class="line">    <span class="comment">//     let contents = fs::read_to_string(&quot;hello.html&quot;).unwrap();</span></span><br><span class="line">    <span class="comment">//     let response = format!(&quot;HTTP/1.1 200 OK\r\n\r\n&#123;&#125;&quot;, contents);</span></span><br><span class="line">    <span class="comment">//     stream.write(response.as_bytes()).unwrap();</span></span><br><span class="line">    <span class="comment">//     stream.flush().unwrap();</span></span><br><span class="line">    <span class="comment">// &#125; else &#123;</span></span><br><span class="line">    <span class="comment">//     // other request</span></span><br><span class="line">    <span class="comment">//     let status_line = &quot;HTTP/1.1 404 NOT FOUND\r\n\r\n&quot;;</span></span><br><span class="line">    <span class="comment">//     let contents = fs::read_to_string(&quot;404.html&quot;).unwrap();</span></span><br><span class="line">    <span class="comment">//     let response = format!(&quot;&#123;&#125;&#123;&#125;&quot;, status_line, contents);</span></span><br><span class="line">    <span class="comment">//     stream.write(response.as_bytes()).unwrap();</span></span><br><span class="line">    <span class="comment">//     stream.flush().unwrap();</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Refactoring</span></span><br><span class="line">    <span class="keyword">let</span> (status_line, filename) = <span class="keyword">if</span> buffer.<span class="title function_ invoke__">starts_with</span>(get) &#123;</span><br><span class="line">        (<span class="string">&quot;HTTP/1.1 200 OK\r\n\r\n&quot;</span>, <span class="string">&quot;hello.html&quot;</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> buffer.<span class="title function_ invoke__">starts_with</span>(sleep) &#123;<span class="comment">// simulate a slow request</span></span><br><span class="line">        <span class="comment">// simulate a slow request</span></span><br><span class="line">        std::thread::<span class="title function_ invoke__">sleep</span>(std::time::Duration::<span class="title function_ invoke__">from_secs</span>(<span class="number">5</span>));</span><br><span class="line">        (<span class="string">&quot;HTTP/1.1 200 OK\r\n\r\n&quot;</span>, <span class="string">&quot;hello.html&quot;</span>)</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        (<span class="string">&quot;HTTP/1.1 404 NOT FOUND\r\n\r\n&quot;</span>, <span class="string">&quot;404.html&quot;</span>)</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">contents</span> = fs::<span class="title function_ invoke__">read_to_string</span>(filename).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">response</span> = <span class="built_in">format!</span>(<span class="string">&quot;&#123;&#125;&#123;&#125;&quot;</span>, status_line, contents);</span><br><span class="line">    stream.<span class="title function_ invoke__">write</span>(response.<span class="title function_ invoke__">as_bytes</span>()).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    stream.<span class="title function_ invoke__">flush</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>src&#x2F;lib.rs</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"><span class="keyword">use</span> std::sync::&#123;mpsc, Arc, Mutex&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Message</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">NewJob</span>(Job),</span><br><span class="line">    Terminate,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Worker</span> &#123;</span><br><span class="line">    id: <span class="type">usize</span>,</span><br><span class="line">    <span class="comment">// thread: thread::JoinHandle&lt;()&gt;,</span></span><br><span class="line">    thread: <span class="type">Option</span>&lt;thread::JoinHandle&lt;()&gt;&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Worker</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">new</span>(id: <span class="type">usize</span>, receiver: Arc&lt;Mutex&lt;mpsc::Receiver&lt;Message&gt;&gt;&gt;) <span class="punctuation">-&gt;</span> Worker &#123;</span><br><span class="line">        <span class="comment">// let thread = thread::spawn(|| &#123;&#125;);</span></span><br><span class="line">        <span class="comment">// let thread = thread::spawn(|| &#123;</span></span><br><span class="line">        <span class="comment">//     receiver;</span></span><br><span class="line">        <span class="comment">// &#125;);</span></span><br><span class="line">        <span class="comment">// let thread = thread::spawn(move || loop &#123;</span></span><br><span class="line">        <span class="comment">//     while let Ok(_) = receiver.lock().unwrap().recv().unwrap()&#123;</span></span><br><span class="line">        <span class="comment">//         println!(&quot;Worker &#123;&#125; got a job; executing.&quot;, id);</span></span><br><span class="line">        <span class="comment">//         job.call_box();</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">// &#125;);</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">thread</span> = thread::<span class="title function_ invoke__">spawn</span>(<span class="keyword">move</span> || <span class="keyword">loop</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> <span class="variable">message</span> = receiver.<span class="title function_ invoke__">lock</span>().<span class="title function_ invoke__">unwrap</span>().<span class="title function_ invoke__">recv</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">            <span class="keyword">match</span> message &#123;</span><br><span class="line">                Message::<span class="title function_ invoke__">NewJob</span>(job) =&gt; &#123;</span><br><span class="line">                    <span class="built_in">println!</span>(<span class="string">&quot;Worker &#123;&#125; got a job; executing.&quot;</span>, id);</span><br><span class="line">                    job.<span class="title function_ invoke__">call_box</span>();</span><br><span class="line">                &#125;,</span><br><span class="line">                Message::Terminate =&gt; &#123;</span><br><span class="line">                    <span class="built_in">println!</span>(<span class="string">&quot;Worker &#123;&#125; was told to terminate.&quot;</span>, id);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        Worker &#123; id, thread: <span class="title function_ invoke__">Some</span>(thread) &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// fn new(id: usize, receiver: Arc&lt;Mutex&lt;mpsc::Receiver&lt;Job&gt;&gt;&gt;) -&gt; Worker &#123;</span></span><br><span class="line">    <span class="comment">//     let thread = thread::spawn(|| &#123;</span></span><br><span class="line">    <span class="comment">//         // loop &#123;</span></span><br><span class="line">    <span class="comment">//         //     receiver.lock().unwrap().recv().unwrap();</span></span><br><span class="line">    <span class="comment">//         // &#125;</span></span><br><span class="line">    <span class="comment">//         loop &#123;</span></span><br><span class="line">    <span class="comment">//             let job = receiver.lock().unwrap().recv().unwrap();</span></span><br><span class="line">    <span class="comment">//             println!(&quot;Worker &#123;&#125; got a job; executing.&quot;, id);</span></span><br><span class="line">    <span class="comment">//             job.call_box();</span></span><br><span class="line">    <span class="comment">//         &#125;</span></span><br><span class="line">    <span class="comment">//     &#125;);</span></span><br><span class="line">    <span class="comment">//     Worker &#123; id, thread &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">ThreadPool</span> &#123;</span><br><span class="line">    <span class="comment">// threads: Vec&lt;thread::JoinHandle&lt;()&gt;&gt;,</span></span><br><span class="line">    workers: <span class="type">Vec</span>&lt;Worker&gt;,</span><br><span class="line">    <span class="comment">// sender: mpsc::Sender&lt;Job&gt;,</span></span><br><span class="line">    sender: mpsc::Sender&lt;Message&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">ThreadPool</span> &#123;</span><br><span class="line">    <span class="comment">/// Create a new ThreadPool</span></span><br><span class="line">    <span class="comment">/// </span></span><br><span class="line">    <span class="comment">/// The size is the number of threads in the pool</span></span><br><span class="line">    <span class="comment">/// </span></span><br><span class="line">    <span class="comment">/// # Panics</span></span><br><span class="line">    <span class="comment">/// </span></span><br><span class="line">    <span class="comment">/// The `new` function will panic if the size is zero</span></span><br><span class="line">    <span class="comment">// </span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// pub fn new(size: usize) -&gt; ThreadPool &#123;</span></span><br><span class="line">    <span class="comment">//     assert!(size &gt; 0);</span></span><br><span class="line">    <span class="comment">//     let (sender, receiver) = mpsc::channel();</span></span><br><span class="line">    <span class="comment">//     let mut workers = Vec::with_capacity(size);</span></span><br><span class="line">    <span class="comment">//     for id in 0..size &#123;</span></span><br><span class="line">    <span class="comment">//         workers.push(Worker::new(id, receiver));</span></span><br><span class="line">    <span class="comment">//     &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//     ThreadPool &#123; workers, sender &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">new</span>(size: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> ThreadPool &#123;</span><br><span class="line">        <span class="built_in">assert!</span>(size &gt; <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">let</span> (sender, receiver) = mpsc::<span class="title function_ invoke__">channel</span>();</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">receiver</span> = Arc::<span class="title function_ invoke__">new</span>(Mutex::<span class="title function_ invoke__">new</span>(receiver));</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">workers</span> = <span class="type">Vec</span>::<span class="title function_ invoke__">with_capacity</span>(size);</span><br><span class="line">        <span class="keyword">for</span> <span class="variable">id</span> <span class="keyword">in</span> <span class="number">0</span>..size &#123;</span><br><span class="line">            workers.<span class="title function_ invoke__">push</span>(Worker::<span class="title function_ invoke__">new</span>(id, Arc::<span class="title function_ invoke__">clone</span>(&amp;receiver)));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ThreadPool &#123; workers, sender &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">execute</span>&lt;F&gt;(&amp;<span class="keyword">self</span>, f: F)</span><br><span class="line">    <span class="keyword">where</span></span><br><span class="line">        F: <span class="title function_ invoke__">FnOnce</span>() + <span class="built_in">Send</span> + <span class="symbol">&#x27;static</span>,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">job</span> = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(f);<span class="comment">//Box&lt;dyn FnOnce() + Send + &#x27;static&gt;</span></span><br><span class="line">        <span class="comment">// self.sender.send(job).unwrap();</span></span><br><span class="line">        <span class="keyword">self</span>.sender.<span class="title function_ invoke__">send</span>(Message::<span class="title function_ invoke__">NewJob</span>(job)).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// the execute method should be similar with thread::spawn</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// pub fn spawn&lt;F, T&gt;(f: F) -&gt; JoinHandle&lt;T&gt;</span></span><br><span class="line">    <span class="comment">// where</span></span><br><span class="line">    <span class="comment">//     F: FnOnce() -&gt; T + Send + &#x27;static,</span></span><br><span class="line">    <span class="comment">//     T: Send + &#x27;static,</span></span><br><span class="line">    <span class="comment">// &#123;</span></span><br><span class="line">    <span class="comment">//     Builder::new().spawn(f).expect(&quot;failed to spawn thread&quot;)</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Drop</span> <span class="keyword">for</span> <span class="title class_">ThreadPool</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">drop</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Sending terminate message to all workers.&quot;</span>);</span><br><span class="line">        <span class="comment">// for worker in &amp;mut self.workers &#123;</span></span><br><span class="line">        <span class="comment">//     println!(&quot;Shutting down worker &#123;&#125;&quot;, worker.id);</span></span><br><span class="line">        <span class="comment">//     worker.thread.join().unwrap();</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="comment">// for worker in &amp;mut self.workers &#123;</span></span><br><span class="line">        <span class="comment">//     println!(&quot;Shutting down worker &#123;&#125;&quot;, worker.id);</span></span><br><span class="line">        <span class="comment">//     // worker.thread.join().unwrap();</span></span><br><span class="line">        <span class="comment">//     if let Ok(_) = worker.thread.join() &#123;</span></span><br><span class="line">        <span class="comment">//         println!(&quot;Worker &#123;&#125; shut down successfully.&quot;, worker.id);</span></span><br><span class="line">        <span class="comment">//     &#125; else &#123;</span></span><br><span class="line">        <span class="comment">//         println!(&quot;Worker &#123;&#125; failed to shut down.&quot;, worker.id);</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> <span class="variable">_</span> <span class="keyword">in</span> &amp;<span class="keyword">mut</span> <span class="keyword">self</span>.workers &#123;</span><br><span class="line">            <span class="keyword">self</span>.sender.<span class="title function_ invoke__">send</span>(Message::Terminate).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Shutting down all workers.&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> <span class="variable">worker</span> <span class="keyword">in</span> &amp;<span class="keyword">mut</span> <span class="keyword">self</span>.workers &#123;</span><br><span class="line">            <span class="comment">// println!(&quot;Shutting down worker &#123;&#125;&quot;, worker.id);</span></span><br><span class="line">            <span class="comment">// worker.thread.join().unwrap();</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">Some</span>(thread) = worker.thread.<span class="title function_ invoke__">take</span>() &#123;</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">Ok</span>(_) = thread.<span class="title function_ invoke__">join</span>() &#123;</span><br><span class="line">                    <span class="built_in">println!</span>(<span class="string">&quot;Worker &#123;&#125; shut down successfully.&quot;</span>, worker.id);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="built_in">println!</span>(<span class="string">&quot;Worker &#123;&#125; failed to shut down.&quot;</span>, worker.id);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// struct Job;</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Job</span> = <span class="type">Box</span>&lt;<span class="keyword">dyn</span> FnBox + <span class="built_in">Send</span> + <span class="symbol">&#x27;static</span>&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">trait</span> <span class="title class_">FnBox</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">call_box</span>(<span class="keyword">self</span>: <span class="type">Box</span>&lt;<span class="keyword">Self</span>&gt;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> &lt;F: <span class="title function_ invoke__">FnOnce</span>()&gt; FnBox <span class="keyword">for</span> <span class="title class_">F</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">call_box</span>(<span class="keyword">self</span>: <span class="type">Box</span>&lt;F&gt;) &#123;</span><br><span class="line">        (*<span class="keyword">self</span>)()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>hello.html</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Hello World<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello World<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="meta">&lt;?php</span></span><br><span class="line"><span class="meta">        echo &quot;Hello World&quot;;</span></span><br><span class="line"><span class="meta">        ?&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>404.html</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>404<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Oops!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>Page not found<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Simba</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>乳虎啸谷，百兽震惶</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Note/"># Note</a>
+                    
+                        <a href="/tags/Code/"># Code</a>
+                    
+                        <a href="/tags/Rust/"># Rust</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/11/25/ZKP-11-4-Use-CI-to-instantiate-Fiat-Shamir/">ZKP11.4 Use CI to instantiate Fiat-Shamir</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Simba | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
