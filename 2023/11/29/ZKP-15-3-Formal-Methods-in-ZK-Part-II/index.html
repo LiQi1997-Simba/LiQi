@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP15.2 Formal Methods in ZK (Part I) | Simba&#39;s Homepage</title>
+<title>ZKP15.3 Formal Methods in ZK (Part II) | Simba&#39;s Homepage</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP15.2 Formal Methods in ZK (Part I)</h1>
+            <h1 class="post-title">ZKP15.3 Formal Methods in ZK (Part II)</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">November 28, 2023&nbsp;&nbsp;19:19:25</a>
+                        Date: <a href="#">November 29, 2023&nbsp;&nbsp;14:17:16</a>
                         </span>
                     
                     <!-- 
@@ -240,7 +240,7 @@
                         
                         Words:
                         
-                        <a href="">247</a> 
+                        <a href="">67</a> 
                         
                         </span>
                         
@@ -265,59 +265,19 @@
 
         <div class="post-content">
             <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-15-Secure-ZK-Circuits-via-Formal-Methods-Guest-Lecturer-Yu-Feng-UCSB-Veridise"><a href="#Lecture-15-Secure-ZK-Circuits-via-Formal-Methods-Guest-Lecturer-Yu-Feng-UCSB-Veridise" class="headerlink" title="Lecture 15: Secure ZK Circuits via Formal Methods (Guest Lecturer: Yu Feng (UCSB &amp; Veridise))"></a>Lecture 15: Secure ZK Circuits via Formal Methods (Guest Lecturer: Yu Feng (UCSB &amp; Veridise))</h2><h3 id="15-2-Formal-Methods-in-ZK-Part-I"><a href="#15-2-Formal-Methods-in-ZK-Part-I" class="headerlink" title="15.2 Formal Methods in ZK (Part I)"></a>15.2 Formal Methods in ZK (Part I)</h3><ul>
-<li>Circuits Workflow<br><img src="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/1.png"><ul>
-<li>Source Code: Witness Generation and Constraints</li>
-<li>Witness Generation and Constraints should (generally) be equivalent!</li>
+<h2 id="Lecture-15-Secure-ZK-Circuits-via-Formal-Methods-Guest-Lecturer-Yu-Feng-UCSB-Veridise"><a href="#Lecture-15-Secure-ZK-Circuits-via-Formal-Methods-Guest-Lecturer-Yu-Feng-UCSB-Veridise" class="headerlink" title="Lecture 15: Secure ZK Circuits via Formal Methods (Guest Lecturer: Yu Feng (UCSB &amp; Veridise))"></a>Lecture 15: Secure ZK Circuits via Formal Methods (Guest Lecturer: Yu Feng (UCSB &amp; Veridise))</h2><h3 id="15-3-Formal-Methods-in-ZK-Part-II"><a href="#15-3-Formal-Methods-in-ZK-Part-II" class="headerlink" title="15.3 Formal Methods in ZK (Part II)"></a>15.3 Formal Methods in ZK (Part II)</h3><ul>
+<li>Formally prove that a circuit is NOT underconstrained</li>
+<li>Existing Strategies<ul>
+<li>Static Analysis of Constraints (SA): false positive</li>
+<li>SMT Solver: hard to scale for large circuit<br><img src="/2023/11/29/ZKP-15-3-Formal-Methods-in-ZK-Part-II/1.png"></li>
 </ul>
 </li>
-<li>What is Equivalence<br><img src="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/2.png"><ul>
-<li>Every input-output of P must satisfy C</li>
-<li>Every (x,y) which satisfies C must be an input-out pair of P</li>
+<li>Picus<br><img src="/2023/11/29/ZKP-15-3-Formal-Methods-in-ZK-Part-II/2.png"><ul>
+<li>Static Analysis Phase<br><img src="/2023/11/29/ZKP-15-3-Formal-Methods-in-ZK-Part-II/3.png"></li>
+<li>SMT Phase<br><img src="/2023/11/29/ZKP-15-3-Formal-Methods-in-ZK-Part-II/4.png"></li>
 </ul>
 </li>
-<li>Equivalence Violations<br><img src="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/3.png"><ul>
-<li>Underconstrained Bugs: Verifier can accept bad inputs&#x2F; outputs</li>
-</ul>
-</li>
-<li>A Taxonomy of ZK Bugs<br><img src="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/4.png"></li>
-<li>Unconstrained Signals<ul>
-<li>Corresponds to signals whose constraints always evaluate to true, accepting everything</li>
-<li>Example: Underconstrained Output<br><img src="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/5.png"><ul>
-<li>Error: for (var i &#x3D; 0; i&lt; n, i++)</li>
-<li>No constrains over the last element of output</li>
-<li>Attacker can pass in any value for out 2</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Unsafe Component Usage<ul>
-<li>Sub-circuits often assume constraints are placed on inputs and outputs</li>
-<li>Corresponds to cases where the use of a sub-circuit does not follow</li>
-<li>Example: Under-Constrained Sub-Circuit Output<br><img src="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/6.png"><ul>
-<li>Missing constraint lt.out &#x3D;&#x3D;&#x3D; 0</li>
-<li>Without the missing constraint, attackers can withdraw more funds than they have</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Constraint&#x2F;Computation Discrepancy<ul>
-<li>Not all computation can be directly expressed as a constraint</li>
-<li>Corresponds to constraints that do not capture a computation’s semantics</li>
-<li>Example: No Zero Inverse<br><img src="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/7.png"><ul>
-<li>Accepts arbitrary out when a and b are 0!</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Circuit Dependence Graphs (CDG)<ul>
-<li>Goal: Identify discrepancies between computation and constraints</li>
-<li>Data dependence &lt;–</li>
-<li>Constrain &#x3D;&#x3D;&#x3D;<br><img src="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/8.png"></li>
-<li>CDG Example<br><img src="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/9.png"><br><img src="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/10.png"></li>
-</ul>
-</li>
-<li>Vanguard Framework<br><img src="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/11.png"></li>
+<li>Future Directions<br><img src="/2023/11/29/ZKP-15-3-Formal-Methods-in-ZK-Part-II/5.png"></li>
 </ul>
 
         </div>
@@ -367,10 +327,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/11/29/ZKP-15-3-Formal-Methods-in-ZK-Part-II/">ZKP15.3 Formal Methods in ZK (Part II)</a>
             
-            
-            <a class="next" rel="next" href="/2023/11/27/ZKP-15-1-Secure-ZK-Circuits-via-Formal-Methods/">ZKP15.1 Secure ZK Circuits via Formal Methods</a>
+            <a class="next" rel="next" href="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/">ZKP15.2 Formal Methods in ZK (Part I)</a>
             
         </section>
 
