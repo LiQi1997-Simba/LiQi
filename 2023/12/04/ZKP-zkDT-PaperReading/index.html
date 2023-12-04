@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP15.3 Formal Methods in ZK (Part II) | Simba&#39;s Homepage</title>
+<title>ZKP-zkDT(PaperReading) | Simba&#39;s Homepage</title>
 
 
 
@@ -40,6 +40,45 @@
 
     
     
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
         
     
 
@@ -196,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP15.3 Formal Methods in ZK (Part II)</h1>
+            <h1 class="post-title">ZKP-zkDT(PaperReading)</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">November 29, 2023&nbsp;&nbsp;14:17:16</a>
+                        Date: <a href="#">December 04, 2023&nbsp;&nbsp;21:15:12</a>
                         </span>
                     
                     <!-- 
@@ -240,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">67</a> 
+                        <a href="">721</a> 
                         
                         </span>
                         
@@ -254,7 +293,7 @@
                         
                         Time:
                         
-                        <a href="">1min</a> 
+                        <a href="">4min</a> 
                         
                         </span>
                         
@@ -264,20 +303,55 @@
         </header>
 
         <div class="post-content">
-            <h1 id="ZKP学习笔记"><a href="#ZKP学习笔记" class="headerlink" title="ZKP学习笔记"></a>ZKP学习笔记</h1><p><a target="_blank" rel="noopener" href="https://zk-learning.org/">ZK-Learning MOOC</a>课程笔记</p>
-<h2 id="Lecture-15-Secure-ZK-Circuits-via-Formal-Methods-Guest-Lecturer-Yu-Feng-UCSB-Veridise"><a href="#Lecture-15-Secure-ZK-Circuits-via-Formal-Methods-Guest-Lecturer-Yu-Feng-UCSB-Veridise" class="headerlink" title="Lecture 15: Secure ZK Circuits via Formal Methods (Guest Lecturer: Yu Feng (UCSB &amp; Veridise))"></a>Lecture 15: Secure ZK Circuits via Formal Methods (Guest Lecturer: Yu Feng (UCSB &amp; Veridise))</h2><h3 id="15-3-Formal-Methods-in-ZK-Part-II"><a href="#15-3-Formal-Methods-in-ZK-Part-II" class="headerlink" title="15.3 Formal Methods in ZK (Part II)"></a>15.3 Formal Methods in ZK (Part II)</h3><ul>
-<li>Formally prove that a circuit is NOT underconstrained</li>
-<li>Existing Strategies<ul>
-<li>Static Analysis of Constraints (SA): false positive</li>
-<li>SMT Solver: hard to scale for large circuit<br><img src="/2023/11/29/ZKP-15-3-Formal-Methods-in-ZK-Part-II/1.png"></li>
+            <h1 id="zkDT-CCS’20-Paper-Reading"><a href="#zkDT-CCS’20-Paper-Reading" class="headerlink" title="zkDT (CCS’20) Paper Reading"></a>zkDT (CCS’20) Paper Reading</h1><ul>
+<li>Abstract<ul>
+<li>In this paper, we initiate the study of zero knowledge machine learning and propose protocols for zero knowledge decision tree predictions and accuracy tests.</li>
 </ul>
 </li>
-<li>Picus<br><img src="/2023/11/29/ZKP-15-3-Formal-Methods-in-ZK-Part-II/2.png"><ul>
-<li>Static Analysis Phase<br><img src="/2023/11/29/ZKP-15-3-Formal-Methods-in-ZK-Part-II/3.png"></li>
-<li>SMT Phase<br><img src="/2023/11/29/ZKP-15-3-Formal-Methods-in-ZK-Part-II/4.png"></li>
+<li>Introduction<ul>
+<li>Newly developed machine learning models are claimed to achieve high accuracy, yet it is challenging to reproduce the results and validate these claims in many cases. In addition, even if a high quality model exists, it may not be used consistently in real-world products.</li>
+<li>In this paper, we initiate the study of zero knowledge machine learning predictions and accuracy, and propose several efficient schemes for zero knowledge decision trees. We also extend our techniques with minimal changes to support variants of decision trees, including regression, multivariate decision trees and random forests.</li>
 </ul>
 </li>
-<li>Future Directions<br><img src="/2023/11/29/ZKP-15-3-Formal-Methods-in-ZK-Part-II/5.png"></li>
+<li>Our Zero-knowledge Argument Backend<ul>
+<li>In our construction and implementation, we aim to optimize for fast prover time and to scale to large decision trees. Therefore, after careful comparisons among all existing ZKP systems, we choose the scheme named Aurora proposed in [10] as the ZKP backend in our zero knowledge decision tree construction.</li>
+<li>Aurora has no trusted setup. Its security is proven in the random oracle model, and is plausibly post-quantum secure. It can be made non-interactive using Fiat-Shamir in the random oracle model.</li>
+</ul>
+</li>
+<li>Zero-knowledge Decision Tree<ul>
+<li>Decision Tree<ul>
+<li>In a decision tree T , each intermediate node contains an attribute, each branch represents a decision and each leaf node denotes an outcome (categorical or continues value). More formally, each internal node v has an associated attribute indexv.att from the set [d] of d attributes, a threshold v.thr and two children v.left and v.right. Each leaf node u stores the classification result u.class. Each data sample is represented as a size-d vector a of values corresponding to each attribute.</li>
+<li>It starts from the root of T . For each node of v in T , it compares a[v.att] with v.thr, and moves to v.left if a[v.att] &lt; v.thr, and v.right otherwise.<br><img src="/2023/12/04/ZKP-zkDT-PaperReading/1.png"></li>
+<li>In our scheme, we only consider proving predictions given the pretrained decision tree, and the training process is out of scope.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Zero Knowledge Decision Tree Prediction<br><img src="/2023/12/04/ZKP-zkDT-PaperReading/2.png"></li>
+<li>Authenticated Decision Tree<ul>
+<li>To validate the prediction for a data sample, the proof includes the prediction path from the root to the leaf node that outputs the prediction result. In addition, the proof also includes the hashes of the siblings of the nodes along the prediction path. With the proof, the verifier can recompute the root hash and compare it with the commitment. In this way, to prove the validity of a prediction, the verification only computes O(h) hashes.<br><img src="/2023/12/04/ZKP-zkDT-PaperReading/3.png"></li>
+<li>Note that in order to prove the zero knowledge property of the scheme later, the commitment has to be randomized and we add a random point r to the root of the decision tree and use the hash of the root concatenated with r as the final commitment.<br><img src="/2023/12/04/ZKP-zkDT-PaperReading/4.png"></li>
+</ul>
+</li>
+<li>Proving the validity of the prediction<br><img src="/2023/12/04/ZKP-zkDT-PaperReading/5.png"><ul>
+<li>Decision tree prediction.<br><img src="/2023/12/04/ZKP-zkDT-PaperReading/6.png"></li>
+<li>Permutation test.<br><img src="/2023/12/04/ZKP-zkDT-PaperReading/7.png"></li>
+<li>Path validation.<br><img src="/2023/12/04/ZKP-zkDT-PaperReading/8.png"></li>
+</ul>
+</li>
+<li>Zero Knowledge Decision Tree Accuracy<br><img src="/2023/12/04/ZKP-zkDT-PaperReading/9.png"><br><img src="/2023/12/04/ZKP-zkDT-PaperReading/10.png"><ul>
+<li>Checking Multiset<ul>
+<li>Instead of validating each prediction path one by one, the idea is to validate all N nodes of the decision tree in one shot. Then the circuit checks that the nodes of each prediction path are drawn from these N nodes of the decision tree and they form a path with the correct parentchildren relationships.<br><img src="/2023/12/04/ZKP-zkDT-PaperReading/11.png"></li>
+</ul>
+</li>
+<li>Validating Decision Tree<ul>
+<li>Using ADT, we can validate it by reconstructing the decision tree in the circuit $2^h$ hashes. However, in practice, we notice that most decision trees are not balanced.</li>
+<li>We first replace the commitment by a hash of all N nodes concatenated by a random value r, instead of the root of the ADT. In addition, each node contains a unique id(id) in [N], the id of its parent (pid), left child (lid), right child (rid) and its depth (depth) in [h] (the id is 0 means the parent or the child is empty). To verify that all N nodes of T1,T2, · · · ,TN form a binary decision tree, it suffices to check the following conditions:<br><img src="/2023/12/04/ZKP-zkDT-PaperReading/12.png"><br><img src="/2023/12/04/ZKP-zkDT-PaperReading/13.png"></li>
+<li>There is no guarantee on other nodes of the N nodes provided by the prover, but they are not used in the prediction paths anyway, which is good enough for our purposes.</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -327,10 +401,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/12/04/ZKP-zkDT-PaperReading/">ZKP-zkDT(PaperReading)</a>
             
-            
-            <a class="next" rel="next" href="/2023/11/28/ZKP-15-2-Formal-Methods-in-ZK-Part-I/">ZKP15.2 Formal Methods in ZK (Part I)</a>
+            <a class="next" rel="next" href="/2023/11/29/ZKP-15-3-Formal-Methods-in-ZK-Part-II/">ZKP15.3 Formal Methods in ZK (Part II)</a>
             
         </section>
 
