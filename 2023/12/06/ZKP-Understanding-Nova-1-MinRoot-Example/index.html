@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Simba">
+
+
+
+
+
+<title>ZKP Understanding Nova 1 MinRoot Example | Simba&#39;s Homepage</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Simba&#39;s Homepage</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Simba&#39;s Homepage</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">ZKP Understanding Nova 1 MinRoot Example</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Simba</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">December 06, 2023&nbsp;&nbsp;21:10:52</a>
+                        </span>
+                    
+                    <!-- 
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Zero-Knowledge-Proofs/">Zero Knowledge Proofs</a>
+                            
+                        </span>
+                     -->
+                    
+
+                        <span class="post-category">
+                        
+                        Category:
+                        
+                        
+                        
+                        <a href="/categories/Zero-Knowledge-Proofs/">Zero Knowledge Proofs</a>
+                        
+                        
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Words:
+                        
+                        <a href="">3.2k</a> 
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Time:
+                        
+                        <a href="">15min</a> 
+                        
+                        </span>
+                        
+                        
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <ol>
+<li>Understanding the MinRoot Example</li>
+</ol>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">E1</span> = Bn256EngineKZG;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">E2</span> = GrumpkinEngine;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">EE1</span> = nova_snark::provider::mlkzg::EvaluationEngine&lt;E1&gt;;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">EE2</span> = nova_snark::provider::ipa_pc::EvaluationEngine&lt;E2&gt;;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">S1</span> = nova_snark::spartan::snark::RelaxedR1CSSNARK&lt;E1, EE1&gt;; <span class="comment">// non-preprocessing SNARK</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">S2</span> = nova_snark::spartan::snark::RelaxedR1CSSNARK&lt;E2, EE2&gt;; <span class="comment">// non-preprocessing SNARK</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>定义了一些type<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">MinRootIteration</span>&lt;G: Group&gt; &#123;</span><br><span class="line">  x_i: G::Scalar,</span><br><span class="line">  y_i: G::Scalar,</span><br><span class="line">  x_i_plus_1: G::Scalar,</span><br><span class="line">  y_i_plus_1: G::Scalar,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+这段代码定义了一个名为 MinRootIteration 的结构体，它是用于表示最小根迭代的数据结构。这个结构体需要一个泛型参数 G，这个参数必须实现了 Group trait。<br>在这个结构体中，我们定义了四个字段，它们都是 G::Scalar 类型。这个类型是由 Group trait 定义的关联类型，通常用于表示一个群的标量值。<br>具体来说，这四个字段分别是：</li>
+<li>x_i：表示当前迭代的 x 值。</li>
+<li>y_i：表示当前迭代的 y 值。</li>
+<li>x_i_plus_1：表示下一次迭代的 x 值。</li>
+<li>y_i_plus_1：表示下一次迭代的 y 值。<br>这个结构体可能被用于存储和管理在最小根迭代过程中的数据。<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span>&lt;G: Group&gt; MinRootIteration&lt;G&gt; &#123;</span><br><span class="line">  <span class="comment">// produces a sample non-deterministic advice, executing one invocation of MinRoot per step</span></span><br><span class="line">  <span class="keyword">fn</span> <span class="title function_">new</span>(num_iters: <span class="type">usize</span>, x_0: &amp;G::Scalar, y_0: &amp;G::Scalar) <span class="punctuation">-&gt;</span> (<span class="type">Vec</span>&lt;G::Scalar&gt;, <span class="type">Vec</span>&lt;<span class="keyword">Self</span>&gt;) &#123;</span><br><span class="line">    <span class="comment">// exp = (p - 3 / 5), where p is the order of the group</span></span><br><span class="line">    <span class="comment">// x^&#123;exp&#125; mod p provides the fifth root of x</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">exp</span> = &#123;</span><br><span class="line">      <span class="keyword">let</span> <span class="variable">p</span> = G::<span class="title function_ invoke__">group_params</span>().<span class="number">2</span>.<span class="title function_ invoke__">to_biguint</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">      <span class="keyword">let</span> <span class="variable">two</span> = BigUint::<span class="title function_ invoke__">parse_bytes</span>(<span class="string">b&quot;2&quot;</span>, <span class="number">10</span>).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">      <span class="keyword">let</span> <span class="variable">three</span> = BigUint::<span class="title function_ invoke__">parse_bytes</span>(<span class="string">b&quot;3&quot;</span>, <span class="number">10</span>).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">      <span class="keyword">let</span> <span class="variable">five</span> = BigUint::<span class="title function_ invoke__">parse_bytes</span>(<span class="string">b&quot;5&quot;</span>, <span class="number">10</span>).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">      <span class="keyword">let</span> <span class="variable">five_inv</span> = five.<span class="title function_ invoke__">modpow</span>(&amp;(&amp;p - &amp;two), &amp;p);</span><br><span class="line">      (&amp;five_inv * (&amp;p - &amp;three)) % &amp;p</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+为什么这段代码得到 exp &#x3D; (p - 3) &#x2F; 5 mod p?</li>
+</ul>
+<ol>
+<li>let p &#x3D; G::group_params().2.to_biguint().unwrap();</li>
+</ol>
+<ul>
+<li>从一个类型为 G 的结构体中获取群组参数，并提取第三个元素作为整数 p。</li>
+<li>to_biguint().unwrap() 将其转换为大整数类型 (BigUint)。</li>
+</ul>
+<ol start="2">
+<li>let two &#x3D; BigUint::parse_bytes(b”2”, 10).unwrap();</li>
+</ol>
+<ul>
+<li>创建一个大整数 two，其值为 2。</li>
+</ul>
+<ol start="3">
+<li>let three &#x3D; BigUint::parse_bytes(b”3”, 10).unwrap();</li>
+</ol>
+<ul>
+<li>创建一个大整数 three，其值为 3。</li>
+</ul>
+<ol start="4">
+<li>let five &#x3D; BigUint::parse_bytes(b”5”, 10).unwrap();</li>
+</ol>
+<ul>
+<li>创建一个大整数 five，其值为 5。</li>
+</ul>
+<ol start="5">
+<li>let five_inv &#x3D; five.modpow(&amp;(&amp;p - &amp;two), &amp;p);</li>
+</ol>
+<ul>
+<li>计算 5 的逆元（模 p 的情况下）。</li>
+<li>逆元的计算使用了模幂运算，即 5 的 (p - 2) 次方模 p。</li>
+</ul>
+<ol start="6">
+<li>(&amp;five_inv * (&amp;p - &amp;three)) % &amp;p</li>
+</ol>
+<ul>
+<li>计算 (&amp;p - &amp;three) 乘以 five_inv 的结果，并对 p 取模。</li>
+<li>最终的计算结果被赋值给变量 exp，它表示 (p - 3) &#x2F; 5 的值，将用于后续的模运算，以获得给定数的五次方根。<br>关于第5步：<br>涉及到模运算中的欧拉定理（Euler’s theorem）和费马小定理（Fermat’s little theorem）。<br>费马小定理表明，如果 p 是一个质数，且 a 是不可被 p 整除的整数，那么 a^{p-1} mod p 等于 1。这是费马小定理的简化版本，而对于逆元的情况，我们可以将 a^{p-1} mod p 表示为 a^{p-2} mod p。<br>在这里，5^{p-2} mod p 表示的是 5 在模 p 的情况下的逆元。这是因为 p 是一个大于 5 的质数，所以根据费马小定理，5^{p-1} mod p 等于 1，从而 5^{p-2} mod p 就是 5 在模 p 的情况下的逆元。<br>逆元的概念是一个数在给定模下的乘法逆元，即与该数相乘的结果模该数的模等于 1。在这个场景中，计算 5^{p-2} mod p 就是为了得到 5 在模 p 的情况下的逆元，以便进行后续的乘法操作。<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">res</span> = <span class="type">Vec</span>::<span class="title function_ invoke__">new</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">x_i</span> = *x_0;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">y_i</span> = *y_0;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">_i</span> <span class="keyword">in</span> <span class="number">0</span>..num_iters &#123;</span><br><span class="line">      <span class="keyword">let</span> <span class="variable">x_i_plus_1</span> = (x_i + y_i).<span class="title function_ invoke__">pow_vartime</span>(&amp;exp.<span class="title function_ invoke__">to_u64_digits</span>()); <span class="comment">// computes the fifth root of x_i + y_i</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// sanity check</span></span><br><span class="line">      <span class="keyword">if</span> <span class="built_in">cfg!</span>(debug_assertions) &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">sq</span> = x_i_plus_1 * x_i_plus_1;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">quad</span> = sq * sq;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">fifth</span> = quad * x_i_plus_1;</span><br><span class="line">        <span class="built_in">assert_eq!</span>(fifth, x_i + y_i);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">let</span> <span class="variable">y_i_plus_1</span> = x_i;</span><br><span class="line"></span><br><span class="line">      res.<span class="title function_ invoke__">push</span>(<span class="keyword">Self</span> &#123;</span><br><span class="line">        x_i,</span><br><span class="line">        y_i,</span><br><span class="line">        x_i_plus_1,</span><br><span class="line">        y_i_plus_1,</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">      x_i = x_i_plus_1;</span><br><span class="line">      y_i = y_i_plus_1;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">z0</span> = <span class="built_in">vec!</span>[*x_0, *y_0];</span><br><span class="line"></span><br><span class="line">    (z0, res)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol>
+<li><code>let mut res = Vec::new();</code></li>
+</ol>
+<ul>
+<li>创建一个可变的空向量 res，用于存储计算的结果。</li>
+</ul>
+<ol start="2">
+<li><code>let mut x_i = *x_0;</code></li>
+</ol>
+<ul>
+<li>初始化一个可变变量 x_i，其初始值为 x_0 的值。</li>
+</ul>
+<ol start="3">
+<li><code>let mut y_i = *y_0;</code></li>
+</ol>
+<ul>
+<li>初始化一个可变变量 y_i，其初始值为 y_0 的值。</li>
+</ul>
+<ol start="4">
+<li><code>for _i in 0..num_iters &#123;</code></li>
+</ol>
+<ul>
+<li>开始一个循环，迭代 num_iters 次。</li>
+</ul>
+<ol start="5">
+<li><code>let x_i_plus_1 = (x_i + y_i).pow_vartime(&amp;exp.to_u64_digits());</code></li>
+</ol>
+<ul>
+<li>计算 x_i + y_i 的五次方根，其中 exp 是之前计算得到的指数。</li>
+</ul>
+<ol start="6">
+<li><code>if cfg!(debug_assertions) &#123; ... &#125;</code></li>
+</ol>
+<ul>
+<li>在调试模式下进行断言检查。这里执行了一个“sanity check”（合理性检查），确保计算的结果满足一定的条件。具体地，它验证了 x_i_plus_1 是否满足 (x_i_plus_1)^5 &#x3D;&#x3D; x_i + y_i。</li>
+</ul>
+<ol start="7">
+<li><code>let y_i_plus_1 = x_i;</code></li>
+</ol>
+<ul>
+<li>计算下一个 y_i 的值，赋值给 y_i_plus_1。</li>
+</ul>
+<ol start="8">
+<li><code>res.push(Self &#123; ... &#125;);</code></li>
+</ol>
+<ul>
+<li>将当前循环迭代的结果以结构体的形式存储在向量 res 中。</li>
+</ul>
+<ol start="9">
+<li><code>x_i = x_i_plus_1;</code></li>
+</ol>
+<ul>
+<li>更新 x_i 的值为下一次迭代计算得到的 x_i_plus_1。</li>
+</ul>
+<ol start="10">
+<li><code>y_i = y_i_plus_1;</code></li>
+</ol>
+<ul>
+<li>更新 y_i 的值为下一次迭代计算得到的 y_i_plus_1。</li>
+</ul>
+<ol start="11">
+<li><code>let z0 = vec![*x_0, *y_0]；(z0, res);</code></li>
+</ol>
+<ul>
+<li>循环结束后，创建一个包含初始输入值 x_0 和 y_0 的向量 z0。返回包含 z0 和 res 的元组。<br>整体而言，这段代码执行了一系列的计算和更新操作，产生了一组结果，这些结果以结构体的形式存储在向量 res 中。在每次迭代中，通过计算 (x_i + y_i)^{1&#x2F;5}，将 x_i 和 y_i 更新为下一轮迭代的值。在调试模式下，还进行了一个断言检查，确保计算的结果符合预期的数学性质。<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Clone, Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MinRootCircuit</span>&lt;G: Group&gt; &#123;</span><br><span class="line">  seq: <span class="type">Vec</span>&lt;MinRootIteration&lt;G&gt;&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;G: Group&gt; StepCircuit&lt;G::Scalar&gt; <span class="keyword">for</span> <span class="title class_">MinRootCircuit</span>&lt;G&gt; &#123;</span><br><span class="line">  <span class="keyword">fn</span> <span class="title function_">arity</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="type">usize</span> &#123;</span><br><span class="line">    <span class="number">2</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">fn</span> <span class="title function_">synthesize</span>&lt;CS: ConstraintSystem&lt;G::Scalar&gt;&gt;(</span><br><span class="line">    &amp;<span class="keyword">self</span>,</span><br><span class="line">    cs: &amp;<span class="keyword">mut</span> CS,</span><br><span class="line">    z: &amp;[AllocatedNum&lt;G::Scalar&gt;],</span><br><span class="line">  ) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;<span class="type">Vec</span>&lt;AllocatedNum&lt;G::Scalar&gt;&gt;, SynthesisError&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">z_out</span>: <span class="type">Result</span>&lt;<span class="type">Vec</span>&lt;AllocatedNum&lt;G::Scalar&gt;&gt;, SynthesisError&gt; =</span><br><span class="line">      <span class="title function_ invoke__">Err</span>(SynthesisError::AssignmentMissing);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use the provided inputs</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x_0</span> = z[<span class="number">0</span>].<span class="title function_ invoke__">clone</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">y_0</span> = z[<span class="number">1</span>].<span class="title function_ invoke__">clone</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// variables to hold running x_i and y_i</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">x_i</span> = x_0;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">y_i</span> = y_0;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="keyword">self</span>.seq.<span class="title function_ invoke__">len</span>() &#123;</span><br><span class="line">      <span class="comment">// non deterministic advice</span></span><br><span class="line">      <span class="keyword">let</span> <span class="variable">x_i_plus_1</span> =</span><br><span class="line">        AllocatedNum::<span class="title function_ invoke__">alloc</span>(cs.<span class="title function_ invoke__">namespace</span>(|| <span class="built_in">format!</span>(<span class="string">&quot;x_i_plus_1_iter_&#123;i&#125;&quot;</span>)), || &#123;</span><br><span class="line">          <span class="title function_ invoke__">Ok</span>(<span class="keyword">self</span>.seq[i].x_i_plus_1)</span><br><span class="line">        &#125;)?;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// check the following conditions hold:</span></span><br><span class="line">      <span class="comment">// (i) x_i_plus_1 = (x_i + y_i)^&#123;1/5&#125;, which can be more easily checked with x_i_plus_1^5 = x_i + y_i</span></span><br><span class="line">      <span class="comment">// (ii) y_i_plus_1 = x_i</span></span><br><span class="line">      <span class="comment">// (1) constraints for condition (i) are below</span></span><br><span class="line">      <span class="comment">// (2) constraints for condition (ii) is avoided because we just used x_i wherever y_i_plus_1 is used</span></span><br><span class="line">      <span class="keyword">let</span> <span class="variable">x_i_plus_1_sq</span> = x_i_plus_1.<span class="title function_ invoke__">square</span>(cs.<span class="title function_ invoke__">namespace</span>(|| <span class="built_in">format!</span>(<span class="string">&quot;x_i_plus_1_sq_iter_&#123;i&#125;&quot;</span>)))?;</span><br><span class="line">      <span class="keyword">let</span> <span class="variable">x_i_plus_1_quad</span> =</span><br><span class="line">        x_i_plus_1_sq.<span class="title function_ invoke__">square</span>(cs.<span class="title function_ invoke__">namespace</span>(|| <span class="built_in">format!</span>(<span class="string">&quot;x_i_plus_1_quad_&#123;i&#125;&quot;</span>)))?;</span><br><span class="line">      cs.<span class="title function_ invoke__">enforce</span>(</span><br><span class="line">        || <span class="built_in">format!</span>(<span class="string">&quot;x_i_plus_1_quad * x_i_plus_1 = x_i + y_i_iter_&#123;i&#125;&quot;</span>),</span><br><span class="line">        |lc| lc + x_i_plus_1_quad.<span class="title function_ invoke__">get_variable</span>(),</span><br><span class="line">        |lc| lc + x_i_plus_1.<span class="title function_ invoke__">get_variable</span>(),</span><br><span class="line">        |lc| lc + x_i.<span class="title function_ invoke__">get_variable</span>() + y_i.<span class="title function_ invoke__">get_variable</span>(),</span><br><span class="line">      );</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> i == <span class="keyword">self</span>.seq.<span class="title function_ invoke__">len</span>() - <span class="number">1</span> &#123;</span><br><span class="line">        z_out = <span class="title function_ invoke__">Ok</span>(<span class="built_in">vec!</span>[x_i_plus_1.<span class="title function_ invoke__">clone</span>(), x_i.<span class="title function_ invoke__">clone</span>()]);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// update x_i and y_i for the next iteration</span></span><br><span class="line">      y_i = x_i;</span><br><span class="line">      x_i = x_i_plus_1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    z_out</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol>
+<li>MinRootCircuit 结构体：</li>
+</ol>
+<ul>
+<li>定义了一个包含 MinRootIteration 结构体的向量 seq 的结构体。</li>
+<li>实现了 Clone 和 Debug trait，使得该结构体可以被克隆和打印调试信息。</li>
+</ul>
+<ol start="2">
+<li>StepCircuit trait 实现：</li>
+</ol>
+<ul>
+<li>该 trait 提供了电路执行的接口，用于计算电路的输出。</li>
+<li>arity 方法返回电路的输入数量，这里是2。</li>
+<li>synthesize 方法用于在给定的约束系统 CS 上执行电路的计算。</li>
+</ul>
+<ol start="3">
+<li>synthesize 方法具体实现：</li>
+</ol>
+<ul>
+<li>创建一个用于保存输出的 Result 对象 z_out，初始值为 Err(SynthesisError::AssignmentMissing)。</li>
+<li>通过模式匹配和 let 语句从输入数组 z 中获取两个输入 x_0 和 y_0。</li>
+<li>使用 for 循环遍历迭代序列 self.seq 中的元素。</li>
+<li>在循环中：<ul>
+<li>使用 AllocatedNum::alloc 创建一个新的分配数字 x_i_plus_1，其值来自于 self.seq[i].x_i_plus_1。</li>
+<li>根据给定的条件，执行一些约束操作，确保 (x_i + y_i)^{1&#x2F;5} &#x3D; x_i_plus_1。</li>
+<li>如果当前迭代是最后一次迭代，将 z_out 更新为包含 x_i_plus_1 和 x_i 的 Ok 值。</li>
+<li>更新 x_i 和 y_i 为下一次迭代做准备。</li>
+</ul>
+</li>
+<li>返回最终的 z_out。<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">  <span class="built_in">println!</span>(<span class="string">&quot;Nova-based VDF with MinRoot delay function&quot;</span>);</span><br><span class="line">  <span class="built_in">println!</span>(<span class="string">&quot;=========================================================&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> <span class="variable">num_steps</span> = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">for</span> <span class="variable">num_iters_per_step</span> <span class="keyword">in</span> [<span class="number">1024</span>, <span class="number">2048</span>, <span class="number">4096</span>, <span class="number">8192</span>, <span class="number">16384</span>, <span class="number">32768</span>, <span class="number">65536</span>] &#123;</span><br><span class="line">    <span class="comment">// number of iterations of MinRoot per Nova&#x27;s recursive step</span></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>测试代码的主循环，分别设置每Nova递归步长MinRoot的迭代次数num_iters_per_step为[1024, 2048, 4096, 8192, 16384, 32768, 65536]<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">circuit_primary</span> = MinRootCircuit &#123;</span><br><span class="line">      seq: <span class="built_in">vec!</span>[</span><br><span class="line">        MinRootIteration &#123;</span><br><span class="line">          x_i: &lt;E1 <span class="keyword">as</span> Engine&gt;::Scalar::<span class="title function_ invoke__">zero</span>(),</span><br><span class="line">          y_i: &lt;E1 <span class="keyword">as</span> Engine&gt;::Scalar::<span class="title function_ invoke__">zero</span>(),</span><br><span class="line">          x_i_plus_1: &lt;E1 <span class="keyword">as</span> Engine&gt;::Scalar::<span class="title function_ invoke__">zero</span>(),</span><br><span class="line">          y_i_plus_1: &lt;E1 <span class="keyword">as</span> Engine&gt;::Scalar::<span class="title function_ invoke__">zero</span>(),</span><br><span class="line">        &#125;;</span><br><span class="line">        num_iters_per_step</span><br><span class="line">      ],</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">circuit_secondary</span> = TrivialCircuit::<span class="title function_ invoke__">default</span>();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Proving &#123;num_iters_per_step&#125; iterations of MinRoot per step&quot;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>参考资料：<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=gopJn_QAdqU">https://www.youtube.com/watch?v=gopJn_QAdqU</a></li>
+<li>circuit_primary 是业务电路，具体为MinRootCircuit。</li>
+<li>circuit_secondary是trivial电路，被初始化为TrivialCircuit的default值。</li>
+<li>初始化x_i ,y_i ,x_i_plus_1 ,y_i_plus_1 都初始化为0<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// produce public parameters</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">start</span> = Instant::<span class="title function_ invoke__">now</span>();</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;Producing public parameters...&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">pp</span> = PublicParams::&lt;</span><br><span class="line">  E1,</span><br><span class="line">  E2,</span><br><span class="line">  MinRootCircuit&lt;&lt;E1 <span class="keyword">as</span> Engine&gt;::GE&gt;,</span><br><span class="line">  TrivialCircuit&lt;&lt;E2 <span class="keyword">as</span> Engine&gt;::Scalar&gt;,</span><br><span class="line">&gt;::<span class="title function_ invoke__">setup</span>(</span><br><span class="line">  &amp;circuit_primary,</span><br><span class="line">  &amp;circuit_secondary,</span><br><span class="line">  &amp;*S1::<span class="title function_ invoke__">ck_floor</span>(),</span><br><span class="line">  &amp;*S2::<span class="title function_ invoke__">ck_floor</span>(), </span><br><span class="line">);</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;PublicParams::setup, took &#123;:?&#125; &quot;</span>, start.<span class="title function_ invoke__">elapsed</span>());</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>在创建 PublicParams 实例的过程中，我们调用了 PublicParams::setup 方法。这个方法接受四个参数：circuit_primary、circuit_secondary、S1::ck_floor() 和 S2::ck_floor()。这四个参数分别表示主从电路，以及两个不同引擎的公共参数。</li>
+<li>ck: CommitmentKey<ul>
+<li>Some final compressing SNARKs, like variants of Spartan, use computation commitments that require larger sizes for these parameters. These SNARKs provide a hint for these values by implementing RelaxedR1CSSNARKTrait::ck_floor(), which can be passed to this function.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// produce non-deterministic advice</span></span><br><span class="line"><span class="keyword">let</span> (z0_primary, minroot_iterations) = MinRootIteration::&lt;&lt;E1 <span class="keyword">as</span> Engine&gt;::GE&gt;::<span class="title function_ invoke__">new</span>(</span><br><span class="line">  num_iters_per_step * num_steps,</span><br><span class="line">  &amp;&lt;E1 <span class="keyword">as</span> Engine&gt;::Scalar::<span class="title function_ invoke__">zero</span>(),</span><br><span class="line">  &amp;&lt;E1 <span class="keyword">as</span> Engine&gt;::Scalar::<span class="title function_ invoke__">one</span>(),</span><br><span class="line">);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">minroot_circuits</span> = (<span class="number">0</span>..num_steps)</span><br><span class="line">  .<span class="title function_ invoke__">map</span>(|i| MinRootCircuit &#123;</span><br><span class="line">    seq: (<span class="number">0</span>..num_iters_per_step)</span><br><span class="line">      .<span class="title function_ invoke__">map</span>(|j| MinRootIteration &#123;</span><br><span class="line">        x_i: minroot_iterations[i * num_iters_per_step + j].x_i,</span><br><span class="line">        y_i: minroot_iterations[i * num_iters_per_step + j].y_i,</span><br><span class="line">        x_i_plus_1: minroot_iterations[i * num_iters_per_step + j].x_i_plus_1,</span><br><span class="line">        y_i_plus_1: minroot_iterations[i * num_iters_per_step + j].y_i_plus_1,</span><br><span class="line">      &#125;)</span><br><span class="line">      .collect::&lt;<span class="type">Vec</span>&lt;_&gt;&gt;(),</span><br><span class="line">  &#125;)</span><br><span class="line">  .collect::&lt;<span class="type">Vec</span>&lt;_&gt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">z0_secondary</span> = <span class="built_in">vec!</span>[&lt;E2 <span class="keyword">as</span> Engine&gt;::Scalar::<span class="title function_ invoke__">zero</span>()];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先，我们调用了 MinRootIteration::new 方法来创建一个新的 MinRootIteration 实例，这个实例包含了 z0_primary 和 minroot_iterations 两个部分。MinRootIteration::new 方法接受三个参数：num_iters_per_step * num_steps，<E1 as Engine>::Scalar::zero() 和 <E1 as Engine>::Scalar::one()。表示我们要进行 num_iters_per_step * num_steps 次的最小根迭代，初始的 x 值为 0，初始的 y 值为 1。</li>
+<li>然后，我们创建了一个名为 minroot_circuits 的向量，这个向量包含了 num_steps 个 MinRootCircuit 实例。每个 MinRootCircuit 实例都包含了一个 seq 字段，这个字段是一个向量，包含了 num_iters_per_step 个 MinRootIteration 实例。每个 MinRootIteration 实例都是从 minroot_iterations 向量中取出的，取出的方式是通过计算 i * num_iters_per_step + j 来获取索引。</li>
+<li>最后，我们创建了一个名为 z0_secondary 的向量，这个向量只包含了一个元素，这个元素是 <E2 as Engine>::Scalar::zero()。这可能表示在第二个引擎中，我们的初始 z 值为 0。<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">C1</span> = MinRootCircuit&lt;&lt;E1 <span class="keyword">as</span> Engine&gt;::GE&gt;;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">C2</span> = TrivialCircuit&lt;&lt;E2 <span class="keyword">as</span> Engine&gt;::Scalar&gt;;</span><br><span class="line"><span class="comment">// produce a recursive SNARK</span></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;Generating a RecursiveSNARK...&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">recursive_snark</span>: RecursiveSNARK&lt;E1, E2, C1, C2&gt; =</span><br><span class="line">  RecursiveSNARK::&lt;E1, E2, C1, C2&gt;::<span class="title function_ invoke__">new</span>(</span><br><span class="line">    &amp;pp,</span><br><span class="line">    &amp;minroot_circuits[<span class="number">0</span>],</span><br><span class="line">    &amp;circuit_secondary,</span><br><span class="line">    &amp;z0_primary,</span><br><span class="line">    &amp;z0_secondary,</span><br><span class="line">  )</span><br><span class="line">  .<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">for</span> (i, circuit_primary) <span class="keyword">in</span> minroot_circuits.<span class="title function_ invoke__">iter</span>().<span class="title function_ invoke__">enumerate</span>() &#123;</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">start</span> = Instant::<span class="title function_ invoke__">now</span>();</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">res</span> = recursive_snark.<span class="title function_ invoke__">prove_step</span>(&amp;pp, circuit_primary, &amp;circuit_secondary);</span><br><span class="line">  <span class="built_in">assert!</span>(res.<span class="title function_ invoke__">is_ok</span>());</span><br><span class="line">  <span class="built_in">println!</span>(</span><br><span class="line">    <span class="string">&quot;RecursiveSNARK::prove_step &#123;&#125;: &#123;:?&#125;, took &#123;:?&#125; &quot;</span>,</span><br><span class="line">    i,</span><br><span class="line">    res.<span class="title function_ invoke__">is_ok</span>(),</span><br><span class="line">    start.<span class="title function_ invoke__">elapsed</span>()</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>首先定义了两种类型别名 C1 和 C2，分别对应 MinRootCircuit 和 TrivialCircuit 结构体。这两个结构体都需要一个泛型参数，分别是 E1 和 E2 引擎的关联类型。</li>
+<li>然后，我们创建了一个名为 recursive_snark 的 RecursiveSNARK 实例。RecursiveSNARK 是一个泛型结构体，需要四个类型参数：E1、E2、C1 和 C2。在创建 RecursiveSNARK 实例的过程中，我们调用了 RecursiveSNARK::new 方法。这个方法接受五个参数：pp、minroot_circuits[0]、circuit_secondary、z0_primary 和 z0_secondary。这五个参数分别表示公共参数、主电路、次电路，以及两个初始的 z 值。</li>
+<li>接下来，我们遍历 minroot_circuits 向量中的每一个元素。对于每一个元素，我们都调用了 recursive_snark.prove_step 方法。这个方法接受三个参数：pp、circuit_primary 和 circuit_secondary，并返回一个 Result 类型的值，表示证明步骤的结果。如果证明步骤成功，Result 的值将是 Ok；如果失败，Result 的值将是 Err。</li>
+<li>最后，我们使用 assert! 宏来检查 Result 的值。如果 Result 的值是 Err，assert! 宏将会触发一个 panic，程序将会终止运行。我们还使用 println! 宏来打印出每一步证明的结果和所花费的时间。<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// verify the recursive SNARK</span></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;Verifying a RecursiveSNARK...&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">start</span> = Instant::<span class="title function_ invoke__">now</span>();</span><br><span class="line"><span class="keyword">let</span> <span class="variable">res</span> = recursive_snark.<span class="title function_ invoke__">verify</span>(&amp;pp, num_steps, &amp;z0_primary, &amp;z0_secondary);</span><br><span class="line"><span class="built_in">println!</span>(</span><br><span class="line">  <span class="string">&quot;RecursiveSNARK::verify: &#123;:?&#125;, took &#123;:?&#125;&quot;</span>,</span><br><span class="line">  res.<span class="title function_ invoke__">is_ok</span>(),</span><br><span class="line">  start.<span class="title function_ invoke__">elapsed</span>()</span><br><span class="line">);</span><br><span class="line"><span class="built_in">assert!</span>(res.<span class="title function_ invoke__">is_ok</span>());</span><br><span class="line">- 验证 RecursiveSNARK </span><br><span class="line"><span class="comment">// produce a compressed SNARK</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Generating a CompressedSNARK using Spartan with multilinear KZG...&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> (pk, vk) = CompressedSNARK::&lt;_, _, _, _, S1, S2&gt;::<span class="title function_ invoke__">setup</span>(&amp;pp).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">start</span> = Instant::<span class="title function_ invoke__">now</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">res</span> = CompressedSNARK::&lt;_, _, _, _, S1, S2&gt;::<span class="title function_ invoke__">prove</span>(&amp;pp, &amp;pk, &amp;recursive_snark);</span><br><span class="line">    <span class="built_in">println!</span>(</span><br><span class="line">      <span class="string">&quot;CompressedSNARK::prove: &#123;:?&#125;, took &#123;:?&#125;&quot;</span>,</span><br><span class="line">      res.<span class="title function_ invoke__">is_ok</span>(),</span><br><span class="line">      start.<span class="title function_ invoke__">elapsed</span>()</span><br><span class="line">    );</span><br><span class="line">    <span class="built_in">assert!</span>(res.<span class="title function_ invoke__">is_ok</span>());</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">compressed_snark</span> = res.<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">encoder</span> = ZlibEncoder::<span class="title function_ invoke__">new</span>(<span class="type">Vec</span>::<span class="title function_ invoke__">new</span>(), Compression::<span class="title function_ invoke__">default</span>());</span><br><span class="line">    bincode::<span class="title function_ invoke__">serialize_into</span>(&amp;<span class="keyword">mut</span> encoder, &amp;compressed_snark).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">compressed_snark_encoded</span> = encoder.<span class="title function_ invoke__">finish</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    <span class="built_in">println!</span>(</span><br><span class="line">      <span class="string">&quot;CompressedSNARK::len &#123;:?&#125; bytes&quot;</span>,</span><br><span class="line">      compressed_snark_encoded.<span class="title function_ invoke__">len</span>()</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// verify the compressed SNARK</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Verifying a CompressedSNARK...&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">start</span> = Instant::<span class="title function_ invoke__">now</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">res</span> = compressed_snark.<span class="title function_ invoke__">verify</span>(&amp;vk, num_steps, &amp;z0_primary, &amp;z0_secondary);</span><br><span class="line">    <span class="built_in">println!</span>(</span><br><span class="line">      <span class="string">&quot;CompressedSNARK::verify: &#123;:?&#125;, took &#123;:?&#125;&quot;</span>,</span><br><span class="line">      res.<span class="title function_ invoke__">is_ok</span>(),</span><br><span class="line">      start.<span class="title function_ invoke__">elapsed</span>()</span><br><span class="line">    );</span><br><span class="line">    <span class="built_in">assert!</span>(res.<span class="title function_ invoke__">is_ok</span>());</span><br></pre></td></tr></table></figure></li>
+<li>证明&#x2F;验证CompressedSNARK。<br>[] 遗留问题：<br>[] PrimaryCircuit 和 SecondaryCircuit<br>[] RecursiveSNARK 和 CompressedSNARK</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Simba</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>乳虎啸谷，百兽震惶</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Note/"># Note</a>
+                    
+                        <a href="/tags/Code/"># Code</a>
+                    
+                        <a href="/tags/ZKP/"># ZKP</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/12/05/GNN-Maximum-Flow-Problem/">GNN Maximum Flow Problem (Shusen Wang)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Simba | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
