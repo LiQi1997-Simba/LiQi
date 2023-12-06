@@ -214,7 +214,7 @@
                         
                         Words:
                         
-                        <a href="">3.2k</a> 
+                        <a href="">3.3k</a> 
                         
                         </span>
                         
@@ -238,7 +238,9 @@
         </header>
 
         <div class="post-content">
-            <ol>
+            <p>Kothapalli, Abhiram, Srinath Setty, and Ioanna Tzialla. “Nova: Recursive zero-knowledge arguments from folding schemes.” Annual International Cryptology Conference. Cham: Springer Nature Switzerland, 2022.</p>
+<p>Nova: <a target="_blank" rel="noopener" href="https://eprint.iacr.org/2021/370.pdf">Paper</a> <a target="_blank" rel="noopener" href="https://github.com/microsoft/Nova.git">Code</a></p>
+<ol>
 <li>Understanding the MinRoot Example</li>
 </ol>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">E1</span> = Bn256EngineKZG;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">E2</span> = GrumpkinEngine;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">EE1</span> = nova_snark::provider::mlkzg::EvaluationEngine&lt;E1&gt;;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">EE2</span> = nova_snark::provider::ipa_pc::EvaluationEngine&lt;E2&gt;;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">S1</span> = nova_snark::spartan::snark::RelaxedR1CSSNARK&lt;E1, EE1&gt;; <span class="comment">// non-preprocessing SNARK</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">S2</span> = nova_snark::spartan::snark::RelaxedR1CSSNARK&lt;E2, EE2&gt;; <span class="comment">// non-preprocessing SNARK</span></span><br></pre></td></tr></table></figure>
