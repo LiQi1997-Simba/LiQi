@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Simba">
+
+
+
+
+
+<title>ZKP Circom 2 Common Circuits | Simba&#39;s Homepage</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Simba&#39;s Homepage</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Simba&#39;s Homepage</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">ZKP Circom 2 Common Circuits</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Simba</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">December 09, 2023&nbsp;&nbsp;16:15:58</a>
+                        </span>
+                    
+                    <!-- 
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Zero-Knowledge-Proofs/">Zero Knowledge Proofs</a>
+                            
+                        </span>
+                     -->
+                    
+
+                        <span class="post-category">
+                        
+                        Category:
+                        
+                        
+                        
+                        <a href="/categories/Zero-Knowledge-Proofs/">Zero Knowledge Proofs</a>
+                        
+                        
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Words:
+                        
+                        <a href="">1.3k</a> 
+                        
+                        </span>
+                        
+                        
+                        
+                         
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Time:
+                        
+                        <a href="">8min</a> 
+                        
+                        </span>
+                        
+                        
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://zkiap.com/">MIT IAP 2023 Modern Zero Knowledge Cryptography</a></p>
+<h1 id="Lecture-2-Circom-1-Brain-Gu"><a href="#Lecture-2-Circom-1-Brain-Gu" class="headerlink" title="Lecture 2: Circom 1 (Brain Gu)"></a>Lecture 2: Circom 1 (Brain Gu)</h1><ul>
+<li>autogen “intermediate” values<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">pragma circom 2.1.6;</span><br><span class="line"></span><br><span class="line">template Example () &#123;</span><br><span class="line">    signal input x1;</span><br><span class="line">    signal input x2;</span><br><span class="line">    signal input x3;</span><br><span class="line">    signal input x4;</span><br><span class="line"></span><br><span class="line">    signal y1;</span><br><span class="line">    signal y2;</span><br><span class="line"></span><br><span class="line">    signal output out;</span><br><span class="line">    // how to autogen &quot;intermediate&quot; values</span><br><span class="line">    // can use any operators</span><br><span class="line">    y1 &lt;-- x1 + x2;</span><br><span class="line">    y2 &lt;-- y1 * x3;</span><br><span class="line">    out &lt;-- y2 - x4;</span><br><span class="line"></span><br><span class="line">    // constrains</span><br><span class="line">    // only can use + and *</span><br><span class="line">    y1 === x1 + x2;</span><br><span class="line">    y2 === y1 * x3;</span><br><span class="line">    out + x4 === y2;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">component main &#123; public [ x1,x2,x3,x4] &#125; = Example();</span><br><span class="line"></span><br><span class="line">/* INPUT = &#123;</span><br><span class="line">    &quot;x1&quot;: &quot;2&quot;,</span><br><span class="line">    &quot;x2&quot;: &quot;4&quot;,</span><br><span class="line">    &quot;x3&quot;: &quot;8&quot;,</span><br><span class="line">    &quot;x4&quot;: &quot;5&quot;</span><br><span class="line">&#125; */</span><br></pre></td></tr></table></figure></li>
+<li>Some improvement with “syntactic sugar”<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">pragma circom 2.1.6;</span><br><span class="line"></span><br><span class="line">template Example () &#123;</span><br><span class="line">    signal input x1;</span><br><span class="line">    signal input x2;</span><br><span class="line">    signal input x3;</span><br><span class="line">    signal input x4;</span><br><span class="line"></span><br><span class="line">    signal y1;</span><br><span class="line">    signal y2;</span><br><span class="line"></span><br><span class="line">    signal output out;</span><br><span class="line"></span><br><span class="line">    //y1 &lt;-- x1 + x2;</span><br><span class="line">    //y1 === x1 + x2;</span><br><span class="line">    y1 &lt;== x1 + x2;</span><br><span class="line"></span><br><span class="line">    //y2 &lt;-- y1 * x3;</span><br><span class="line">    //y2 === y1 * x3;</span><br><span class="line">    y2 &lt;== y1 * x3;</span><br><span class="line"></span><br><span class="line">    //out &lt;-- y2 - x4;</span><br><span class="line">    //out + x4 === y2;</span><br><span class="line">    out &lt;== y2 - x4;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">component main &#123; public [ x1,x2,x3,x4] &#125; = Example();</span><br><span class="line"></span><br><span class="line">/* INPUT = &#123;</span><br><span class="line">    &quot;x1&quot;: &quot;2&quot;,</span><br><span class="line">    &quot;x2&quot;: &quot;4&quot;,</span><br><span class="line">    &quot;x3&quot;: &quot;8&quot;,</span><br><span class="line">    &quot;x4&quot;: &quot;5&quot;</span><br><span class="line">&#125; */</span><br></pre></td></tr></table></figure></li>
+<li>Example: import other code <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">pragma circom 2.1.6;</span><br><span class="line"></span><br><span class="line">include &quot;circomlib/poseidon.circom&quot;;</span><br><span class="line">// include &quot;https://github.com/0xPARC/circom-secp256k1/blob/master/circuits/bigint.circom&quot;;</span><br><span class="line"></span><br><span class="line">template Example () &#123;</span><br><span class="line">    signal input a;</span><br><span class="line">    signal input b;</span><br><span class="line">    signal output c;</span><br><span class="line">    </span><br><span class="line">    var unused = 4;</span><br><span class="line">    c &lt;== a * b;</span><br><span class="line">    assert(a &gt; 2);</span><br><span class="line">    </span><br><span class="line">    component hash = Poseidon(2);</span><br><span class="line">    hash.inputs[0] &lt;== a;</span><br><span class="line">    hash.inputs[1] &lt;== b;</span><br><span class="line"></span><br><span class="line">    log(&quot;hash&quot;, hash.out);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">component main &#123; public [ a ] &#125; = Example();</span><br><span class="line"></span><br><span class="line">/* INPUT = &#123;</span><br><span class="line">    &quot;a&quot;: &quot;5&quot;,</span><br><span class="line">    &quot;b&quot;: &quot;77&quot;</span><br><span class="line">&#125; */</span><br></pre></td></tr></table></figure></li>
+<li>Exercises<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br></pre></td><td class="code"><pre><span class="line">//IsZero</span><br><span class="line">//Parameters: none</span><br><span class="line">//Input signal(s): in</span><br><span class="line">//Output signal(s): out</span><br><span class="line"></span><br><span class="line">template IsZero() &#123;</span><br><span class="line">    signal input in;</span><br><span class="line">    signal output out;</span><br><span class="line"></span><br><span class="line">    signal inv;</span><br><span class="line"></span><br><span class="line">    inv &lt;-- in!=0 ? 1/in : 0;</span><br><span class="line"></span><br><span class="line">    out &lt;== -in*inv +1;</span><br><span class="line">    in*out === 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//IsEqual</span><br><span class="line">//Parameters: none</span><br><span class="line">//Input signal(s): in[2]</span><br><span class="line">//Output signal(s): out</span><br><span class="line"></span><br><span class="line">template IsEqual() &#123;</span><br><span class="line">    signal input in[2];</span><br><span class="line">    signal output out;</span><br><span class="line"></span><br><span class="line">    component isz = IsZero();</span><br><span class="line"></span><br><span class="line">    in[1] - in[0] ==&gt; isz.in;</span><br><span class="line"></span><br><span class="line">    isz.out ==&gt; out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//Selector</span><br><span class="line">//Parameters: nChoices</span><br><span class="line">//Input signal(s): in[nChoices], index</span><br><span class="line">//Output: out</span><br><span class="line"></span><br><span class="line">template CalculateTotal(n) &#123;</span><br><span class="line">    signal input in[n];</span><br><span class="line">    signal output out;</span><br><span class="line"></span><br><span class="line">    signal sums[n];</span><br><span class="line"></span><br><span class="line">    sums[0] &lt;== in[0];</span><br><span class="line"></span><br><span class="line">    for (var i = 1; i &lt; n; i++) &#123;</span><br><span class="line">        sums[i] &lt;== sums[i-1] + in[i]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    out &lt;== sums[n-1];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template QuinSelector(choices) &#123;</span><br><span class="line">    signal input in[choices];</span><br><span class="line">    signal input index;</span><br><span class="line">    signal output out;</span><br><span class="line">    </span><br><span class="line">    // Ensure that index &lt; choices</span><br><span class="line">    component lessThan = LessThan(4);</span><br><span class="line">    lessThan.in[0] &lt;== index;</span><br><span class="line">    lessThan.in[1] &lt;== choices;</span><br><span class="line">    lessThan.out === 1;</span><br><span class="line"></span><br><span class="line">    component calcTotal = CalculateTotal(choices);</span><br><span class="line">    component eqs[choices];</span><br><span class="line"></span><br><span class="line">    // For each item, check whether its index equals the input index.</span><br><span class="line">    for (var i = 0; i &lt; choices; i ++) &#123;</span><br><span class="line">        eqs[i] = IsEqual();</span><br><span class="line">        eqs[i].in[0] &lt;== i;</span><br><span class="line">        eqs[i].in[1] &lt;== index;</span><br><span class="line"></span><br><span class="line">        // eqs[i].out is 1 if the index matches. As such, at most one input to</span><br><span class="line">        // calcTotal is not 0.</span><br><span class="line">        calcTotal.in[i] &lt;== eqs[i].out * in[i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Returns 0 + 0 + 0 + item</span><br><span class="line">    out &lt;== calcTotal.out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//IsNegative</span><br><span class="line"></span><br><span class="line">template Num2Bits(n) &#123;</span><br><span class="line">    signal input in;</span><br><span class="line">    signal output out[n];</span><br><span class="line">    var lc1=0;</span><br><span class="line"></span><br><span class="line">    var e2=1;</span><br><span class="line">    for (var i = 0; i&lt;n; i++) &#123;</span><br><span class="line">        out[i] &lt;-- (in &gt;&gt; i) &amp; 1;</span><br><span class="line">        out[i] * (out[i] -1 ) === 0;</span><br><span class="line">        lc1 += out[i] * e2;</span><br><span class="line">        e2 = e2+e2;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lc1 === in;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template CompConstant(ct) &#123;</span><br><span class="line">    signal input in[254];</span><br><span class="line">    signal output out;</span><br><span class="line"></span><br><span class="line">    signal parts[127];</span><br><span class="line">    signal sout;</span><br><span class="line"></span><br><span class="line">    var clsb;</span><br><span class="line">    var cmsb;</span><br><span class="line">    var slsb;</span><br><span class="line">    var smsb;</span><br><span class="line"></span><br><span class="line">    var sum=0;</span><br><span class="line"></span><br><span class="line">    var b = (1 &lt;&lt; 128) -1;</span><br><span class="line">    var a = 1;</span><br><span class="line">    var e = 1;</span><br><span class="line">    var i;</span><br><span class="line"></span><br><span class="line">    for (i=0;i&lt;127; i++) &#123;</span><br><span class="line">        clsb = (ct &gt;&gt; (i*2)) &amp; 1;</span><br><span class="line">        cmsb = (ct &gt;&gt; (i*2+1)) &amp; 1;</span><br><span class="line">        slsb = in[i*2];</span><br><span class="line">        smsb = in[i*2+1];</span><br><span class="line"></span><br><span class="line">        if ((cmsb==0)&amp;&amp;(clsb==0)) &#123;</span><br><span class="line">            parts[i] &lt;== -b*smsb*slsb + b*smsb + b*slsb;</span><br><span class="line">        &#125; else if ((cmsb==0)&amp;&amp;(clsb==1)) &#123;</span><br><span class="line">            parts[i] &lt;== a*smsb*slsb - a*slsb + b*smsb - a*smsb + a;</span><br><span class="line">        &#125; else if ((cmsb==1)&amp;&amp;(clsb==0)) &#123;</span><br><span class="line">            parts[i] &lt;== b*smsb*slsb - a*smsb + a;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            parts[i] &lt;== -a*smsb*slsb + a;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        sum = sum + parts[i];</span><br><span class="line"></span><br><span class="line">        b = b -e;</span><br><span class="line">        a = a +e;</span><br><span class="line">        e = e*2;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    sout &lt;== sum;</span><br><span class="line"></span><br><span class="line">    component num2bits = Num2Bits(135);</span><br><span class="line"></span><br><span class="line">    num2bits.in &lt;== sout;</span><br><span class="line"></span><br><span class="line">    out &lt;== num2bits.out[127];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template Sign() &#123;</span><br><span class="line">    signal input in[254];</span><br><span class="line">    signal output sign;</span><br><span class="line"></span><br><span class="line">    component comp = CompConstant(10944121435919637611123202872628637544274182200208017171849102093287904247808);</span><br><span class="line"></span><br><span class="line">    var i;</span><br><span class="line"></span><br><span class="line">    for (i=0; i&lt;254; i++) &#123;</span><br><span class="line">        comp.in[i] &lt;== in[i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    sign &lt;== comp.out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//LessThan</span><br><span class="line">//Parameters: none</span><br><span class="line">//Input signal(s): in[2]. Assume that it is known ahead of time that these are at most 2252−1.</span><br><span class="line">//Output signal(s): out</span><br><span class="line"></span><br><span class="line">//Specification: If in[0] is strictly less than in[1], out should be 1. Otherwise, out should be 0.</span><br><span class="line"></span><br><span class="line">//Extension 1: If you know that the input signals are at most 2^k - 1 (k ≤ 252), how can you reduce the total number of constraints that this circuit requires? Write a version of this circuit parametrized in k.</span><br><span class="line">//Extension 2: Write LessEqThan (tests if in[0] is ≤ in[1]), GreaterThan, and GreaterEqThan</span><br><span class="line"></span><br><span class="line">template LessThan(n) &#123;</span><br><span class="line">    assert(n &lt;= 252);</span><br><span class="line">    signal input in[2];</span><br><span class="line">    signal output out;</span><br><span class="line"></span><br><span class="line">    component n2b = Num2Bits(n+1);</span><br><span class="line"></span><br><span class="line">    n2b.in &lt;== in[0]+ (1&lt;&lt;n) - in[1];</span><br><span class="line"></span><br><span class="line">    out &lt;== 1-n2b.out[n];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// N is the number of bits the input  have.</span><br><span class="line">// The MSF is the sign bit.</span><br><span class="line">template LessEqThan(n) &#123;</span><br><span class="line">    signal input in[2];</span><br><span class="line">    signal output out;</span><br><span class="line"></span><br><span class="line">    component lt = LessThan(n);</span><br><span class="line"></span><br><span class="line">    lt.in[0] &lt;== in[0];</span><br><span class="line">    lt.in[1] &lt;== in[1]+1;</span><br><span class="line">    lt.out ==&gt; out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// N is the number of bits the input  have.</span><br><span class="line">// The MSF is the sign bit.</span><br><span class="line">template GreaterThan(n) &#123;</span><br><span class="line">    signal input in[2];</span><br><span class="line">    signal output out;</span><br><span class="line"></span><br><span class="line">    component lt = LessThan(n);</span><br><span class="line"></span><br><span class="line">    lt.in[0] &lt;== in[1];</span><br><span class="line">    lt.in[1] &lt;== in[0];</span><br><span class="line">    lt.out ==&gt; out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// N is the number of bits the input  have.</span><br><span class="line">// The MSF is the sign bit.</span><br><span class="line">template GreaterEqThan(n) &#123;</span><br><span class="line">    signal input in[2];</span><br><span class="line">    signal output out;</span><br><span class="line"></span><br><span class="line">    component lt = LessThan(n);</span><br><span class="line"></span><br><span class="line">    lt.in[0] &lt;== in[1];</span><br><span class="line">    lt.in[1] &lt;== in[0]+1;</span><br><span class="line">    lt.out ==&gt; out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//IntegerDivide</span><br><span class="line">//NOTE: This circuit is pretty hard!</span><br><span class="line">//Parameters: nbits. Use assert to assert that this is at most 126!</span><br><span class="line">//Input signal(s): dividend, divisor</span><br><span class="line">//Output signal(s): remainder, quotient</span><br><span class="line">// input: dividend and divisor field elements in [0, sqrt(p))</span><br><span class="line">// output: remainder and quotient field elements in [0, p-1] and [0, sqrt(p)</span><br><span class="line">// Haven&#x27;t thought about negative divisor yet. Not needed.</span><br><span class="line">// -8 % 5 = 2. [-8 -&gt; 8. 8 % 5 -&gt; 3. 5 - 3 -&gt; 2.]</span><br><span class="line">// (-8 - 2) // 5 = -2</span><br><span class="line">// -8 + 2 * 5 = 2</span><br><span class="line">// check: 2 - 2 * 5 = -8</span><br><span class="line"></span><br><span class="line">template Modulo(divisor_bits, SQRT_P) &#123;</span><br><span class="line">    signal input dividend; // -8</span><br><span class="line">    signal input divisor; // 5</span><br><span class="line">    signal output remainder; // 2</span><br><span class="line">    signal output quotient; // -2</span><br><span class="line"></span><br><span class="line">    component is_neg = IsNegative();</span><br><span class="line">    is_neg.in &lt;== dividend;</span><br><span class="line"></span><br><span class="line">    signal output is_dividend_negative;</span><br><span class="line">    is_dividend_negative &lt;== is_neg.out;</span><br><span class="line"></span><br><span class="line">    signal output dividend_adjustment;</span><br><span class="line">    dividend_adjustment &lt;== 1 + is_dividend_negative * -2; // 1 or -1</span><br><span class="line"></span><br><span class="line">    signal output abs_dividend;</span><br><span class="line">    abs_dividend &lt;== dividend * dividend_adjustment; // 8</span><br><span class="line"></span><br><span class="line">    signal output raw_remainder;</span><br><span class="line">    raw_remainder &lt;-- abs_dividend % divisor;</span><br><span class="line">    </span><br><span class="line">    signal output neg_remainder;</span><br><span class="line">    neg_remainder &lt;-- divisor - raw_remainder;</span><br><span class="line">    </span><br><span class="line">        if (is_dividend_negative == 1 &amp;&amp; raw_remainder != 0) &#123;</span><br><span class="line">        remainder &lt;-- neg_remainder;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        remainder &lt;-- raw_remainder;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    quotient &lt;-- (dividend - remainder) / divisor; // (-8 - 2) / 5 = -2.</span><br><span class="line"></span><br><span class="line">    dividend === divisor * quotient + remainder; // -8 = 5 * -2 + 2.</span><br><span class="line"></span><br><span class="line">    component rp = MultiRangeProof(3, 128);</span><br><span class="line">    rp.in[0] &lt;== divisor;</span><br><span class="line">    rp.in[1] &lt;== quotient;</span><br><span class="line">    rp.in[2] &lt;== dividend;</span><br><span class="line">    rp.max_abs_value &lt;== SQRT_P;</span><br><span class="line"></span><br><span class="line">    // check that 0 &lt;= remainder &lt; divisor</span><br><span class="line">    component remainderUpper = LessThan(divisor_bits);</span><br><span class="line">    remainderUpper.in[0] &lt;== remainder;</span><br><span class="line">    remainderUpper.in[1] &lt;== divisor;</span><br><span class="line">    remainderUpper.out === 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Simba</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>乳虎啸谷，百兽震惶</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Note/"># Note</a>
+                    
+                        <a href="/tags/Code/"># Code</a>
+                    
+                        <a href="/tags/ZKP/"># ZKP</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/12/08/ZKP-Circom-1/">ZKP Circom 1</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Simba | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
