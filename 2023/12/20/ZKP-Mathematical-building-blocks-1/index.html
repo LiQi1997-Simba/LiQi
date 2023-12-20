@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP Commitment 2 | Simba&#39;s Homepage</title>
+<title>ZKP Mathematical Building Blocks 1 | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP Commitment 2</h1>
+            <h1 class="post-title">ZKP Mathematical Building Blocks 1</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">December 19, 2023&nbsp;&nbsp;13:44:50</a>
+                        Date: <a href="#">December 20, 2023&nbsp;&nbsp;15:02:28</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">105</a> 
+                        <a href="">234</a> 
                         
                         </span>
                         
@@ -304,26 +304,35 @@
 
         <div class="post-content">
             <p><a target="_blank" rel="noopener" href="https://zkiap.com/">MIT IAP 2023 Modern Zero Knowledge Cryptography</a>课程笔记</p>
-<h1 id="Lecture-5-Commitment-2-Ying-Tong-Lai"><a href="#Lecture-5-Commitment-2-Ying-Tong-Lai" class="headerlink" title="Lecture 5: Commitment 2 (Ying Tong Lai)"></a>Lecture 5: Commitment 2 (Ying Tong Lai)</h1><ul>
-<li>Polynomial Commitment<ul>
-<li>f(x) &#x3D; $a_0$ + $a_1x$ + $a_2x^2$ + $\dots$ + $a_nx^n$</li>
-<li>$a_i$ is secret</li>
-<li>commit(f,z,y) &#x3D; C</li>
-<li>The commitment proved that <ul>
-<li>f(z) &#x3D; y</li>
-<li>C is the commitment of f</li>
+<h1 id="Lecture-3-Mathematical-Building-Blocks-Yufei-Zhao"><a href="#Lecture-3-Mathematical-Building-Blocks-Yufei-Zhao" class="headerlink" title="Lecture 3: Mathematical Building Blocks (Yufei Zhao)"></a>Lecture 3: Mathematical Building Blocks (Yufei Zhao)</h1><ul>
+<li>Example: I (Prover) want to convince you (Verifier) that I can distinguish two colors that you see as identical<br><img src="/2023/12/20/ZKP-Mathematical-building-blocks-1/1.png"><ul>
+<li>A Similar Example: How to prove two colors are different to a blind verifier<br><img src="/2023/12/20/ZKP-Mathematical-building-blocks-1/2.png"></li>
+<li>What is a proof?<ul>
+<li>A proof is something that could convince someone else</li>
+<li>Properties: completeness, soundness, zero-knowledge</li>
 </ul>
 </li>
-<li>KZG commitment scheme. It is used in protocols like Sonic, Marlin, and PlonK. (Marlin and PlonK improve on Sonic by constructing a different polynomial IOP.)<br><img src="/2023/12/19/ZKP-Commitment-2/1.png"></li>
-<li>How to generate $\tau$ (trusted setup)<ul>
-<li>Multiple-party computation<ul>
-<li>Each party generate a random beacon</li>
-<li>Aggregate all beacons as $\tau$</li>
-<li>No one knows $\tau$ exceplt compeletly collusion</li>
+<li>What is the prover and the verifier (based on blockchain)<ul>
+<li>Prover: run on the regular computer (much more powerful than the verifier)</li>
+<li>Verifier: run on the smart contract</li>
 </ul>
 </li>
 </ul>
 </li>
+<li>Example: Hamilton cycle [Blum ‘87]<ul>
+<li>Hamilton cycle: a cycle can go through every vertex of the graph exactly once and return to the start</li>
+<li>Everybody knows a graph</li>
+<li>P knows a Hamilton cycle in the graph without revealing any additional information</li>
+<li>Protocol<br><img src="/2023/12/20/ZKP-Mathematical-building-blocks-1/3.png"></li>
+</ul>
+</li>
+<li>ZKP Properties<ul>
+<li>Completeness: If everyone behaves then protocol accepts</li>
+<li>Soundness: If there is no Ham cycle, then no matter what P does, V rejects with the probability of $\leq \frac{1}{2}$<ul>
+<li>There is a stronger requirement called knowledge soundness which says that even if the graph has a Ham Cycle , the prover doesn’t know it, the protocol will still fail. The precise definition involves an extractor with rewinding abilities.</li>
+</ul>
+</li>
+<li>Zero-knowledge: If V accepts then it learns no addl into from the interaction because V could have simulated the entire dialog by itself.</li>
 </ul>
 </li>
 </ul>
@@ -375,10 +384,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/12/20/ZKP-Mathematical-building-blocks-1/">ZKP Mathematical Building Blocks 1</a>
             
-            
-            <a class="next" rel="next" href="/2023/12/18/ZKP-Commitment-1/">ZKP Commitment 1</a>
+            <a class="next" rel="next" href="/2023/12/19/ZKP-Commitment-2/">ZKP Commitment 2</a>
             
         </section>
 
