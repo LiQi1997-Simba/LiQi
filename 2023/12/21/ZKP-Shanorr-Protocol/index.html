@@ -328,7 +328,7 @@
 <p>The prover hashes the commitment and other relevant information to generate a challenge.</p>
 <p>$$c &#x3D; \text{Hash}(pk,R)$$</p>
 <p>d. Response:</p>
-<p>The prover responds to the challenge with information derived from the secret key. The prover sends $z$ and $c$ to the verifier.</p>
+<p>The prover responds to the challenge with information derived from the secret key. The prover sends $z$ and $R$ to the verifier.</p>
 <p>$$z &#x3D; r + c \cdot sk$$</p>
 <p>e. Verification:</p>
 <p>The verifier checks the validity of the response using the hash function and decides whether to accept or reject.</p>
