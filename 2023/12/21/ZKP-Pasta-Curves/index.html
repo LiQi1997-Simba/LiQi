@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP Mathematical Building Blocks 1 | Simba&#39;s Homepage</title>
+<title>ZKP Pasta Curves | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP Mathematical Building Blocks 1</h1>
+            <h1 class="post-title">ZKP Pasta Curves</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">December 20, 2023&nbsp;&nbsp;15:02:28</a>
+                        Date: <a href="#">December 21, 2023&nbsp;&nbsp;22:00:51</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">234</a> 
+                        <a href="">396</a> 
                         
                         </span>
                         
@@ -293,7 +293,7 @@
                         
                         Time:
                         
-                        <a href="">1min</a> 
+                        <a href="">2min</a> 
                         
                         </span>
                         
@@ -303,39 +303,31 @@
         </header>
 
         <div class="post-content">
-            <p><a target="_blank" rel="noopener" href="https://zkiap.com/">MIT IAP 2023 Modern Zero Knowledge Cryptography</a>课程笔记</p>
-<h1 id="Lecture-3-Mathematical-Building-Blocks-Yufei-Zhao"><a href="#Lecture-3-Mathematical-Building-Blocks-Yufei-Zhao" class="headerlink" title="Lecture 3: Mathematical Building Blocks (Yufei Zhao)"></a>Lecture 3: Mathematical Building Blocks (Yufei Zhao)</h1><ul>
-<li>Example: I (Prover) want to convince you (Verifier) that I can distinguish two colors that you see as identical<br><img src="/2023/12/20/ZKP-Mathematical-building-blocks-1/1.png"><ul>
-<li>A Similar Example: How to prove two colors are different to a blind verifier<br><img src="/2023/12/20/ZKP-Mathematical-building-blocks-1/2.png"></li>
-<li>What is a proof?<ul>
-<li>A proof is something that could convince someone else</li>
-<li>Properties: completeness, soundness, zero-knowledge</li>
-</ul>
+            <p>Mina book[<a target="_blank" rel="noopener" href="https://o1-labs.github.io/proof-systems/specs/pasta.html?highlight=pasta#pasta-curves]%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0">https://o1-labs.github.io/proof-systems/specs/pasta.html?highlight=pasta#pasta-curves]学习笔记</a></p>
+<h1 id="Pasta-Curves"><a href="#Pasta-Curves" class="headerlink" title="Pasta Curves"></a>Pasta Curves</h1><p>Pasta Curves is a fascinating innovation in cryptography designed by Zcash. </p>
+<h2 id="What-are-the-Pasta-Curves"><a href="#What-are-the-Pasta-Curves" class="headerlink" title="What are the Pasta Curves"></a>What are the Pasta Curves</h2><p>The Pasta Curves are a pair of elliptic curves named <strong>Pallas</strong> and <strong>Vesta</strong>, specifically designed for use in the Halo 2 proof system, a core component of Zcash’s privacy features. These curves are named after the asteroids Pallas and Vesta, both discovered by German astronomer Heinrich Olbers.</p>
+<p><img src="/pallas.jpg"><br><img src="/vesta.jpg"></p>
+<h2 id="What-makes-them-special"><a href="#What-makes-them-special" class="headerlink" title="What makes them special"></a>What makes them special</h2><p>The Pasta Curves have a unique property: the order of one curve (the number of points on the curve) is exactly the field size of the other. This means that Vesta’s field size is the order of Pallas, and vice versa. This seemingly simple design choice has significant implications for efficiency and security in cryptographic applications.</p>
+<h2 id="Benefits-of-the-Pasta-Curves"><a href="#Benefits-of-the-Pasta-Curves" class="headerlink" title="Benefits of the Pasta Curves"></a>Benefits of the Pasta Curves</h2><p>Improved efficiency: The special relationship between the curves allows for faster and more compact proofs in Halo 2, leading to smaller transaction sizes and improved scalability for Zcash.<br>Enhanced security: The unique structure of the curves makes them resistant to certain types of attacks, further strengthening the security of Zcash transactions.</p>
+<ul>
+<li><p>Flexibility: The Pasta Curves can be used in various cryptographic constructions beyond Halo 2, potentially finding applications in other privacy-preserving technologies.<br>Beyond the technical details:</p>
 </li>
-<li>What is the prover and the verifier (based on blockchain)<ul>
-<li>Prover: run on the regular computer (much more powerful than the verifier)</li>
-<li>Verifier: run on the smart contract</li>
-</ul>
+<li><p>The Pasta Curves’ name reflects the playful and collaborative spirit of the Zcash community. The choice of pasta-inspired names adds a touch of whimsy to a complex technical topic, highlighting the human element behind cryptographic research.</p>
 </li>
 </ul>
-</li>
-<li>Example: Hamilton cycle [Blum ‘87]<ul>
-<li>Hamilton cycle: a cycle can go through every vertex of the graph exactly once and return to the start</li>
-<li>Everybody knows a graph</li>
-<li>P knows a Hamilton cycle in the graph without revealing any additional information</li>
-<li>Protocol<br><img src="/2023/12/20/ZKP-Mathematical-building-blocks-1/3.png"></li>
-</ul>
-</li>
-<li>ZKP Properties<ul>
-<li>Completeness: If everyone behaves then protocol accepts</li>
-<li>Soundness: If there is no Ham cycle, then no matter what P does, V rejects with the probability of $\geq \frac{1}{2}$<ul>
-<li>There is a stronger requirement called knowledge soundness which says that even if the graph has a Ham Cycle , the prover doesn’t know it, the protocol will still fail. The precise definition involves an extractor with rewinding abilities.</li>
-</ul>
-</li>
-<li>Zero-knowledge: If V accepts then it learns no addl into from the interaction because V could have simulated the entire dialog by itself.</li>
-</ul>
-</li>
-</ul>
+<h2 id="Some-Technical-Details"><a href="#Some-Technical-Details" class="headerlink" title="Some Technical Details"></a>Some Technical Details</h2><p>In this section, $F_p$ refers to the base field of Pallas, and the scalar field of Vesta; $F_q$ refers to the base field of Vesta, and the scalar field of Pallas. Note that $\vert F_q \vert &gt; \vert F_p \vert$.</p>
+<h3 id="Pallas"><a href="#Pallas" class="headerlink" title="Pallas"></a>Pallas</h3><p>curve equation: $y^2 &#x3D; x^3 + 5$<br>base field: 28948022309329048855892746252171976963363056481941560715954676764349967630337<br>scalar field: 28948022309329048855892746252171976963363056481941647379679742748393362948097<br>mina generator: (1,12418654782883325593414442427049395787963493412651469444558597405572177144507)<br>arkworks generator: (−1,2)<br>endo:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">endo_q = 2D33357CB532458ED3552A23A8554E5005270D29D19FC7D27B7FD22F0201B547</span><br><span class="line">endo_r = 397E65A7D7C1AD71AEE24B27E308F0A61259527EC1D4752E619D1840AF55F1B1</span><br></pre></td></tr></table></figure>
+
+<h3 id="Vesta"><a href="#Vesta" class="headerlink" title="Vesta"></a>Vesta</h3><p>curve equation: $y^2 &#x3D; x^3 + 5$</p>
+<p>base field: 28948022309329048855892746252171976963363056481941647379679742748393362948097</p>
+<p>scalar field: 28948022309329048855892746252171976963363056481941560715954676764349967630337</p>
+<p>mina generator: (1,11426906929455361843568202299992114520848200991084027513389447476559454104162)</p>
+<p>arkworks generator: (−1,2)</p>
+<p>endo:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">endo_q = 06819A58283E528E511DB4D81CF70F5A0FED467D47C033AF2AA9D2E050AA0E4F</span><br><span class="line">endo_r = 12CCCA834ACDBA712CAAD5DC57AAB1B01D1F8BD237AD31491DAD5EBDFDFE4AB9</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>In conclusion, the Pasta Curves are a significant advancement in cryptography, offering improved efficiency, security, and flexibility for privacy-preserving technologies like Zcash. Their unique design and playful naming serve as a testament to the ingenuity and innovation within the Zcash community.</p>
 
         </div>
 
@@ -384,10 +376,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/12/21/ZKP-Schnorr-Protocol/">ZKP Schnorr Protocol</a>
             
-            
-            <a class="next" rel="next" href="/2023/12/19/ZKP-Commitment-2/">ZKP Commitment 2</a>
+            <a class="next" rel="next" href="/2023/12/21/ZKP-Schnorr-Protocol/">ZKP Schnorr Protocol</a>
             
         </section>
 
