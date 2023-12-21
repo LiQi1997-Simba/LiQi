@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP Mathematical Building Blocks 1 | Simba&#39;s Homepage</title>
+<title>ZKP Shanorr Protocol | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP Mathematical Building Blocks 1</h1>
+            <h1 class="post-title">ZKP Shanorr Protocol</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">December 20, 2023&nbsp;&nbsp;15:02:28</a>
+                        Date: <a href="#">December 21, 2023&nbsp;&nbsp;20:07:33</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">234</a> 
+                        <a href="">358</a> 
                         
                         </span>
                         
@@ -293,7 +293,7 @@
                         
                         Time:
                         
-                        <a href="">1min</a> 
+                        <a href="">2min</a> 
                         
                         </span>
                         
@@ -303,39 +303,36 @@
         </header>
 
         <div class="post-content">
-            <p><a target="_blank" rel="noopener" href="https://zkiap.com/">MIT IAP 2023 Modern Zero Knowledge Cryptography</a>课程笔记</p>
-<h1 id="Lecture-3-Mathematical-Building-Blocks-Yufei-Zhao"><a href="#Lecture-3-Mathematical-Building-Blocks-Yufei-Zhao" class="headerlink" title="Lecture 3: Mathematical Building Blocks (Yufei Zhao)"></a>Lecture 3: Mathematical Building Blocks (Yufei Zhao)</h1><ul>
-<li>Example: I (Prover) want to convince you (Verifier) that I can distinguish two colors that you see as identical<br><img src="/2023/12/20/ZKP-Mathematical-building-blocks-1/1.png"><ul>
-<li>A Similar Example: How to prove two colors are different to a blind verifier<br><img src="/2023/12/20/ZKP-Mathematical-building-blocks-1/2.png"></li>
-<li>What is a proof?<ul>
-<li>A proof is something that could convince someone else</li>
-<li>Properties: completeness, soundness, zero-knowledge</li>
-</ul>
-</li>
-<li>What is the prover and the verifier (based on blockchain)<ul>
-<li>Prover: run on the regular computer (much more powerful than the verifier)</li>
-<li>Verifier: run on the smart contract</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Example: Hamilton cycle [Blum ‘87]<ul>
-<li>Hamilton cycle: a cycle can go through every vertex of the graph exactly once and return to the start</li>
-<li>Everybody knows a graph</li>
-<li>P knows a Hamilton cycle in the graph without revealing any additional information</li>
-<li>Protocol<br><img src="/2023/12/20/ZKP-Mathematical-building-blocks-1/3.png"></li>
-</ul>
-</li>
-<li>ZKP Properties<ul>
-<li>Completeness: If everyone behaves then protocol accepts</li>
-<li>Soundness: If there is no Ham cycle, then no matter what P does, V rejects with the probability of $\geq \frac{1}{2}$<ul>
-<li>There is a stronger requirement called knowledge soundness which says that even if the graph has a Ham Cycle , the prover doesn’t know it, the protocol will still fail. The precise definition involves an extractor with rewinding abilities.</li>
-</ul>
-</li>
-<li>Zero-knowledge: If V accepts then it learns no addl into from the interaction because V could have simulated the entire dialog by itself.</li>
-</ul>
-</li>
-</ul>
+            <h1 id="Schnorr-Protocol"><a href="#Schnorr-Protocol" class="headerlink" title="Schnorr Protocol"></a>Schnorr Protocol</h1><p>The Schnorr Protocol is a cryptographic protocol used for secure communication and digital signatures. It was originally proposed by Claus-Peter Schnorr in 1989 and has gained attention for its simplicity and efficiency. There are both interactive and non-interactive versions of the Schnorr Protocol.</p>
+<h2 id="Interactive-Schnorr-Protocol"><a href="#Interactive-Schnorr-Protocol" class="headerlink" title="Interactive Schnorr Protocol"></a>Interactive Schnorr Protocol</h2><p>a. Key Generation:</p>
+<p>The prover generates a public-private key pair.</p>
+<p>$$sk &#x3D; a; pk &#x3D; a \cdot G$$</p>
+<p>b. Commitment:</p>
+<p>The prover chooses a random number $r$ and commits to the value $R$.</p>
+<p>$$R &#x3D; r \cdot G$$</p>
+<p>c. Challenge:</p>
+<p>The verifier sends a random challenge $c$ to the prover.</p>
+<p>d. Response:</p>
+<p>The prover responds to the challenge with information derived from the secret key. The prover sends $z$ to the verifier.</p>
+<p>$$z &#x3D; r + c \cdot sk$$</p>
+<p>e. Verification:</p>
+<p>The verifier checks the validity of the response and decides whether to accept or reject.</p>
+<p>$$z \cdot G \overset{\text{?}}{&#x3D;} R + c \cdot pk$$</p>
+<h2 id="Non-Interactive-Schnorr-Protocol"><a href="#Non-Interactive-Schnorr-Protocol" class="headerlink" title="Non-Interactive Schnorr Protocol"></a>Non-Interactive Schnorr Protocol</h2><p>The non-interactive version is designed to be more efficient and is often used in scenarios where a single round of communication is preferred.<br>This is achieved by using a technique called a Fiat-Shamir transform, which converts an interactive protocol into a non-interactive one by replacing the challenge from the verifier with a hash function.<br>The steps involved in the non-interactive Schnorr Protocol are as follows:</p>
+<p>a. Key Generation:</p>
+<p>The prover generates a public-private key pair.<br>$$sk &#x3D; a; pk &#x3D; a \cdot G$$</p>
+<p>b. Commitment:</p>
+<p>The prover chooses a random number $r$ and commits to the value $R$, similar to the interactive version.</p>
+<p>$$R &#x3D; r \cdot G$$</p>
+<p>c. Hashing:</p>
+<p>The prover hashes the commitment and other relevant information to generate a challenge.</p>
+<p>$$c &#x3D; \text{Hash}(pk,R)$$</p>
+<p>d. Response:</p>
+<p>The prover responds to the challenge with information derived from the secret key. The prover sends $z$ and $c$ to the verifier.</p>
+<p>$$z &#x3D; r + c \cdot sk$$</p>
+<p>e. Verification:</p>
+<p>The verifier checks the validity of the response using the hash function and decides whether to accept or reject.</p>
+<p>$$c^{‘} &#x3D; \text{Hash}(pk,R)$$<br>$$z \cdot G \overset{\text{?}}{&#x3D;} R + c^{‘} \cdot pk$$</p>
 
         </div>
 
@@ -384,10 +381,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/12/21/ZKP-Shanorr-Protocol/">ZKP Shanorr Protocol</a>
             
-            
-            <a class="next" rel="next" href="/2023/12/19/ZKP-Commitment-2/">ZKP Commitment 2</a>
+            <a class="next" rel="next" href="/2023/12/20/ZKP-Mathematical-building-blocks-1/">ZKP Mathematical Building Blocks 1</a>
             
         </section>
 
