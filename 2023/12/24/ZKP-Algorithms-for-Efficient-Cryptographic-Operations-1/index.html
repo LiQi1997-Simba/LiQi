@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP Mathematical Building Blocks 2 | Simba&#39;s Homepage</title>
+<title>ZKP Algorithms for Efficient Cryptographic Operations 1 | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP Mathematical Building Blocks 2</h1>
+            <h1 class="post-title">ZKP Algorithms for Efficient Cryptographic Operations 1</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">December 24, 2023&nbsp;&nbsp;09:57:50</a>
+                        Date: <a href="#">December 24, 2023&nbsp;&nbsp;14:02:17</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">313</a> 
+                        <a href="">349</a> 
                         
                         </span>
                         
@@ -293,7 +293,7 @@
                         
                         Time:
                         
-                        <a href="">1min</a> 
+                        <a href="">2min</a> 
                         
                         </span>
                         
@@ -304,71 +304,60 @@
 
         <div class="post-content">
             <p><a target="_blank" rel="noopener" href="https://zkiap.com/">MIT IAP 2023 Modern Zero Knowledge Cryptography</a>课程笔记</p>
-<h1 id="Lecture-3-Mathematical-Building-Blocks-Yufei-Zhao"><a href="#Lecture-3-Mathematical-Building-Blocks-Yufei-Zhao" class="headerlink" title="Lecture 3: Mathematical Building Blocks (Yufei Zhao)"></a>Lecture 3: Mathematical Building Blocks (Yufei Zhao)</h1><ul>
-<li>Fiat Shamir heuristic<ul>
-<li>Turn an interactive proof to a non-interactive proof</li>
-<li>P can simulate V<ul>
-<li>whenever V picks a random value</li>
-<li>P can simulate V’s randomness by running a cryptographic hash function on the transcript so that P can’t cheat by choosing “favorable random challenges”</li>
+<h1 id="Lecture-6-Algorithms-for-Efficient-Cryptographic-Operations-Jason-Morton"><a href="#Lecture-6-Algorithms-for-Efficient-Cryptographic-Operations-Jason-Morton" class="headerlink" title="Lecture 6: Algorithms for Efficient Cryptographic Operations (Jason Morton)"></a>Lecture 6: Algorithms for Efficient Cryptographic Operations (Jason Morton)</h1><ul>
+<li>Multi-scalar Multiplication(MSM)<ul>
+<li>Naive: nP &#x3D; (((P + P) + P) + P)… &#x3D; (2(2P))…</li>
+<li>Binary expand<ul>
+<li>$n &#x3D; e_0+e_1\alpha+e_2\alpha^2+\dots+\e_{\lambda-1}^{\lambda-1}</li>
+<li>Accumulator<ul>
+<li>Q &#x3D; P; </li>
+<li>R &#x3D; 0 if e_0 &#x3D; 0 </li>
+<li>R &#x3D; P if e_0 &#x3D; 1</li>
+<li>For i &#x3D; 1 to t<ul>
+<li>Q &#x3D; 2Q</li>
+<li>If e_i &#x3D; 1<ul>
+<li>R &#x3D; R+Q</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Elliptic Curve<ul>
-<li>$y^2 &#x3D; x^3 + Ax + B$</li>
-<li>All points in a elliptic curve make a group<br><img src="/2023/12/24/ZKP-Mathematical-Building-Blocks-2/1.png"></li>
-<li>g in the generator of the group G<br><img src="/2023/12/24/ZKP-Mathematical-Building-Blocks-2/2.png"></li>
-<li>Difficult problem: <ul>
-<li>Discrete Log Problem on Elliptic Curve<ul>
-<li>Secret random x generated form Zq</li>
-<li>Share with the public xG</li>
-<li>It is hard to recover x from xG</li>
+<li>Return R</li>
 </ul>
 </li>
-<li>Diffie-Hellman Key Exchange (Public key cryptography)<ul>
-<li>Alice takes a random a mod q</li>
-<li>Bob takes a random b mod q</li>
-<li>Alice says to the public: aG</li>
-<li>Bob says to the public: bG</li>
-<li>So, Alice and Bob share a secret: abG</li>
+<li>Overhead: \log_2 n doubling + \log_2 n add</li>
 </ul>
 </li>
 </ul>
 </li>
+<li>Pippenger [<strong>Reference</strong>:drouyang.eth, <a target="_blank" rel="noopener" href="https://hackmd.io/@drouyang/SyYwhWIso]">https://hackmd.io/@drouyang/SyYwhWIso]</a><br><img src="/2023/12/24/ZKP-Algorithms-for-Efficient-Cryptographic-Operations-1/1.png"><ul>
+<li>$P&#x3D;\sum_{i&#x3D;0}^n k_i P_i$</li>
+<li>Step 1: partition scalars into windows<ul>
+<li>Let’s first partition each scalar into $m$ windows each has $w$ bits, then<ul>
+<li>$k_i &#x3D; k_{i,0} + k_{i,1} 2^{w} + … + k_{i,(m-1)} 2^{(m-1)w}$</li>
 </ul>
 </li>
-<li>Pairing based cryptography<ul>
-<li>Given cyclic groups $G_0, G_1, G_T$ all same prime order q</li>
-<li>a pairing is a nondegenerate bilinear map<ul>
-<li>$e: G_0 \times G_1 \rightarrow G_T$</li>
+<li>You can think of each scalar $k_i$ as a bignum and representing it as a multi-precision integer with limb size $w$. Then we have,<ul>
+<li>$\sum_i k_i P_i &#x3D; \sum_i \sum_{j&#x3D;0}^{m-1} k_{i,j} 2^{jw} P_i$</li>
 </ul>
 </li>
-<li>Properties<ul>
-<li>Bilinear<ul>
-<li>e(x+x’, y) &#x3D; e(x,y) + e(x’,y)</li>
-<li>e(x,y+y’) &#x3D; e(x,y) + e(x,y’)</li>
-<li>e(ax,y) &#x3D; ae(x,y) + e(x,ay)</li>
+<li>By reordering the sums, we get<ul>
+<li>$\sum_i k_i P_i&#x3D; \sum_j 2^{jw} \left( \sum_i k_{i,j} P_i \right) &#x3D; \sum_j 2^{jw} W_j$</li>
+<li>It means we can calculte the MSM for each window $W_j$ first, then aggregate the results</li>
 </ul>
 </li>
-<li>Nondegenerated<ul>
-<li>With generator $g_0 \in G_0$ and $g_1 \in G_1$</li>
-<li>$g_T &#x3D; e(g_0, g_1) \in G_T$</li>
+<li>Then, let’s examine $W_j &#x3D; \sum_{i&#x3D;0}^n k_{i,j} P_i$</li>
+</ul>
+</li>
+<li>Step 2: for each window, add points by bucket<ul>
+<li>Because each window has $w$ bits, $k_{i,j}$ has a value range of $[0, 2^w-1]$.Therefore, we can put $n$ points into $2^w$ buckets according to the value of $k_{i,j}$. We can first calculate $W_j$ by,<ul>
+<li>for bucket  $t$, $t \in {0, 2^w-1}$, calculate the sum of points in this bucket and get $B_t$.</li>
+<li>$W_j &#x3D; \sum_{t&#x3D;0}^{2^w-1} t B_t$</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>An application BLS signature scheme (Boneh-Lynn-Shacham)<ul>
-<li>Protocol<ul>
-<li>Keygen: $sk &#x3D; s$, $pk &#x3D; sg$</li>
-<li>Sign(sk,m): $\sigma &#x3D; sH(m)$</li>
-<li>Verify(pk,m): check $e(pk, H(m)) &#x3D; e(g,\sigma)$</li>
-</ul>
-</li>
-<li>It can be extended to allow signature aggregation<ul>
-<li>The verifier can collect all the signatures and aggregate them into a single short signature.</li>
-<li>The verifier can just verify the short signature then he knows that everyone signed their messages correctly.</li>
-</ul>
-</li>
+<li>Step 3: reduce window results<ul>
+<li>$P&#x3D;\sum_{i&#x3D;0}^n k_i P_i &#x3D; \sum_j 2^{jw} W_j$</li>
 </ul>
 </li>
 </ul>
@@ -422,10 +411,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/12/24/ZKP-Algorithms-for-Efficient-Cryptographic-Operations-1/">ZKP Algorithms for Efficient Cryptographic Operations 1</a>
             
-            
-            <a class="next" rel="next" href="/2023/12/21/ZKP-Pasta-Curves/">ZKP Pasta Curves</a>
+            <a class="next" rel="next" href="/2023/12/24/ZKP-Mathematical-Building-Blocks-2/">ZKP Mathematical Building Blocks 2</a>
             
         </section>
 
