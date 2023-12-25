@@ -41,6 +41,45 @@
     
     
         
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
     
 
 
@@ -127,6 +166,71 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
@@ -143,14 +247,55 @@
                         Date: <a href="#">December 24, 2023&nbsp;&nbsp;22:25:38</a>
                         </span>
                     
-                    <!--  -->
+                    <!-- 
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Zero-Knowledge-Proofs/">Zero Knowledge Proofs</a>
+                            
+                        </span>
+                     -->
                     
+
+                        <span class="post-category">
+                        
+                        Category:
+                        
+                        
+                        
+                        <a href="/categories/Zero-Knowledge-Proofs/">Zero Knowledge Proofs</a>
+                        
+                        
+                        
+                        </span>
+                        
+                        
                         
                          
                         
                         
                         
+                        <span class="post-count">
+                        
+                        Words:
+                        
+                        <a href="">637</a> 
+                        
+                        </span>
+                        
+                        
+                        
                          
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Time:
+                        
+                        <a href="">3min</a> 
+                        
+                        </span>
                         
                         
                 </div>
@@ -158,7 +303,27 @@
         </header>
 
         <div class="post-content">
-            
+            <h1 id="Nova-Scotia-Middleware-to-compile-Circom-circuits-to-Nova-prover"><a href="#Nova-Scotia-Middleware-to-compile-Circom-circuits-to-Nova-prover" class="headerlink" title="Nova Scotia: Middleware to compile Circom circuits to Nova prover"></a>Nova Scotia: Middleware to compile Circom circuits to Nova prover</h1><p>[Reference: <a target="_blank" rel="noopener" href="https://github.com/nalinbhardwaj/Nova-Scotia]">https://github.com/nalinbhardwaj/Nova-Scotia]</a></p>
+<p>My device: Macbook Pro 2020 with Intel chip</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/nalinbhardwaj/Nova-Scotia.git</span><br><span class="line"><span class="built_in">cd</span> Nova-Scotia</span><br><span class="line">cargo build</span><br><span class="line">cargo run --example toy_bn254 <span class="comment">#Available examples: bitcoin, toy_bn254, toy_pasta</span></span><br></pre></td></tr></table></figure>
+<p>toy_bn254.rs</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">group_name</span> = <span class="string">&quot;bn254&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">circuit_filepath</span> = <span class="built_in">format!</span>(<span class="string">&quot;examples/toy/&#123;&#125;/toy.r1cs&quot;</span>, group_name);</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">witness_gen_filepath</span> <span class="keyword">in</span> [</span><br><span class="line">        <span class="built_in">format!</span>(<span class="string">&quot;examples/toy/&#123;&#125;/toy_cpp/toy&quot;</span>, group_name),</span><br><span class="line">        <span class="built_in">format!</span>(<span class="string">&quot;examples/toy/&#123;&#125;/toy_js/toy.wasm&quot;</span>, group_name),</span><br><span class="line">    ] &#123;</span><br><span class="line">        <span class="title function_ invoke__">run_test</span>(circuit_filepath.<span class="title function_ invoke__">clone</span>(), witness_gen_filepath);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>toy_circuit</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">pragma circom 2.0.3;</span><br><span class="line"></span><br><span class="line">// include <span class="string">&quot;https://github.com/0xPARC/circom-secp256k1/blob/master/circuits/bigint.circom&quot;</span>;</span><br><span class="line"></span><br><span class="line">template <span class="function"><span class="title">Example</span></span> () &#123;</span><br><span class="line">    signal input step_in[2];</span><br><span class="line"></span><br><span class="line">    signal output step_out[2];</span><br><span class="line"></span><br><span class="line">    signal input adder;</span><br><span class="line"></span><br><span class="line">    step_out[0] &lt;== step_in[0] + adder;</span><br><span class="line">    step_out[1] &lt;== step_in[0] + step_in[1];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">component main &#123; public [step_in] &#125; = Example();</span><br><span class="line"></span><br><span class="line">/* INPUT = &#123;</span><br><span class="line">    <span class="string">&quot;step_in&quot;</span>: [1, 1],</span><br><span class="line">    <span class="string">&quot;step_out&quot;</span>: [1, 2],</span><br><span class="line">    <span class="string">&quot;adder&quot;</span>: 0</span><br><span class="line">&#125; */</span><br></pre></td></tr></table></figure>
+
+<p>example &#x3D; toy_bn254</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">Running <span class="built_in">test</span> with witness generator: examples/toy/bn254/toy_cpp/toy and group: halo2curves::bn256::curve::G1</span><br><span class="line">Number of constraints per step (primary circuit): 9987</span><br><span class="line">Number of constraints per step (secondary circuit): 10536</span><br><span class="line">Number of variables per step (primary circuit): 9982</span><br><span class="line">Number of variables per step (secondary circuit): 10518</span><br><span class="line">Creating a RecursiveSNARK...</span><br><span class="line">RecursiveSNARK creation took 13.224248261s</span><br><span class="line">Verifying a RecursiveSNARK...</span><br><span class="line">RecursiveSNARK::verify: Ok(([<span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000014, <span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000046], [<span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000000])), took 3.157009284s</span><br><span class="line">Generating a CompressedSNARK using Spartan with IPA-PC...</span><br><span class="line">CompressedSNARK::prove: <span class="literal">true</span>, took 70.214257205s</span><br><span class="line">Verifying a CompressedSNARK...</span><br><span class="line">CompressedSNARK::verify: <span class="literal">true</span>, took 2.716456417s</span><br><span class="line">Adding steps to our RecursiveSNARK...</span><br><span class="line">Adding 2 steps to our RecursiveSNARK took 6.124253293s</span><br><span class="line">Verifying a RecursiveSNARK...</span><br><span class="line">RecursiveSNARK::verify: Ok(([<span class="number">0</span>x000000000000000000000000000000000000000000000000000000000000001f, <span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000073], [<span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000000])), took 3.17058345s</span><br><span class="line">Running <span class="built_in">test</span> with witness generator: examples/toy/bn254/toy_js/toy.wasm and group: halo2curves::bn256::curve::G1</span><br><span class="line">Number of constraints per step (primary circuit): 9987</span><br><span class="line">Number of constraints per step (secondary circuit): 10536</span><br><span class="line">Number of variables per step (primary circuit): 9982</span><br><span class="line">Number of variables per step (secondary circuit): 10518</span><br><span class="line">Creating a RecursiveSNARK...</span><br><span class="line">RecursiveSNARK creation took 13.44364122s</span><br><span class="line">Verifying a RecursiveSNARK...</span><br><span class="line">RecursiveSNARK::verify: Ok(([<span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000014, <span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000046], [<span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000000])), took 3.164956873s</span><br><span class="line">Generating a CompressedSNARK using Spartan with IPA-PC...</span><br><span class="line">CompressedSNARK::prove: <span class="literal">true</span>, took 71.255975254s</span><br><span class="line">Verifying a CompressedSNARK...</span><br><span class="line">CompressedSNARK::verify: <span class="literal">true</span>, took 2.705070478s</span><br><span class="line">Adding steps to our RecursiveSNARK...</span><br><span class="line">Adding 2 steps to our RecursiveSNARK took 6.359241709s</span><br><span class="line">Verifying a RecursiveSNARK...</span><br><span class="line">RecursiveSNARK::verify: Ok(([<span class="number">0</span>x000000000000000000000000000000000000000000000000000000000000001f, <span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000073], [<span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000000])), took 3.185926252s</span><br></pre></td></tr></table></figure>
+
+<p>example &#x3D; toy_pasta</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Running <span class="built_in">test</span> with witness generator: examples/toy/pasta/toy_cpp/toy and group: pasta_curves::curves::Ep</span><br><span class="line">Number of constraints per step (primary circuit): 9819</span><br><span class="line">Number of constraints per step (secondary circuit): 10347</span><br><span class="line">Number of variables per step (primary circuit): 9814</span><br><span class="line">Number of variables per step (secondary circuit): 10329</span><br><span class="line">Creating a RecursiveSNARK...</span><br><span class="line">RecursiveSNARK creation took 4.414209623s</span><br><span class="line">Verifying a RecursiveSNARK...</span><br><span class="line">RecursiveSNARK::verify: Ok(([<span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000014, <span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000046], [<span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000000])), took 370.838978ms</span><br><span class="line">Generating a CompressedSNARK using Spartan with IPA-PC...</span><br><span class="line">CompressedSNARK::prove: <span class="literal">true</span>, took 32.915398792s</span><br><span class="line">Verifying a CompressedSNARK...</span><br><span class="line">CompressedSNARK::verify: <span class="literal">true</span>, took 345.546614ms</span><br><span class="line">Running <span class="built_in">test</span> with witness generator: examples/toy/pasta/toy_js/toy.wasm and group: pasta_curves::curves::Ep</span><br><span class="line">Number of constraints per step (primary circuit): 9819</span><br><span class="line">Number of constraints per step (secondary circuit): 10347</span><br><span class="line">Number of variables per step (primary circuit): 9814</span><br><span class="line">Number of variables per step (secondary circuit): 10329</span><br><span class="line">Creating a RecursiveSNARK...</span><br><span class="line">RecursiveSNARK creation took 4.407457827s</span><br><span class="line">Verifying a RecursiveSNARK...</span><br><span class="line">RecursiveSNARK::verify: Ok(([<span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000014, <span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000046], [<span class="number">0</span>x0000000000000000000000000000000000000000000000000000000000000000])), took 266.348024ms</span><br><span class="line">Generating a CompressedSNARK using Spartan with IPA-PC...</span><br><span class="line">CompressedSNARK::prove: <span class="literal">true</span>, took 32.952874742s</span><br><span class="line">Verifying a CompressedSNARK...</span><br><span class="line">CompressedSNARK::verify: <span class="literal">true</span>, took 332.043144ms</span><br></pre></td></tr></table></figure>
+
+<p>Some Error and solution:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">stdout: stderr: dyld[3280]: Library not loaded: /usr/local/opt/gmp/lib/libgmp.10.dylib</span><br><span class="line"></span><br><span class="line">  Referenced from: &lt;70F76335-7705-34A9-B709-6DD492286528&gt; /path/to/Nova-Scotia/examples/toy/pasta/toy_cpp/toy</span><br><span class="line">  Reason: tried: /some/possible/paths/</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew update &amp;&amp; brew install gmp</span><br><span class="line">brew <span class="built_in">ls</span> gmp</span><br><span class="line"><span class="built_in">cp</span> /opt/homebrew/Cellar/gmp/6.3.0/lib/libgmp.10.dylib /one/of/the/possible/paths/</span><br></pre></td></tr></table></figure>
+
+<p><strong>Notes</strong>: Cannot run on the MacOS with m1&#x2F;m2 chips :(<br> (Error: have ‘arm64’, need ‘x86_64’)</p>
+
         </div>
 
         
@@ -190,6 +355,12 @@
                 <span>Tag(s):</span>
                 <span class="tag">
                     
+                    
+                        <a href="/tags/Note/"># Note</a>
+                    
+                        <a href="/tags/ZKP/"># ZKP</a>
+                    
+                        
                 </span>
             </div>
             <div>
@@ -199,6 +370,8 @@
             </div>
         </section>
         <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/12/25/ZKP-Schnorr-Protocol-Implementation/">ZKP Schnorr Protocol Implementation</a>
             
             
             <a class="next" rel="next" href="/2023/12/24/ZKP-Algorithms-for-Efficient-Cryptographic-Operations-1/">ZKP Algorithms for Efficient Cryptographic Operations 1</a>
