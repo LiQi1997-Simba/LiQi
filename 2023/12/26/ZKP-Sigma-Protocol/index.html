@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP Schnorr Protocol Implementation | Simba&#39;s Homepage</title>
+<title>ZKP Sigma Protocol | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP Schnorr Protocol Implementation</h1>
+            <h1 class="post-title">ZKP Sigma Protocol</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">December 25, 2023&nbsp;&nbsp;18:45:13</a>
+                        Date: <a href="#">December 26, 2023&nbsp;&nbsp;21:54:04</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">192</a> 
+                        <a href="">316</a> 
                         
                         </span>
                         
@@ -303,7 +303,27 @@
         </header>
 
         <div class="post-content">
-            <h1 id="Schnorr-Protocol"><a href="#Schnorr-Protocol" class="headerlink" title="Schnorr Protocol"></a>Schnorr Protocol</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_random_value</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Generates a random value in the range [1, n-1]&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> random.randrange(<span class="number">1</span>, n)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">mod_pow</span>(<span class="params">base, exponent, modulus</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Calculates (base^exponent) % modulus efficiently&quot;&quot;&quot;</span></span><br><span class="line">    result = <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> exponent &gt; <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">if</span> exponent % <span class="number">2</span> == <span class="number">1</span>:</span><br><span class="line">            result = (result * base) % modulus</span><br><span class="line">        exponent = exponent &gt;&gt; <span class="number">1</span></span><br><span class="line">        base = (base * base) % modulus</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">prover</span>(<span class="params">secret, generator, modulus, challenge</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Prover&#x27;s actions in the Schnorr Protocol&quot;&quot;&quot;</span></span><br><span class="line">    r = generate_random_value(modulus)</span><br><span class="line">    commitment = mod_pow(generator, r, modulus)</span><br><span class="line">    response = (r + challenge * secret) % modulus</span><br><span class="line">    <span class="keyword">return</span> commitment, response</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">verifier</span>(<span class="params">commitment, response, generator, modulus, public_key, challenge</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Verifier&#x27;s actions in the Schnorr Protocol&quot;&quot;&quot;</span></span><br><span class="line">    verification = mod_pow(generator, response, modulus)</span><br><span class="line">    check = (commitment * mod_pow(public_key, challenge, modulus)) % modulus</span><br><span class="line">    <span class="keyword">return</span> verification == check</span><br><span class="line"></span><br><span class="line"><span class="comment"># Example usage (non-interactive)</span></span><br><span class="line">secret = <span class="number">1234</span>  <span class="comment"># Example secret</span></span><br><span class="line">generator = <span class="number">5</span>  <span class="comment"># Example generator</span></span><br><span class="line">modulus = <span class="number">2147483647</span>  <span class="comment"># Prime modulus</span></span><br><span class="line">public_key = mod_pow(generator, secret, modulus)</span><br><span class="line"></span><br><span class="line">verifier_challenge = <span class="number">233</span> <span class="comment"># Example verifier challenge</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Verifier challenge:&#x27;</span>, verifier_challenge)</span><br><span class="line"></span><br><span class="line">commitment, response = prover(secret, generator, modulus, verifier_challenge)</span><br><span class="line"><span class="keyword">if</span> verifier(commitment, response, generator, modulus, public_key, verifier_challenge):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Proof successful!&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Proof failed!&quot;</span>)</span><br></pre></td></tr></table></figure>
+            <h1 id="Sigma-Protocol"><a href="#Sigma-Protocol" class="headerlink" title="Sigma Protocol"></a>Sigma Protocol</h1><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Sigma protocols are a specific type of interactive zero-knowledge proof (ZKP) that are known for their efficiency and simplicity.<br>They involve three distinct phases between a prover and a verifier:</p>
+<ul>
+<li>Prover: $P(x,y)$</li>
+<li>Verifier: $V(y)$</li>
+<li>Commitment: The prover sends an initial commitment $t$ to the verifier, often involving a secret value.</li>
+<li>Challenge: The verifier responds with a random challenge $c$.</li>
+<li>Response: The prover calculates a response $z$ based on the challenge and their secret knowledge and sends it to the verifier.</li>
+<li>Evaluation: Upon receiving prover’s response $z$, the verifier outputs either accept or reject, which must be computed strictly as a function of the statement $y$ and the conversation $(t,c,z)$. In particular, the verifier does not make any random choices other than the selection of the challenge: all other computations are completely deterministic.</li>
+</ul>
+<h2 id="Example-Okamoto’s-protocol"><a href="#Example-Okamoto’s-protocol" class="headerlink" title="Example: Okamoto’s protocol"></a>Example: Okamoto’s protocol</h2><p>Okamoto’s protocol allows a prover to convince a skeptical verifier that he “knows” a representation of a given $u \in \mathbb{G}$, without revealing anything about that representation to the verifier.</p>
+<p>A witness for the statement $u \in \mathbb{G} is $(\alpha; \beta)$ \in \mathbb{Z}_q^2 such that $ g^\alpha h^\beta&#x3D; u$, i.e., a representation of u. Thus, in this example, every statement has many witnesses.</p>
+<ul>
+<li>Prover: $P((\alpha, \beta), u)$</li>
+<li>Verifier: $V(u)$</li>
+<li>The prover computes $\alpha_t \leftarrow \mathbb{G}$, $\beta_t \leftarrow \mathbb{G}$, $u_t \leftarrow g^{\alpha_t}h^{\beta_t}$ and sends the commitment $u_t$ to the verifier.</li>
+<li>The verifier computes a random $c$ and sends the challenge $c$ to the prover.</li>
+<li>The prover computes $\alpha_z \leftarrow \alpha_t + \alpha c \in \mathbb{Z}_q$, $\beta_z \leftarrow \beta_t + \beta c \in \mathbb{Z}_q$ and sends the response $(\alpha_z, \beta_z)$ to the verifier.</li>
+<li>The verifier checks if $g^{\alpha_z}h^{\beta_z} &#x3D; u_t \cdot u^c$. if so, the verifier outputs “accept”; otherwise, the verifier outputs “reject”.</li>
+</ul>
+<p> <img src="/2023/12/26/ZKP-Sigma-Protocol/image.png"></p>
+
         </div>
 
         
@@ -338,8 +358,6 @@
                     
                         <a href="/tags/Note/"># Note</a>
                     
-                        <a href="/tags/Code/"># Code</a>
-                    
                         <a href="/tags/ZKP/"># ZKP</a>
                     
                         
@@ -353,10 +371,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/12/26/ZKP-Sigma-Protocol/">ZKP Sigma Protocol</a>
             
-            
-            <a class="next" rel="next" href="/2023/12/24/ZKP-Nova-Scotia-Middleware-to-compile-Circom-circuits-to-Nova-prover/">ZKP Nova Scotia: Middleware to compile Circom circuits to Nova prover</a>
+            <a class="next" rel="next" href="/2023/12/25/ZKP-Schnorr-Protocol-Implementation/">ZKP Schnorr Protocol Implementation</a>
             
         </section>
 
