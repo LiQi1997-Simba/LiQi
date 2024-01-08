@@ -127,6 +127,71 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
@@ -171,7 +236,27 @@
                         
                         
                         
+                        <span class="post-count">
+                        
+                        Words:
+                        
+                        <a href="">873</a> 
+                        
+                        </span>
+                        
+                        
+                        
                          
+                        
+                        
+                        
+                        <span class="post-count">
+                        
+                        Time:
+                        
+                        <a href="">5min</a> 
+                        
+                        </span>
                         
                         
                 </div>
@@ -179,7 +264,50 @@
         </header>
 
         <div class="post-content">
-            
+            <p><strong>Reading Alleviates Anxiety</strong> [Simba的阅读障碍治疗计划:#1]</p>
+<p>Reading Notes for (NIST AI 100-2e2023)[<a target="_blank" rel="noopener" href="https://csrc.nist.gov/pubs/ai/100/2/e2023/final]">https://csrc.nist.gov/pubs/ai/100/2/e2023/final]</a>.</p>
+<h1 id="Adversarial-Machine-Learning"><a href="#Adversarial-Machine-Learning" class="headerlink" title="Adversarial Machine Learning"></a>Adversarial Machine Learning</h1><p>A Taxonomy and Terminology of Attacks and Mitigations</p>
+<h2 id="Section-1-Introduction"><a href="#Section-1-Introduction" class="headerlink" title="Section 1: Introduction"></a>Section 1: Introduction</h2><ul>
+<li><p>There are two broad classes of AI systems, based on their capabilities: Predictive AI (PredAI) and Generative AI (GenAI).</p>
+</li>
+<li><p>However, despite the signifcant progress that AI and machine learning (ML) have made in a number of different application domains, these technologies are also vulnerable to attacks that can cause spectacular failures with dire consequences.</p>
+</li>
+<li><p>Unlike cryptography, there are no information-theoretic security proofs for the widely used machine learning algorithms. Moreover, information-theoretic impossibility results have started to appear in the literature [102, 116] that set limits on the effectiveness of widely-used mitigation techniques. As a result, many of the advances in developing mitigations against different classes of attacks tend to be empirical and limited in nature.</p>
+</li>
+</ul>
+<h2 id="Section-2-Pridictive-AI-Taxonomy"><a href="#Section-2-Pridictive-AI-Taxonomy" class="headerlink" title="Section 2: Pridictive AI Taxonomy"></a>Section 2: Pridictive AI Taxonomy</h2><ul>
+<li>The attacker’s objectives are shown as disjointed circles with the attacker’s goal at the center of each circle: <strong>Availability breakdown</strong>, <strong>Integrity violations</strong>, and <strong>Privacy compromise</strong>.</li>
+</ul>
+<p><img src="/2024/01/08/FL-Adversarial-Machine-Learning-1/fig1.jpg"></p>
+<ul>
+<li><p>Machine learning involves a TRAINING STAGE, in which a model is learned, and a DEPLOYMENT STAGE, in which the model is deployed on new, unlabeled data samples to generate predictions. </p>
+</li>
+<li><p>Adversarial machine learning literature predominantly considers adversarial attacks against AI systems that could occur at either the training stage or the ML deployment stage. During the ML training stage, the attacker might control part of the training data, their labels, the model parameters, or the code of ML algorithms, resulting in different types of poisoning attacks. During the ML deployment stage, the ML model is already trained, and the adversary could mount evasion attacks to create integrity violations and change the ML model’s predictions, as well as privacy attacks to infer sensitive information about the training data or the ML model.</p>
+</li>
+<li><p>Training-time attacks. Poisoning Attack.  Data poisoning attacks are applicable to all learning paradigms, while model poisoning attacks are most prevalent in federated learning, where clients send local model updates to the aggregating server, and in supply-chain attacks where malicious code may be added to the model by suppliers of model technology.</p>
+</li>
+<li><p>Deployment-time attack. Adversarial Example.</p>
+</li>
+<li><p>Attacker Goals and Objectives. Availability breakdown, Integrity violations, and Privacy compromise. </p>
+</li>
+<li><p>Privacy Compromise. Attackers might be interested in learning information about the training data (resulting in DATA PRIVACY attacks) or about the ML model (resulting in MODEL PRIVACY attacks). The attacker could have different objectives for compromising the privacy of training data, such as DATA RECONSTRUCTION (inferring content or features of training data), MEMBERSHIP-INFERENCE ATTACKS (inferring the presence of data in the training set), data EXTRACTION (ability to extract training data from generative models), and PROPERTY INFERENCE (inferring properties about the training data distribution). MODEL EXTRACTION is a model privacy attack in which attackers aim to extract information about the model.</p>
+</li>
+<li><p>Attacker Capabilities. Training Data Control. Model Control. Testing Data Control. Label Limit. Source Code Control. Query Access.</p>
+</li>
+<li><p>Attacker Knowledge. White-box attacks. These assume that the attacker operates with full knowledge about the ML system, including the training data, model architecture, and model hyper-parameters. Black-box attacks. These attacks assume minimal knowledge about the ML system. An adversary might get query access to the model, but they have no other information about how the model is trained. Gray-box attacks. There are a range of gray-box attacks that capture adversarial knowledge between black-box and white-box attacks. Suciu et al. introduced a framework to classify gray-box attacks. An attacker might know the model architecture but not its parameters, or the attacker might know the model and its parameters but not the training data.</p>
+</li>
+<li><p>Data Modality: Image. Text. Audio. Video. Cybersecurity. Tabular Data. </p>
+</li>
+<li><p>Recently, the use of ML models trained on multimodal data has gained traction, particularly the combination of image and text data modalities. Several papers have shown that multimodal models may provide some resilience against attacks, but other papers show that multimodal models themselves could be vulnerable to attacks mounted on all modalities at the same time.</p>
+</li>
+<li><p>An interesting open challenge is to test and characterize the resilience of a variety of multimodal ML against evasion, poisoning, and privacy attacks.</p>
+</li>
+<li><p>Evasion Attacks and Mitigations. Methods for creating adversarial examples in black-box settings include zeroth-order optimization, discrete optimization, and Bayesian optimization, as well as transferability, which involves the white-box generation of adversarial examples on a different model architecture before transferring them to the target model. </p>
+</li>
+<li><p>The most promising directions for mitigating the critical threat of evasion attacks are adversarial training (iteratively generating and inserting adversarial examples with their correct labels at training time); certifed techniques, such as randomized smoothing (evaluating ML predic-<br>tion under noise); and formal verifcation techniques [112, 154] (applying formal method techniques to verify the model’s output). Nevertheless, these methods come with different limitations, such as decreased accuracy for adversarial training and randomized smoothing, and computational complexity for formal methods. There is an inherent trade-off between robustness and accuracy [297, 302, 343]. Similarly, there are trade-offs between a model’s robustness and fairness guarantees.</p>
+</li>
+</ul>
+
         </div>
 
         
