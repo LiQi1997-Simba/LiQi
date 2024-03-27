@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP-Fiat–Shamir Heuristic | Simba&#39;s Homepage</title>
+<title>ZKP-Schwartz-Zippel Lemma | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP-Fiat–Shamir Heuristic</h1>
+            <h1 class="post-title">ZKP-Schwartz-Zippel Lemma</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 27, 2024&nbsp;&nbsp;14:43:50</a>
+                        Date: <a href="#">March 27, 2024&nbsp;&nbsp;15:18:04</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">290</a> 
+                        <a href="">202</a> 
                         
                         </span>
                         
@@ -303,38 +303,14 @@
         </header>
 
         <div class="post-content">
-            <h1 id="Fiat-Shamir-Heuristic"><a href="#Fiat-Shamir-Heuristic" class="headerlink" title="Fiat-Shamir Heuristic"></a>Fiat-Shamir Heuristic</h1><blockquote>
-<p>Fiat, Amos, and Adi Shamir. “How to prove yourself: Practical solutions to identification and signature problems.” Conference on the theory and application of cryptographic techniques. Berlin, Heidelberg: Springer Berlin Heidelberg, 1986.</p>
+            <h1 id="Schwartz-Zippel-Lemma"><a href="#Schwartz-Zippel-Lemma" class="headerlink" title="Schwartz-Zippel Lemma"></a>Schwartz-Zippel Lemma</h1><blockquote>
+<p>Schwartz, Jacob T. “Fast probabilistic algorithms for verification of polynomial identities.” Journal of the ACM (JACM) 27.4 (1980): 701-717.<br>Zippel, Richard. “Probabilistic algorithms for sparse polynomials.” International symposium on symbolic and algebraic manipulation. Berlin, Heidelberg: Springer Berlin Heidelberg, 1979.</p>
 </blockquote>
-<h2 id="Trust-Setup"><a href="#Trust-Setup" class="headerlink" title="Trust Setup"></a>Trust Setup</h2><p>f: A pseudo random function<br>I: Information</p>
-<ol>
-<li>Compute the values $v_j &#x3D; f(I,j)$ for small values of $j$.</li>
-<li>Pick $k$ distinct values of $j$ for which $v_j$ is a quadratic residue (mod n) and compute the smallest square root $s_j$, of $v_j^{-1}$ (mod n).</li>
-<li>Issue $I$ , the k $s_j$ values, and their indices.</li>
-</ol>
-<h2 id="Interactive-Protocol"><a href="#Interactive-Protocol" class="headerlink" title="Interactive Protocol"></a>Interactive Protocol</h2><ol>
-<li>A sends $I$ to B.</li>
-<li>B generates $v_j &#x3D; f(I, j)$ for $j &#x3D; 1,…,k$.</li>
-</ol>
-<p>Repeat steps 3 to 6 for $i &#x3D; 1,…,t$:</p>
-<ol start="3">
-<li>A picks a random $r_i \in [0,n)$ and sends $x_i &#x3D; r_i^2 (\mod n)$ to B.</li>
-<li>B sends a <strong>random binary vector</strong> $(e_{i1},…,e_{ik})$ to A.</li>
-<li>A sends to B :<br>$$<br>y_i &#x3D; r_i \prod_{e_ij&#x3D;1}s_j\mod n<br>$$</li>
-<li>B checks that<br>$$<br>x_i &#x3D; y_i \prod_{e_ij&#x3D;1}v_j\mod n<br>$$</li>
-</ol>
-<h2 id="Non-interactive-Protocol-Signature"><a href="#Non-interactive-Protocol-Signature" class="headerlink" title="Non-interactive Protocol (Signature)"></a>Non-interactive Protocol (Signature)</h2><p>To sign a message $m$:</p>
-<ol>
-<li>A picks random $r_1, …,r_t \in [O,n)$ and computes $x_i &#x3D; r_i^2\mod n$.</li>
-<li>A computes $f(m, x_1,…,x_t)$and uses its first kt bits as $e_{ij}$ values.</li>
-<li>A computes<br>$$<br>y_i &#x3D; r_i \prod_{e_ij&#x3D;1}s_j\mod n<br>$$<br>and sends $I$,$m$, the $e_{ij}$ matrix and all the $y_i$ to B.</li>
-</ol>
-<p>To verify A’s signature on $m$:</p>
-<ol>
-<li>B computes $v_j &#x3D; f(I, j)$ for $j &#x3D; 1,…,k$.</li>
-<li>B computes<br>$$<br>x_i &#x3D; y_i \prod_{e_ij&#x3D;1}v_j\mod n<br>$$</li>
-<li><strong>B verifies that the first kt bits of $f(m, x_1,…,x_t)$ are $e_{ij}$ matrix.</strong></li>
-</ol>
+<p>For an m-variate polynomial $g$, the degree of a term of $g$ is the sum of the exponents of the variables in the term. </p>
+<p>Let $\mathbb{F}$ be any field, and let $g : \mathbb{F}^m \rightarrow \mathbb{F}$ be a nonzero m-variate<br>polynomial of total degree at most $d$. Then on any finite set $S \subseteq F$,</p>
+<p>$$<br>\Pr_{x\leftarrow S^m}[g(x)&#x3D;0]\leq d&#x2F;\vert S \vert<br>$$</p>
+<p>Here, $x\leftarrow S^m$ denotes an $x$ drawn uniformly at random from the product set $S^m$, and $\vert S \vert$ denotes the size of<br>$S$. In words, if $x$ is chosen uniformly at random from $S^m$, then the probability that $g(x) &#x3D; 0$ is at most $d&#x2F;\vert S \vert$.</p>
+<p>In particular, any two distinct polynomials of total degree at most $d$ can agree on at most a $d&#x2F;\vert S \vert$ fraction of points in $S^m$.</p>
 
         </div>
 
@@ -383,10 +359,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/27/ZKP-Schwartz-Zippel-Lemma/">ZKP-Schwartz-Zippel Lemma</a>
             
-            
-            <a class="next" rel="next" href="/2024/01/08/FL-Adversarial-Machine-Learning-1/">［FL］Adversarial Machine Learning (1)</a>
+            <a class="next" rel="next" href="/2024/03/27/ZKP-Fiat%E2%80%93Shamir-Heuristic/">ZKP-Fiat–Shamir Heuristic</a>
             
         </section>
 
