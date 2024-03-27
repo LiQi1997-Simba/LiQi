@@ -13,7 +13,7 @@
 
 
 
-<title>［FL］Adversarial Machine Learning (1) | Simba&#39;s Homepage</title>
+<title>ZKP-Fiat–Shamir Heuristic | Simba&#39;s Homepage</title>
 
 
 
@@ -40,6 +40,45 @@
 
     
     
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
         
     
 
@@ -196,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">［FL］Adversarial Machine Learning (1)</h1>
+            <h1 class="post-title">ZKP-Fiat–Shamir Heuristic</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +244,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">January 08, 2024&nbsp;&nbsp;14:40:20</a>
+                        Date: <a href="#">March 27, 2024&nbsp;&nbsp;14:43:50</a>
                         </span>
                     
                     <!-- 
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/Federated-Learning/">Federated Learning</a>
+                                <a href="/categories/Zero-Knowledge-Proofs/">Zero Knowledge Proofs</a>
                             
                         </span>
                      -->
@@ -224,7 +263,7 @@
                         
                         
                         
-                        <a href="/categories/Federated-Learning/">Federated Learning</a>
+                        <a href="/categories/Zero-Knowledge-Proofs/">Zero Knowledge Proofs</a>
                         
                         
                         
@@ -240,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">873</a> 
+                        <a href="">290</a> 
                         
                         </span>
                         
@@ -254,7 +293,7 @@
                         
                         Time:
                         
-                        <a href="">5min</a> 
+                        <a href="">1min</a> 
                         
                         </span>
                         
@@ -264,49 +303,38 @@
         </header>
 
         <div class="post-content">
-            <p><strong>Reading Alleviates Anxiety</strong> [Simba的阅读障碍治疗计划:#1]</p>
-<p>Reading Notes for (NIST AI 100-2e2023)[<a target="_blank" rel="noopener" href="https://csrc.nist.gov/pubs/ai/100/2/e2023/final]">https://csrc.nist.gov/pubs/ai/100/2/e2023/final]</a>.</p>
-<h1 id="Adversarial-Machine-Learning"><a href="#Adversarial-Machine-Learning" class="headerlink" title="Adversarial Machine Learning"></a>Adversarial Machine Learning</h1><p>A Taxonomy and Terminology of Attacks and Mitigations</p>
-<h2 id="Section-1-Introduction"><a href="#Section-1-Introduction" class="headerlink" title="Section 1: Introduction"></a>Section 1: Introduction</h2><ul>
-<li><p>There are two broad classes of AI systems, based on their capabilities: Predictive AI (PredAI) and Generative AI (GenAI).</p>
-</li>
-<li><p>However, despite the signifcant progress that AI and machine learning (ML) have made in a number of different application domains, these technologies are also vulnerable to attacks that can cause spectacular failures with dire consequences.</p>
-</li>
-<li><p>Unlike cryptography, there are no information-theoretic security proofs for the widely used machine learning algorithms. Moreover, information-theoretic impossibility results have started to appear in the literature [102, 116] that set limits on the effectiveness of widely-used mitigation techniques. As a result, many of the advances in developing mitigations against different classes of attacks tend to be empirical and limited in nature.</p>
-</li>
-</ul>
-<h2 id="Section-2-Pridictive-AI-Taxonomy"><a href="#Section-2-Pridictive-AI-Taxonomy" class="headerlink" title="Section 2: Pridictive AI Taxonomy"></a>Section 2: Pridictive AI Taxonomy</h2><ul>
-<li>The attacker’s objectives are shown as disjointed circles with the attacker’s goal at the center of each circle: <strong>Availability breakdown</strong>, <strong>Integrity violations</strong>, and <strong>Privacy compromise</strong>.</li>
-</ul>
-<p><img src="/2024/01/08/FL-Adversarial-Machine-Learning-1/fig1.jpg"></p>
-<ul>
-<li><p>Machine learning involves a TRAINING STAGE, in which a model is learned, and a DEPLOYMENT STAGE, in which the model is deployed on new, unlabeled data samples to generate predictions. </p>
-</li>
-<li><p>Adversarial machine learning literature predominantly considers adversarial attacks against AI systems that could occur at either the training stage or the ML deployment stage. During the ML training stage, the attacker might control part of the training data, their labels, the model parameters, or the code of ML algorithms, resulting in different types of poisoning attacks. During the ML deployment stage, the ML model is already trained, and the adversary could mount evasion attacks to create integrity violations and change the ML model’s predictions, as well as privacy attacks to infer sensitive information about the training data or the ML model.</p>
-</li>
-<li><p>Training-time attacks. Poisoning Attack.  Data poisoning attacks are applicable to all learning paradigms, while model poisoning attacks are most prevalent in federated learning, where clients send local model updates to the aggregating server, and in supply-chain attacks where malicious code may be added to the model by suppliers of model technology.</p>
-</li>
-<li><p>Deployment-time attack. Adversarial Example.</p>
-</li>
-<li><p>Attacker Goals and Objectives. Availability breakdown, Integrity violations, and Privacy compromise. </p>
-</li>
-<li><p>Privacy Compromise. Attackers might be interested in learning information about the training data (resulting in DATA PRIVACY attacks) or about the ML model (resulting in MODEL PRIVACY attacks). The attacker could have different objectives for compromising the privacy of training data, such as DATA RECONSTRUCTION (inferring content or features of training data), MEMBERSHIP-INFERENCE ATTACKS (inferring the presence of data in the training set), data EXTRACTION (ability to extract training data from generative models), and PROPERTY INFERENCE (inferring properties about the training data distribution). MODEL EXTRACTION is a model privacy attack in which attackers aim to extract information about the model.</p>
-</li>
-<li><p>Attacker Capabilities. Training Data Control. Model Control. Testing Data Control. Label Limit. Source Code Control. Query Access.</p>
-</li>
-<li><p>Attacker Knowledge. White-box attacks. These assume that the attacker operates with full knowledge about the ML system, including the training data, model architecture, and model hyper-parameters. Black-box attacks. These attacks assume minimal knowledge about the ML system. An adversary might get query access to the model, but they have no other information about how the model is trained. Gray-box attacks. There are a range of gray-box attacks that capture adversarial knowledge between black-box and white-box attacks. Suciu et al. introduced a framework to classify gray-box attacks. An attacker might know the model architecture but not its parameters, or the attacker might know the model and its parameters but not the training data.</p>
-</li>
-<li><p>Data Modality: Image. Text. Audio. Video. Cybersecurity. Tabular Data. </p>
-</li>
-<li><p>Recently, the use of ML models trained on multimodal data has gained traction, particularly the combination of image and text data modalities. Several papers have shown that multimodal models may provide some resilience against attacks, but other papers show that multimodal models themselves could be vulnerable to attacks mounted on all modalities at the same time.</p>
-</li>
-<li><p>An interesting open challenge is to test and characterize the resilience of a variety of multimodal ML against evasion, poisoning, and privacy attacks.</p>
-</li>
-<li><p>Evasion Attacks and Mitigations. Methods for creating adversarial examples in black-box settings include zeroth-order optimization, discrete optimization, and Bayesian optimization, as well as transferability, which involves the white-box generation of adversarial examples on a different model architecture before transferring them to the target model. </p>
-</li>
-<li><p>The most promising directions for mitigating the critical threat of evasion attacks are adversarial training (iteratively generating and inserting adversarial examples with their correct labels at training time); certifed techniques, such as randomized smoothing (evaluating ML predic-<br>tion under noise); and formal verifcation techniques [112, 154] (applying formal method techniques to verify the model’s output). Nevertheless, these methods come with different limitations, such as decreased accuracy for adversarial training and randomized smoothing, and computational complexity for formal methods. There is an inherent trade-off between robustness and accuracy [297, 302, 343]. Similarly, there are trade-offs between a model’s robustness and fairness guarantees.</p>
-</li>
-</ul>
+            <h1 id="Fiat-Shamir-Heuristic"><a href="#Fiat-Shamir-Heuristic" class="headerlink" title="Fiat-Shamir Heuristic"></a>Fiat-Shamir Heuristic</h1><blockquote>
+<p>Fiat, Amos, and Adi Shamir. “How to prove yourself: Practical solutions to identification and signature problems.” Conference on the theory and application of cryptographic techniques. Berlin, Heidelberg: Springer Berlin Heidelberg, 1986.</p>
+</blockquote>
+<h2 id="Trust-Setup"><a href="#Trust-Setup" class="headerlink" title="Trust Setup"></a>Trust Setup</h2><p>f: A pseudo random function<br>I: Information</p>
+<ol>
+<li>Compute the values $v_j &#x3D; f(I,j)$ for small values of $j$.</li>
+<li>Pick $k$ distinct values of $j$ for which $v_j$ is a quadratic residue (mod n) and compute the smallest square root $s_j$, of $v_j^{-1}$ (mod n).</li>
+<li>Issue $I$ , the k $s_j$ values, and their indices.</li>
+</ol>
+<h2 id="Interactive-Protocol"><a href="#Interactive-Protocol" class="headerlink" title="Interactive Protocol"></a>Interactive Protocol</h2><ol>
+<li>A sends $I$ to B.</li>
+<li>B generates $v_j &#x3D; f(I, j)$ for $j &#x3D; 1,…,k$.</li>
+</ol>
+<p>Repeat steps 3 to 6 for $i &#x3D; 1,…,t$:</p>
+<ol start="3">
+<li>A picks a random $r_i \in [0,n)$ and sends $x_i &#x3D; r_i^2 (\mod n)$ to B.</li>
+<li>B sends a <strong>random binary vector</strong> $(e_{i1},…,e_{ik})$ to A.</li>
+<li>A sends to B :<br>$$<br>y_i &#x3D; r_i \prod_{e_ij&#x3D;1}s_j\mod n<br>$$</li>
+<li>B checks that<br>$$<br>x_i &#x3D; y_i \prod_{e_ij&#x3D;1}v_j\mod n<br>$$</li>
+</ol>
+<h2 id="Non-interactive-Protocol-Signature"><a href="#Non-interactive-Protocol-Signature" class="headerlink" title="Non-interactive Protocol (Signature)"></a>Non-interactive Protocol (Signature)</h2><p>To sign a message $m$:</p>
+<ol>
+<li>A picks random $r_1, …,r_t \in [O,n)$ and computes $x_i &#x3D; r_i^2\mod n$.</li>
+<li>A computes $f(m, x_1,…,x_t)$and uses its first kt bits as $e_{ij}$ values.</li>
+<li>A computes<br>$$<br>y_i &#x3D; r_i \prod_{e_ij&#x3D;1}s_j\mod n<br>$$<br>and sends $I$,$m$, the $e_{ij}$ matrix and all the $y_i$ to B.</li>
+</ol>
+<p>To verify A’s signature on $m$:</p>
+<ol>
+<li>B computes $v_j &#x3D; f(I, j)$ for $j &#x3D; 1,…,k$.</li>
+<li>B computes<br>$$<br>x_i &#x3D; y_i \prod_{e_ij&#x3D;1}v_j\mod n<br>$$</li>
+<li><strong>B verifies that the first kt bits of $f(m, x_1,…,x_t)$ are $e_{ij}$ matrix.</strong></li>
+</ol>
 
         </div>
 
@@ -342,9 +370,7 @@
                     
                         <a href="/tags/Note/"># Note</a>
                     
-                        <a href="/tags/FL/"># FL</a>
-                    
-                        <a href="/tags/PaperReading/"># PaperReading</a>
+                        <a href="/tags/ZKP/"># ZKP</a>
                     
                         
                 </span>
@@ -357,10 +383,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/27/ZKP-Fiat%E2%80%93Shamir-Heuristic/">ZKP-Fiat–Shamir Heuristic</a>
             
-            
-            <a class="next" rel="next" href="/2023/12/28/ZKP-A-Sigma-Protocol-For-Arbitrary-Linear-Relations/">ZKP A Sigma Protocol For Arbitrary Linear Relations</a>
+            <a class="next" rel="next" href="/2024/01/08/FL-Adversarial-Machine-Learning-1/">［FL］Adversarial Machine Learning (1)</a>
             
         </section>
 
