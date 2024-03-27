@@ -13,7 +13,7 @@
 
 
 
-<title>ZKP-Schwartz-Zippel Lemma | Simba&#39;s Homepage</title>
+<title>ZKP-Freivalds’ Algorithm | Simba&#39;s Homepage</title>
 
 
 
@@ -235,7 +235,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ZKP-Schwartz-Zippel Lemma</h1>
+            <h1 class="post-title">ZKP-Freivalds’ Algorithm</h1>
             
                 <div class="post-meta">
                     
@@ -244,7 +244,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 27, 2024&nbsp;&nbsp;15:18:04</a>
+                        Date: <a href="#">March 27, 2024&nbsp;&nbsp;15:57:36</a>
                         </span>
                     
                     <!-- 
@@ -279,7 +279,7 @@
                         
                         Words:
                         
-                        <a href="">218</a> 
+                        <a href="">349</a> 
                         
                         </span>
                         
@@ -293,7 +293,7 @@
                         
                         Time:
                         
-                        <a href="">1min</a> 
+                        <a href="">2min</a> 
                         
                         </span>
                         
@@ -303,15 +303,19 @@
         </header>
 
         <div class="post-content">
-            <h1 id="Schwartz-Zippel-Lemma"><a href="#Schwartz-Zippel-Lemma" class="headerlink" title="Schwartz-Zippel Lemma"></a>Schwartz-Zippel Lemma</h1><p>In mathematics, the Schwartz–Zippel Lemma is a tool commonly used in probabilistic polynomial identity testing.</p>
-<blockquote>
-<p>Schwartz, Jacob T. “Fast probabilistic algorithms for verification of polynomial identities.” Journal of the ACM (JACM) 27.4 (1980): 701-717.<br>Zippel, Richard. “Probabilistic algorithms for sparse polynomials.” International symposium on symbolic and algebraic manipulation. Berlin, Heidelberg: Springer Berlin Heidelberg, 1979.</p>
+            <h1 id="Freivalds’-Algorithm"><a href="#Freivalds’-Algorithm" class="headerlink" title="Freivalds’ Algorithm"></a>Freivalds’ Algorithm</h1><blockquote>
+<p>Freivalds, Rusins. “Probabilistic Machines Can Use Less Running Time.” IFIP congress. Vol. 839. 1977.</p>
 </blockquote>
-<p>For an m-variate polynomial $g$, the degree of a term of $g$ is the sum of the exponents of the variables in the term. </p>
-<p>Let $\mathbb{F}$ be any field, and let $g : \mathbb{F}^m \rightarrow \mathbb{F}$ be a nonzero m-variate polynomial of total degree at most $d$. Then on any finite set $S \subseteq F$,</p>
-<p>$$<br>\Pr_{x\leftarrow S^m}[g(x)&#x3D;0]\leq d&#x2F;\vert S \vert<br>$$</p>
-<p>Here, $x\leftarrow S^m$ denotes an $x$ drawn uniformly at random from the product set $S^m$, and $\vert S \vert$ denotes the size of $S$. In words, if $x$ is chosen uniformly at random from $S^m$, then the probability that $g(x) &#x3D; 0$ is at most $d&#x2F;\vert S \vert$.</p>
-<p>In particular, any two distinct polynomials of total degree at most $d$ can agree on at most a $d&#x2F;\vert S \vert$ fraction of points in $S^m$.</p>
+<h2 id="Problem-Statement"><a href="#Problem-Statement" class="headerlink" title="Problem Statement"></a>Problem Statement</h2><p>Suppose we are given as input two $n \times n$ matrices $A$ and $B$ over $\mathbb{F}_p$, where $p &gt; n^2$ is a prime number. The fastest known algorithm for accomplishing this task in time roughly $\mathcal{O}(n^{2.37286})$.</p>
+<p>Suppose someone hands us a matrix $C$. Our goal is to check whether or not the product matrix $A \cdot B &#x3D; C$ in $\mathcal{O}(n^{2})$ time.</p>
+<h2 id="Algorithm"><a href="#Algorithm" class="headerlink" title="Algorithm"></a>Algorithm</h2><p>First, choose a random $r \in \mathbb{F}_p$, and let $x &#x3D; (1,r,r^2,…,r^{n−1})$. Then compute $y &#x3D;Cx$ and $z &#x3D; A \cdot Bx$, outputting $1$ if $y &#x3D; z$ and $0$ otherwise.</p>
+<h2 id="Time-Cost"><a href="#Time-Cost" class="headerlink" title="Time Cost"></a>Time Cost</h2><ol>
+<li>vector $x &#x3D; (1,r,r^2,…,r^{n−1})$ can be done with $\mathcal{O}(n)$ total multiplication operations.</li>
+<li>Multiply an $n \times n$ matrix by an n-dimensional vector can be done in $\mathcal{O}(n^{2})$ time.<br>2.1. $y &#x3D; Cx$ : $\mathcal{O}(n^{2})$ time<br>2.2. $w &#x3D; Bx$ : $\mathcal{O}(n^{2})$ time<br>2.3. $z &#x3D; Aw$ : $\mathcal{O}(n^{2})$ time</li>
+</ol>
+<h2 id="Explaination"><a href="#Explaination" class="headerlink" title="Explaination"></a>Explaination</h2><p>Recall the Reed-Solomon Fingerprinting: Encode vector $a$ and $b$ with Reed-Solomon Encoding: $p_a(x) &#x3D; \sum_{i&#x3D;1}^na_ir^{i-1}$,$p_b(x) &#x3D; \sum_{i&#x3D;1}^nb_ir^{i-1}$. If $a_i &#x3D; b_i$ for all $i &#x3D; 1,…,n$, then $p_a(r)&#x3D;p_b(r)$ for every possible choice of $r$. Otherwise, if there is even one $i$ such that $a_i \neq b_i$, $p_a(r)&#x3D;p_b(r)$ with probability at least $1 − (n − 1)&#x2F;p$. (It can be proved by Schwartz-Zippel Lemma.)</p>
+<p>The encoding is distance-amplifying: if $a$ and $b$ differ on even a single coordinate, then their encodings will differ on a $1−(n−1)&#x2F;p$ fraction of coordinates. Due to the distanceamplifying nature of the code, checking equality of two vectors a and b was reduced to checking equality of a single (randomly chosen) entry of the encodings. </p>
+<p><img src="/2024/03/27/ZKP-Freivalds%E2%80%99-Algorithm/Reed_Solomon_Encoding.png"></p>
 
         </div>
 
@@ -360,10 +364,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/27/ZKP-Freivalds%E2%80%99-Algorithm/">ZKP-Freivalds’ Algorithm</a>
             
-            
-            <a class="next" rel="next" href="/2024/03/27/ZKP-Fiat%E2%80%93Shamir-Heuristic/">ZKP-Fiat–Shamir Heuristic</a>
+            <a class="next" rel="next" href="/2024/03/27/ZKP-Schwartz-Zippel-Lemma/">ZKP-Schwartz-Zippel Lemma</a>
             
         </section>
 
